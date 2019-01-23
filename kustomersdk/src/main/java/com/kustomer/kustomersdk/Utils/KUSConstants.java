@@ -60,5 +60,6 @@ public class KUSConstants {
         String CHAT_SESSION_BUNDLE_KEY = "Chat_Session_bundle";
         String CHAT_SCREEN_BACK_BUTTON_KEY = "Chat_back_button_bundle";
         String NOTIFICATION_ID_BUNDLE_KEY = "Notification_ID";
+        String CHAT_SCREEN_MESSAGE = "ChatScreenMessage";
     }
 }

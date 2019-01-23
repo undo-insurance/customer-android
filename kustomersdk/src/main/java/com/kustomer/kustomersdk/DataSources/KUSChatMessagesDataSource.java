@@ -173,7 +173,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         isProactiveCampaign = !isAnyMessageByCurrentUser();
 
         KUSChatSettings chatSettings = (KUSChatSettings) getUserSession().getChatSettingsDataSource().getObject();
-        if (sessionId == null && chatSettings.getActiveFormId() != null) {
+        if (sessionId == null && chatSettings != null && chatSettings.getActiveFormId() != null) {
 
             if (attachments != null && attachments.size() > 0)
                 throw new AssertionError("Should not have been able to send attachments without a sessionId");

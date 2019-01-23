@@ -166,12 +166,20 @@ public class Kustomer {
         getSharedInstance().mSetFormId(formId);
     }
 
-    public static int getOpenConversationsCount(){
+    public static int getOpenConversationsCount() {
         return getSharedInstance().mGetOpenConversationsCount();
     }
 
-    public static void hideNewConversationButtonInClosedChat(Boolean status){
+    public static void hideNewConversationButtonInClosedChat(Boolean status) {
         getSharedInstance().mHideNewConversationButtonInClosedChat(status);
+    }
+
+    public static void presentSupportWithMessage(Activity activity, String message, JSONObject customAttributes) {
+        getSharedInstance().mPresentSupportWithMessage(activity, message, customAttributes);
+    }
+
+    public static void presentSupportWithMessage(Activity activity, String message) {
+        getSharedInstance().mPresentSupportWithMessage(activity, message, null);
     }
     //endregion
 
@@ -330,12 +338,24 @@ public class Kustomer {
         userSession.getSharedPreferences().setFormId(formId);
     }
 
-    private int mGetOpenConversationsCount(){
+    private int mGetOpenConversationsCount() {
         return getUserSession().getSharedPreferences().getOpenChatSessionsCount();
     }
 
-    private void mHideNewConversationButtonInClosedChat(Boolean status){
+    private void mHideNewConversationButtonInClosedChat(Boolean status) {
         getUserSession().getSharedPreferences().setShouldHideConversationButton(status);
+    }
+
+    private void mPresentSupportWithMessage(Activity activity, String message, JSONObject customAttributes) {
+        if (message == null || message.length() == 0)
+            throw new AssertionError("Requires a valid message to create chat session.");
+
+        getUserSession().getChatSessionsDataSource().setMessageToCreateNewChatSession(message);
+
+        if (customAttributes != null)
+            mDescribeNextConversation(customAttributes);
+
+        showSupport(activity);
     }
     //endregion
 

@@ -44,6 +44,7 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource
     private JSONObject pendingCustomChatSessionAttributes;
     private JSONObject pendingCustomChatSessionAttributesForNextConversation;
     private HashMap<String, Date> localLastSeenAtBySessionId;
+    private String messageToCreateNewChatSession;
     //endregion
 
     //region Initializer
@@ -93,6 +94,10 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource
             return null;
 
         return getUserSession().getRequestManager().urlForEndpoint(KUSConstants.URL.CHAT_SESSIONS_ENDPOINT);
+    }
+
+    public String getMessageToCreateNewChatSession(){
+        return messageToCreateNewChatSession;
     }
     //endregion
 
@@ -368,6 +373,10 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource
         return count;
     }
 
+    public void setMessageToCreateNewChatSession(String messageToCreateNewChatSession) {
+        this.messageToCreateNewChatSession = messageToCreateNewChatSession;
+    }
+
     public int getOpenProactiveCampaignsCount() {
         if (getUserSession() == null)
             return 0;
@@ -573,6 +582,7 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource
             notifyAnnouncersOnError(error);
         }
     }
+
     //endregion
 
 }

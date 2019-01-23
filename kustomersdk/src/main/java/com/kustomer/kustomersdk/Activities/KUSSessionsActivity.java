@@ -75,7 +75,9 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
             }
         }
 
-        if (chatSessionsDataSource.isFetched()) {
+        boolean shouldCreateNewSessionWithMessage = chatSessionsDataSource.getMessageToCreateNewChatSession() != null;
+
+        if (chatSessionsDataSource.isFetched() || shouldCreateNewSessionWithMessage) {
             handleFirstLoadIfNecessary();
         } else {
             rvSessions.setVisibility(View.INVISIBLE);
@@ -137,9 +139,9 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
             btnNewConversation.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
         } else {
 
-            if(userSession.getScheduleDataSource().isActiveBusinessHours()) {
+            if (userSession.getScheduleDataSource().isActiveBusinessHours()) {
                 btnNewConversation.setText(R.string.com_kustomer_new_conversation);
-            }else{
+            } else {
                 btnNewConversation.setText(R.string.com_kustomer_leave_a_message);
             }
 
@@ -168,6 +170,19 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
             return;
 
         didHandleFirstLoad = true;
+
+        boolean shouldCreateNewSessionWithMessage = chatSessionsDataSource.getMessageToCreateNewChatSession() != null;
+        if (shouldCreateNewSessionWithMessage) {
+            Intent intent = new Intent(this, KUSChatActivity.class);
+            intent.putExtra(KUSConstants.BundleName.CHAT_SCREEN_MESSAGE,
+                    chatSessionsDataSource.getMessageToCreateNewChatSession());
+            startActivity(intent);
+            if (shouldAnimateChatScreen)
+                overridePendingTransition(R.anim.kus_slide_up, R.anim.kus_stay);
+            else
+                overridePendingTransition(0, 0);
+            return;
+        }
 
         if (chatSessionsDataSource != null &&
                 (chatSessionsDataSource.getSize() == 0 || chatSessionsDataSource.getOpenChatSessionsCount() == 0)) {

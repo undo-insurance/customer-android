@@ -34,6 +34,3 @@ output.json
 #NDK
 obj/
 .externalNativeBuild
-
-# app file to avoid kustomer key from pushed
-src/**/App.java

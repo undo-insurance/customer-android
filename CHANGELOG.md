@@ -1,5 +1,9 @@
 # Changelog for Kustomer Android SDK
 
+## 0.1.26
+Release Date: 01/31/2019
+* Fix: Changed Okhttp client to a shared single instance
+
 ## 0.1.25
 Release Date: 01/22/2019
 * Kustomer SDK no longer requires file provider declaration in manifest

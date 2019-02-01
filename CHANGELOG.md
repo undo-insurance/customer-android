@@ -1,5 +1,9 @@
 # Changelog for Kustomer Android SDK
 
+## 0.1.27
+Release Date: 02/1/2019
+* Fix: Updated pusher polling logic and pusher issue in case of subscription failure
+
 ## 0.1.26
 Release Date: 01/31/2019
 * Fix: Changed Okhttp client to a shared single instance

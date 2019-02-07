@@ -71,6 +71,7 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
     private boolean isPusherTrackingStarted;
     private boolean shouldConnect;
     private boolean sessionUpdated;
+    private boolean didPusherLostPackets;
     private Date lastActivity;
     //endregion
 
@@ -92,7 +93,7 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
     //region Public Methods
     public void onClientActivityTick() {
         // We only need to poll for client activity changes if we are not connected to the socket
-        if (pusherClient.getConnection().getState() != ConnectionState.CONNECTED) {
+        if (pusherClient.getConnection().getState() != ConnectionState.CONNECTED || !pusherChannel.isSubscribed()) {
             onPollTick();
         }
     }
@@ -129,6 +130,7 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
 
         KUSTrackingToken trackingTokenObj = (KUSTrackingToken) userSession.get()
                 .getTrackingTokenDataSource().getObject();
+
         if (trackingTokenObj != null)
             return String.format("presence-external-%s-tracking-%s", userSession.get().getOrgId(),
                     trackingTokenObj.getTrackingId());
@@ -170,6 +172,11 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
                         updateStats(new KUSPusherShouldConnectListener() {
                             @Override
                             public void onCompletion() {
+                                // Get latest session on update to avoid packet loss during socket connection
+                                if (sessionUpdated) {
+                                    didPusherLostPackets = true;
+                                    userSession.get().getChatSessionsDataSource().fetchLatest();
+                                }
                                 connectToChannelsIfNecessary();
                             }
                         });
@@ -207,12 +214,12 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
 
                             @Override
                             public void onAuthenticationFailure(String message, Exception e) {
-
+                                updatePollingTimer();
                             }
 
                             @Override
                             public void onSubscriptionSucceeded(String channelName) {
-
+                                updatePollingTimer();
                             }
 
                             @Override
@@ -260,12 +267,12 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
 
                             @Override
                             public void onAuthenticationFailure(String message, Exception e) {
-
+                                updatePollingTimer();
                             }
 
                             @Override
                             public void onSubscriptionSucceeded(String channelName) {
-
+                                updatePollingTimer();
                             }
 
                             @Override
@@ -307,7 +314,8 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
 
     private void updatePollingTimer() {
         if (shouldBeConnectedToPusher()) {
-            if (pusherClient != null && pusherClient.getConnection().getState() == ConnectionState.CONNECTED) {
+            if (pusherClient != null && pusherClient.getConnection().getState() == ConnectionState.CONNECTED
+                    && pusherChannel != null && pusherChannel.isSubscribed()) {
                 //Stop Polling
                 if (pollingTimer != null) {
                     pollingTimer.cancel();
@@ -412,18 +420,19 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
             return;
 
         // Fetch last activity time of the client
-        userSession.get().getRequestManager().getEndpoint(KUSConstants.URL.CUSTOMER_STATS_ENDPOINT,
-                true,
-                new KUSRequestCompletionListener() {
-                    @Override
-                    public void onCompletion(Error error, final JSONObject response) {
-                        if (userSession.get() == null)
-                            return;
+        if (userSession.get() != null) {
+            userSession.get().getRequestManager().getEndpoint(KUSConstants.URL.CUSTOMER_STATS_ENDPOINT,
+                    true,
+                    new KUSRequestCompletionListener() {
+                        @Override
+                        public void onCompletion(Error error, JSONObject response) {
+                            if (userSession.get() == null)
+                                return;
 
-                        JSONObject jsonObject = JsonHelper.jsonObjectFromKeyPath(response,
-                                "data");
-                        Date lastActivity = JsonHelper.dateFromKeyPath(jsonObject,
-                                "attributes.lastActivity");
+                            JSONObject jsonObject =
+                                    JsonHelper.jsonObjectFromKeyPath(response, "data");
+                            Date lastActivity = JsonHelper.dateFromKeyPath(
+                                    jsonObject, "attributes.lastActivity");
 
                         boolean shouldConnect = lastActivity != null
                                 && Calendar.getInstance().getTimeInMillis() - lastActivity.getTime()
@@ -445,8 +454,10 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
                             }
                         };
                         handler.post(runnable);
+
                     }
                 });
+        }
     }
 
     private void updatePreviousChatSessions() {
@@ -548,17 +559,18 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
         if (userSession.get() == null || dataSource != userSession.get().getChatSessionsDataSource())
             return;
 
-        // Only consider new messages here if we're actively polling
-        if (pollingTimer == null) {
-            //But update the state of previousChatSessions
-            updatePreviousChatSessions();
-            return;
-        }
+            // Only consider new messages here if we're actively polling
+            if (pollingTimer == null && !didPusherLostPackets) {
+                //But update the state of previousChatSessions
+                updatePreviousChatSessions();
+                return;
+            }
 
-        String updatedSessionId = null;
-        List<KUSModel> newChatSessions = userSession.get().getChatSessionsDataSource().getList();
-        for (KUSModel model : newChatSessions) {
-            KUSChatSession chatSession = (KUSChatSession) model;
+            didPusherLostPackets = false;
+            String updatedSessionId = null;
+            List<KUSModel> newChatSessions = userSession.get().getChatSessionsDataSource().getList();
+            for (KUSModel model : newChatSessions) {
+                KUSChatSession chatSession = (KUSChatSession) model;
 
             KUSChatSession previousChatSession = null;
 

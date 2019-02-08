@@ -425,7 +425,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
         wantsOptionPicker = (currentQuestion != null
                 && currentQuestion.getProperty() == KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_VALUES
-                && currentQuestion.getValues().size() > 0);
+                && currentQuestion.getValues() != null && currentQuestion.getValues().size() > 0);
 
         if (wantsOptionPicker) {
             kusInputBarView.setVisibility(View.GONE);
@@ -438,7 +438,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
         wantsOptionPicker = (currentQuestion != null
                 && currentQuestion.getProperty() == KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_CONVERSATION_TEAM
-                && currentQuestion.getValues().size() > 0);
+                && currentQuestion.getValues() != null && currentQuestion.getValues().size() > 0);
 
         boolean teamOptionsDidFail = teamOptionsDatasource != null && (teamOptionsDatasource.getError() != null
                 || (teamOptionsDatasource.isFetched() && teamOptionsDatasource.getSize() == 0));
@@ -513,7 +513,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         KUSFormQuestion vcCurrentQuestion = chatMessagesDataSource.volumeControlCurrentQuestion();
         boolean wantsOptionPicker = (vcCurrentQuestion != null
                 && vcCurrentQuestion.getProperty() == KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_CUSTOMER_FOLLOW_UP_CHANNEL
-                && vcCurrentQuestion.getValues().size() > 0);
+                && vcCurrentQuestion.getValues() != null && vcCurrentQuestion.getValues().size() > 0);
         if (wantsOptionPicker) {
             kusOptionPickerView.setOptions(vcCurrentQuestion.getValues());
             return;
@@ -522,7 +522,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         KUSFormQuestion currentQuestion = chatMessagesDataSource.currentQuestion();
         wantsOptionPicker = (currentQuestion != null
                 && currentQuestion.getProperty() == KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_VALUES
-                && currentQuestion.getValues().size() > 0);
+                && currentQuestion.getValues() != null && currentQuestion.getValues().size() > 0);
         if (wantsOptionPicker) {
             kusOptionPickerView.setOptions(currentQuestion.getValues());
             return;

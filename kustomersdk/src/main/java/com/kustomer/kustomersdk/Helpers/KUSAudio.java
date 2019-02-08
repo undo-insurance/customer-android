@@ -20,8 +20,8 @@ public class KUSAudio implements MediaPlayer.OnCompletionListener {
     //endregion
 
     //region LifeCycle
-    private static KUSAudio getSharedInstance(){
-        if(kusAudio == null)
+    private static KUSAudio getSharedInstance() {
+        if (kusAudio == null)
             kusAudio = new KUSAudio();
 
         return kusAudio;
@@ -29,16 +29,16 @@ public class KUSAudio implements MediaPlayer.OnCompletionListener {
     //endregion
 
     //region Public Methods
-    public static void playMessageReceivedSound(){
+    public static void playMessageReceivedSound() {
         getSharedInstance().playMsgReceivedSound();
     }
     //endregion
 
     //region Private Methods
-    private void playMsgReceivedSound(){
+    private void playMsgReceivedSound() {
         MediaPlayer mPlayer = MediaPlayer.create(Kustomer.getContext(), R.raw.kus_message_received);
 
-        if(mPlayer != null) {
+        if (mPlayer != null) {
             playingMediaPlayers.add(mPlayer);
             mPlayer.setOnCompletionListener(this);
             mPlayer.start();
@@ -48,6 +48,7 @@ public class KUSAudio implements MediaPlayer.OnCompletionListener {
     @Override
     public void onCompletion(MediaPlayer mp) {
         mp.stop();
+        mp.release();
         mp.setOnCompletionListener(null);
         playingMediaPlayers.remove(mp);
     }

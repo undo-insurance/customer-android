@@ -174,12 +174,12 @@ public class Kustomer {
         getSharedInstance().mHideNewConversationButtonInClosedChat(status);
     }
 
-    public static void presentSupportWithMessage(Activity activity, String message, JSONObject customAttributes) {
-        getSharedInstance().mPresentSupportWithMessage(activity, message, customAttributes);
+    public static void showSupportWithMessage(Activity activity, String message, JSONObject customAttributes) {
+        getSharedInstance().mShowSupportWithMessage(activity, message, customAttributes);
     }
 
-    public static void presentSupportWithMessage(Activity activity, String message) {
-        getSharedInstance().mPresentSupportWithMessage(activity, message, null);
+    public static void showSupportWithMessage(Activity activity, String message) {
+        getSharedInstance().mShowSupportWithMessage(activity, message, null);
     }
     //endregion
 
@@ -346,7 +346,7 @@ public class Kustomer {
         getUserSession().getSharedPreferences().setShouldHideConversationButton(status);
     }
 
-    private void mPresentSupportWithMessage(Activity activity, String message, JSONObject customAttributes) {
+    private void mShowSupportWithMessage(Activity activity, String message, JSONObject customAttributes) {
         if (message == null || message.length() == 0)
             throw new AssertionError("Requires a valid message to create chat session.");
 

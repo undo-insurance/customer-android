@@ -3,6 +3,8 @@ package com.kustomer.kustomersdk;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.text.emoji.EmojiCompat;
@@ -228,7 +230,7 @@ public class Kustomer {
         userSession.describeCustomer(customerDescription, null);
     }
 
-    private void mIdentify( final String externalToken, @Nullable final KUSIdentifyListener listener) {
+    private void mIdentify(final String externalToken, @Nullable final KUSIdentifyListener listener) {
         if (externalToken == null) {
             throw new AssertionError("Kustomer expects externalToken to be non-null");
         }
@@ -248,10 +250,15 @@ public class Kustomer {
                 true,
                 new KUSRequestCompletionListener() {
                     @Override
-                    public void onCompletion(Error error, JSONObject response) {
+                    public void onCompletion(final Error error, JSONObject response) {
                         instance.get().getTrackingTokenDataSource().fetch();
                         if (listener != null) {
-                            listener.onComplete();
+                            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    listener.onComplete(error == null);
+                                }
+                            });
                         }
                     }
                 }

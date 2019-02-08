@@ -5,5 +5,5 @@ package com.kustomer.kustomersdk.Interfaces;
  */
 
 public interface KUSIdentifyListener {
-    void onComplete();
+    void onComplete(boolean success);
 }

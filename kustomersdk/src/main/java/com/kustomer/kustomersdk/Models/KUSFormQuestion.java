@@ -36,18 +36,19 @@ public class KUSFormQuestion extends KUSModel {
         type = KUSFormQuestionTypeFromString(JsonHelper.stringFromKeyPath(json, "type"));
         property = KUSFormQuestionPropertyFromString(JsonHelper.stringFromKeyPath(json, "property"));
 
-        if(property == KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_MLV){
+        if (property == KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_MLV) {
             JSONObject tempJson = null;
 
             try {
-                JSONObject valueMeta = JsonHelper.jsonObjectFromKeyPath(json,"valueMeta");
+                JSONObject valueMeta = JsonHelper.jsonObjectFromKeyPath(json, "valueMeta");
 
-                if(valueMeta != null) {
+                if (valueMeta != null) {
                     tempJson = new JSONObject(valueMeta.toString());
                     tempJson.put("id", 1);
                     mlFormValues = new KUSMLFormValue(tempJson);
                 }
-            } catch (JSONException ignore) { }
+            } catch (JSONException ignore) {
+            }
         }
 
         values = JsonHelper.arrayListFromKeyPath(json, "values");
@@ -73,7 +74,7 @@ public class KUSFormQuestion extends KUSModel {
 
     private static KUSFormQuestionType KUSFormQuestionTypeFromString(String string) {
 
-        if(string == null)
+        if (string == null)
             return KUSFormQuestionType.KUS_FORM_QUESTION_TYPE_UNKNOWN;
 
         switch (string) {
@@ -92,18 +93,20 @@ public class KUSFormQuestion extends KUSModel {
         if (string == null)
             return KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_UNKNOWN;
 
-        if(string.equals("customer_name")) {
+        if (string.equals("customer_name")) {
             return KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_CUSTOMER_NAME;
-        } else if(string.equals("customer_email")){
+        } else if (string.equals("customer_email")) {
             return KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_CUSTOMER_EMAIL;
-        } else if(string.equals("conversation_team")){
+        } else if (string.equals("conversation_team")) {
             return KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_CONVERSATION_TEAM;
-        } else if(string.equals("customer_phone")){
+        } else if (string.equals("customer_phone")) {
             return KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_CUSTOMER_PHONE;
-        } else if(string.equals("followup_channel")){
+        } else if (string.equals("followup_channel")) {
             return KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_CUSTOMER_FOLLOW_UP_CHANNEL;
-        } else if(string.endsWith("Tree")){
+        } else if (string.endsWith("Tree")) {
             return KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_MLV;
+        } else if (string.endsWith("Str")) {
+            return KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_VALUES;
         }
 
         return KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_UNKNOWN;

@@ -157,12 +157,14 @@ public class KUSRequestManager implements Serializable, KUSObjectDataSourceListe
                     if (error != null) {
                         safeComplete(completionListener, error, null);
                     } else {
-                        performRequestWithTrackingToken(type, trackingToken, url, params, bodyData, authenticated, additionalHeaders, completionListener);
+                        performRequestWithTrackingToken(type, trackingToken, url, params, bodyData,
+                                authenticated, additionalHeaders, completionListener);
                     }
                 }
             });
         } else {
-            performRequestWithTrackingToken(type, null, url, params, bodyData, authenticated, additionalHeaders, completionListener);
+            performRequestWithTrackingToken(type, null, url, params, bodyData,
+                    authenticated, additionalHeaders, completionListener);
         }
 
     }
@@ -338,7 +340,7 @@ public class KUSRequestManager implements Serializable, KUSObjectDataSourceListe
                     if (response.body() != null) {
                         String body = response.body().string();
 
-                        if(response.code() >= 400) {
+                        if (response.code() >= 400) {
                             safeComplete(completionListener, new Error(body), null);
                             return;
                         }
@@ -359,13 +361,15 @@ public class KUSRequestManager implements Serializable, KUSObjectDataSourceListe
 
 
 
-    private void safeComplete(final KUSRequestCompletionListener completionListener, final Error error, final JSONObject jsonObject) {
+    private void safeComplete(final KUSRequestCompletionListener completionListener, final Error error,
+                              final JSONObject jsonObject) {
         completionListener.onCompletion(error, jsonObject);
     }
 
-
     private void dispenseTrackingToken(final KUSTrackingTokenListener listener) {
-        String trackingToken = userSession.get().getTrackingTokenDataSource().getCurrentTrackingToken();
+        String trackingToken = null;
+        if (userSession.get() != null)
+            trackingToken = userSession.get().getTrackingTokenDataSource().getCurrentTrackingToken();
         if (trackingToken != null) {
             listener.onCompletion(null, trackingToken);
         } else {
@@ -427,7 +431,7 @@ public class KUSRequestManager implements Serializable, KUSObjectDataSourceListe
     //region Callbacks
     @Override
     public void objectDataSourceOnLoad(KUSObjectDataSource dataSource) {
-        if (dataSource == userSession.get().getTrackingTokenDataSource()) {
+        if (userSession.get() != null && dataSource == userSession.get().getTrackingTokenDataSource()) {
             String trackingToken = userSession.get().getTrackingTokenDataSource().getCurrentTrackingToken();
             firePendingTokenCompletionsWithToken(trackingToken, null);
         }

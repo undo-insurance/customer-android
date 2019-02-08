@@ -10,7 +10,6 @@ import com.kustomer.kustomersdk.Interfaces.KUSObjectDataSourceListener;
 import com.kustomer.kustomersdk.Models.KUSChatSettings;
 
 import java.lang.ref.WeakReference;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -29,37 +28,37 @@ public class KUSClientActivityManager implements KUSObjectDataSourceListener {
     //endregion
 
     //region LifeCycle
-    public KUSClientActivityManager(KUSUserSession userSession){
+    public KUSClientActivityManager(KUSUserSession userSession) {
         this.userSession = new WeakReference<>(userSession);
     }
     //endregion
 
     //region Internal Methods
-    private void cancelTimers(){
+    private void cancelTimers() {
 
-        if(timers == null || timers.size() == 0) {
+        if (timers == null || timers.size() == 0) {
             return;
         }
 
         List<Timer> tempTimers = new ArrayList<>(timers);
         timers = null;
 
-        for(Timer timer : tempTimers){
+        for (Timer timer : tempTimers) {
             timer.cancel();
         }
 
     }
 
-    private void updateTimers(){
-        if(activityDataSource.getObject() == null){
+    private void updateTimers() {
+        if (activityDataSource.getObject() == null) {
             cancelTimers();
             return;
         }
 
-        List <Timer> timers = new ArrayList<>();
+        List<Timer> timers = new ArrayList<>();
 
         //Interval value is in seconds rather than milliseconds
-        for(final Double interval : activityDataSource.getIntervals()){
+        for (final Double interval : activityDataSource.getIntervals()) {
             final Handler handler = new Handler();
             Timer timer = new Timer();
             TimerTask doAsynchronousTask = new TimerTask() {
@@ -72,18 +71,18 @@ public class KUSClientActivityManager implements KUSObjectDataSourceListener {
                     });
                 }
             };
-            timer.schedule(doAsynchronousTask, interval.longValue() > 0 ? interval.longValue()*1000 : 0);
+            timer.schedule(doAsynchronousTask, interval.longValue() > 0 ? interval.longValue() * 1000 : 0);
 
             timers.add(timer);
         }
         this.timers = timers;
     }
 
-    private void requestClientActivity(){
+    private void requestClientActivity() {
         requestClientActivityWithCurrentPageSeconds(timeOnCurrentPage());
     }
 
-    private void requestClientActivityWithCurrentPageSeconds(Double currentPageSeconds){
+    private void requestClientActivityWithCurrentPageSeconds(Double currentPageSeconds) {
 
         activityDataSource = new KUSClientActivityDataSource(userSession.get(),
                 previousPageName,
@@ -95,21 +94,21 @@ public class KUSClientActivityManager implements KUSObjectDataSourceListener {
     }
 
     @NonNull
-    private Double timeOnCurrentPage(){
-        long currentTime = Calendar.getInstance().getTimeInMillis()/1000;
+    private Double timeOnCurrentPage() {
+        long currentTime = Calendar.getInstance().getTimeInMillis() / 1000;
         return (double) Math.round(currentTime - currentPageStartTime);
     }
 
 
-    private void onActivityTimer(Double interval){
+    private void onActivityTimer(Double interval) {
         requestClientActivityWithCurrentPageSeconds(interval);
     }
     //endregion
 
     //region Public Methods
-    public void setCurrentPageName(String currentPageName){
+    public void setCurrentPageName(String currentPageName) {
 
-        if(this.currentPageName != null && this.currentPageName.equals(currentPageName))
+        if (this.currentPageName != null && this.currentPageName.equals(currentPageName))
             return;
 
         previousPageName = this.currentPageName;
@@ -117,29 +116,30 @@ public class KUSClientActivityManager implements KUSObjectDataSourceListener {
 
         cancelTimers();
 
-        if(activityDataSource != null)
+        if (activityDataSource != null)
             activityDataSource.cancel();
 
         activityDataSource = null;
 
         //If we don't have a current page name, stop here.
-        if(this.currentPageName == null)
+        if (this.currentPageName == null)
+            return;
+
+        if (userSession.get() == null)
             return;
 
         // Check that settings is fetched and no history is not enabled
-        if(userSession.get() != null &&
-                userSession.get().getChatSettingsDataSource()!= null &&
-                userSession.get().getChatSettingsDataSource().isFetched()){
+        if (userSession.get().getChatSettingsDataSource() != null &&
+                userSession.get().getChatSettingsDataSource().isFetched()) {
             KUSChatSettings settings = (KUSChatSettings) userSession.get()
                     .getChatSettingsDataSource()
                     .getObject();
 
-            if(settings == null || settings.getNoHistory() == null || !settings.getNoHistory()){
-                currentPageStartTime = (double) Calendar.getInstance().getTimeInMillis()/1000;
+            if (settings == null || settings.getNoHistory() == null || !settings.getNoHistory()) {
+                currentPageStartTime = (double) Calendar.getInstance().getTimeInMillis() / 1000;
                 requestClientActivityWithCurrentPageSeconds(0.0);
-                return;
             }
-        }else{
+        } else {
             userSession.get().getChatSettingsDataSource().addListener(this);
             userSession.get().getChatSettingsDataSource().fetch();
         }
@@ -159,38 +159,42 @@ public class KUSClientActivityManager implements KUSObjectDataSourceListener {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
+                if (userSession.get() == null)
+                    return;
 
-                    if(dataSource == userSession.get().getChatSettingsDataSource()){
-                        userSession.get().getChatSettingsDataSource().removeListener(KUSClientActivityManager.this);
+                if (dataSource == userSession.get().getChatSettingsDataSource()) {
+                    userSession.get().getChatSettingsDataSource().removeListener(KUSClientActivityManager.this);
 
-                        KUSChatSettings settings = (KUSChatSettings) userSession.get()
-                                .getChatSettingsDataSource()
-                                .getObject();
-                        if(settings == null || settings.getNoHistory() == null || !settings.getNoHistory()){
-                            currentPageStartTime = (double) Calendar.getInstance().getTimeInMillis()/1000;
-                            requestClientActivityWithCurrentPageSeconds(0.0);
-                        }
-                        return;
+                    KUSChatSettings settings = (KUSChatSettings) userSession.get()
+                            .getChatSettingsDataSource()
+                            .getObject();
+                    if (settings == null || settings.getNoHistory() == null || !settings.getNoHistory()) {
+                        currentPageStartTime = (double) Calendar.getInstance().getTimeInMillis() / 1000;
+                        requestClientActivityWithCurrentPageSeconds(0.0);
                     }
-                    if(dataSource == activityDataSource){
-                        if(activityDataSource.getCurrentPageSeconds() > 0){
-                            // Tell the push client to perform a sessions list pull to check for automated messages
-                            // We delay a bit here to avoid a race in message creation delay
-
-                            Handler handler = new Handler();
-                            Runnable runnable = new Runnable() {
-                                @Override
-                                public void run() {
-                                    userSession.get().getPushClient().onClientActivityTick();
-                                }
-                            };
-                            handler.postDelayed(runnable,1000);
-                        }
-                    }
-
-                    updateTimers();
+                    return;
                 }
-            };
+                if (dataSource == activityDataSource) {
+                    if (activityDataSource.getCurrentPageSeconds() > 0) {
+                        // Tell the push client to perform a sessions list pull to check for automated messages
+                        // We delay a bit here to avoid a race in message creation delay
+
+                        Handler handler = new Handler();
+                        Runnable runnable = new Runnable() {
+                            @Override
+                            public void run() {
+                                if (userSession.get() == null)
+                                    return;
+                                userSession.get().getPushClient().onClientActivityTick();
+                            }
+                        };
+                        handler.postDelayed(runnable, 1000);
+                    }
+                }
+
+                updateTimers();
+            }
+        };
         handler.post(runnable);
     }
 

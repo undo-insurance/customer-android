@@ -220,6 +220,7 @@ public class KUSAvatarImageView extends FrameLayout implements KUSObjectDataSour
                             .into(new SimpleTarget<Drawable>() {
                                 @Override
                                 public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                                    staticImageView.setVisibility(VISIBLE);
                                     remoteImageView.setImageDrawable(resource);
                                 }
                             });

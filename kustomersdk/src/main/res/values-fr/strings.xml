@@ -39,7 +39,7 @@
     <string name="com_kustomer_start_a_new_conversation">Démarrer une nouvelle conversation</string>
     <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">Je vous remercie! Nous suivrons votre demande.</string>
     <string name="com_kustomer_chat_has_ended">Le chat est terminé</string>
-    <string name="com_kustomer_end_chat">Terminer le chat</string>
+    <string name="com_kustomer_end_chat">TERMINER LE CHAT</string>
     <string name="com_kustomer_back_to_chat">Retour au chat</string>
     <string name="com_kustomer_leave_a_message">Laisser un message</string>
     <string name="com_kustomer_home">Accueil</string>

@@ -39,7 +39,7 @@
     <string name="com_kustomer_start_a_new_conversation">ახალი მიმოწერის დაწყება</string>
     <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">გმადლობთ! ჩვენ მივყვებით თქვენს თხოვნას.</string>
     <string name="com_kustomer_chat_has_ended">ჩეთი დასრულდა</string>
-    <string name="com_kustomer_end_chat">ბოლო ჩატი</string>
+    <string name="com_kustomer_end_chat">საუბრის დახურვა</string>
     <string name="com_kustomer_back_to_chat">ჩეთში დაბრუნება</string>
     <string name="com_kustomer_leave_a_message">Დატოვე შეტყობინება</string>
     <string name="com_kustomer_home">მთავარი</string>

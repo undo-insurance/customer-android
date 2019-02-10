@@ -2,10 +2,8 @@ package com.kustomer.kustomersdk.DataSources;
 
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
-import com.kustomer.kustomersdk.Models.KUSChatSession;
 import com.kustomer.kustomersdk.Models.KUSModel;
 import com.kustomer.kustomersdk.Models.KUSTeam;
-import com.kustomer.kustomersdk.Utils.JsonHelper;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
 import com.kustomer.kustomersdk.Utils.KUSUtils;
 
@@ -26,29 +24,31 @@ public class KUSTeamsDataSource extends KUSPaginatedDataSource {
     //endregion
 
     //region Initializer
-    public KUSTeamsDataSource (KUSUserSession userSession, List<String> teamIds){
+    public KUSTeamsDataSource(KUSUserSession userSession, List<String> teamIds) {
         super(userSession);
         this.teamIds = new ArrayList<>(teamIds);
     }
 
-    public List<String> getTeamIds(){
+    public List<String> getTeamIds() {
         return teamIds;
     }
     //endregion
 
     //region subclass methods
     public URL getFirstUrl() {
-        if(teamIds != null) {
+        if (getUserSession() == null)
+            return null;
+
+        if (teamIds != null) {
             String endPoint = String.format(KUSConstants.URL.TEAMS_ENDPOINT,
-                    KUSUtils.listJoinedByString(teamIds,","));
+                    KUSUtils.listJoinedByString(teamIds, ","));
             return getUserSession().getRequestManager().urlForEndpoint(endPoint);
-        }else
+        } else
             return null;
     }
 
     @Override
-    public List<KUSModel> objectsFromJSON(JSONObject jsonObject)
-    {
+    public List<KUSModel> objectsFromJSON(JSONObject jsonObject) {
         ArrayList<KUSModel> arrayList = null;
 
         KUSModel model = null;
@@ -58,7 +58,7 @@ public class KUSTeamsDataSource extends KUSPaginatedDataSource {
             e.printStackTrace();
         }
 
-        if(model != null) {
+        if (model != null) {
             arrayList = new ArrayList<>();
             arrayList.add(model);
         }

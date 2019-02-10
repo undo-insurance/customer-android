@@ -60,5 +60,7 @@
     <string name="com_kustomer_volume_control_email_question">Great, what\'s the best email to reach you at?</string>
     <string name="com_kustomer_volume_control_phone_question">Great, what\'s the best phone number to reach you at?</string>
     <string name="com_kustomer_volume_control_thankyou_response">Thank you. We\'ll get back to you shortly.</string>
+    <string name="com_kustomer_unable_to_share_file">Unable to share file.</string>
+    <string name="com_kustomer_unable_to_open_camera">Unable to open camera.</string>
 
 </resources>

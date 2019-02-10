@@ -1162,6 +1162,9 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
                             chatListener.onCreateSessionId(KUSChatMessagesDataSource.this, sessionId);
                         }
 
+                        // Update last seen locally for the session
+                        getUserSession().getChatSessionsDataSource().updateLocallyLastSeenAtForSessionId(sessionId);
+
                     }
                 }
 
@@ -1411,6 +1414,9 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
 
         if (isProactiveCampaign)
             closeProactiveCampaignIfNecessary();
+
+        // Update the locally session last seen
+        getUserSession().getChatSessionsDataSource().updateLocallyLastSeenAtForSessionId(sessionId);
     }
 
     private JSONArray getAttachmentIds(List<KUSChatAttachment> attachments) {

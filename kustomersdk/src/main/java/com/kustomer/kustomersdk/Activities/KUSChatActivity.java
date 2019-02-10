@@ -203,9 +203,12 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
         if (requestCode == REQUEST_IMAGE_CAPTURE) {
             if (resultCode == RESULT_OK && mCurrentPhotoPath != null) {
-                String photoUri = KUSUtils.getUriFromFile(this, new File(mCurrentPhotoPath)).toString();
+                Uri photoUri = KUSUtils.getUriFromFile(this, new File(mCurrentPhotoPath));
 
-                kusInputBarView.attachImage(photoUri);
+                if (photoUri != null) {
+                    String photoPath = photoUri.toString();
+                    kusInputBarView.attachImage(photoPath);
+                }
                 mCurrentPhotoPath = null;
             } else {
                 mCurrentPhotoPath = null;
@@ -432,7 +435,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
         wantsOptionPicker = (currentQuestion != null
                 && currentQuestion.getProperty() == KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_VALUES
-                && currentQuestion.getValues().size() > 0);
+                && currentQuestion.getValues() != null && currentQuestion.getValues().size() > 0);
 
         if (wantsOptionPicker) {
             kusInputBarView.setVisibility(View.GONE);
@@ -445,7 +448,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
         wantsOptionPicker = (currentQuestion != null
                 && currentQuestion.getProperty() == KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_CONVERSATION_TEAM
-                && currentQuestion.getValues().size() > 0);
+                && currentQuestion.getValues() != null && currentQuestion.getValues().size() > 0);
 
         boolean teamOptionsDidFail = teamOptionsDatasource != null && (teamOptionsDatasource.getError() != null
                 || (teamOptionsDatasource.isFetched() && teamOptionsDatasource.getSize() == 0));
@@ -520,7 +523,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         KUSFormQuestion vcCurrentQuestion = chatMessagesDataSource.volumeControlCurrentQuestion();
         boolean wantsOptionPicker = (vcCurrentQuestion != null
                 && vcCurrentQuestion.getProperty() == KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_CUSTOMER_FOLLOW_UP_CHANNEL
-                && vcCurrentQuestion.getValues().size() > 0);
+                && vcCurrentQuestion.getValues() != null && vcCurrentQuestion.getValues().size() > 0);
         if (wantsOptionPicker) {
             kusOptionPickerView.setOptions(vcCurrentQuestion.getValues());
             return;
@@ -529,7 +532,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         KUSFormQuestion currentQuestion = chatMessagesDataSource.currentQuestion();
         wantsOptionPicker = (currentQuestion != null
                 && currentQuestion.getProperty() == KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_VALUES
-                && currentQuestion.getValues().size() > 0);
+                && currentQuestion.getValues() != null && currentQuestion.getValues().size() > 0);
         if (wantsOptionPicker) {
             kusOptionPickerView.setOptions(currentQuestion.getValues());
             return;
@@ -584,8 +587,14 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
             if (photoFile != null) {
                 Uri photoURI = KUSUtils.getUriFromFile(this, photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+
+                if (photoURI != null) {
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                } else {
+                    Toast.makeText(this, getString(R.string.com_kustomer_unable_to_open_camera),
+                            Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }

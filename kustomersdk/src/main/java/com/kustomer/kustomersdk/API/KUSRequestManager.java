@@ -52,6 +52,9 @@ public class KUSRequestManager implements Serializable, KUSObjectDataSourceListe
 
 
     //region Properties
+    private static OkHttpClient requestClient;
+    private static OkHttpClient uploadClient;
+
     private String baseUrlString;
     private WeakReference<KUSUserSession> userSession;
 
@@ -165,9 +168,82 @@ public class KUSRequestManager implements Serializable, KUSObjectDataSourceListe
         }
 
     }
+
+    public void uploadImageOnS3(URL url, String filename, byte[] imageBytes,
+                                HashMap<String, String> uploadFields,
+                                final KUSRequestCompletionListener completionListener) {
+
+        String[] fieldArrays = new String[uploadFields.keySet().size()];
+        fieldArrays = uploadFields.keySet().toArray(fieldArrays);
+
+        List<String> fieldKeys = new ArrayList<>(Arrays.asList(fieldArrays));
+        if (fieldKeys.contains("key")) {
+            fieldKeys.remove("key");
+            fieldKeys.add(0, "key");
+        }
+
+        MultipartBody.Builder builder = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM);
+
+        for (String field : fieldKeys) {
+            String value = uploadFields.get(field);
+
+            builder.addFormDataPart(field, value);
+        }
+
+        builder.addFormDataPart("file", filename, RequestBody.create(MediaType.parse("image/jpeg"), imageBytes));
+
+        RequestBody requestBody = builder.build();
+        Request request = new Request.Builder().url(url).post(requestBody).build();
+
+
+        getUploadClient().newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                completionListener.onCompletion(new Error(e.getMessage()), null);
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.body() != null) {
+                    boolean twoHundred = response.code() >= 200 && response.code() < 300;
+
+                    if (!twoHundred) {
+                        if (completionListener != null)
+                            safeComplete(completionListener, new Error("Something went wrong"), null);
+                        return;
+                    }
+
+                    if (completionListener != null) {
+                        safeComplete(completionListener, null, null);
+                    }
+                }
+
+            }
+        });
+    }
     //endregion
 
     //region Private Methods
+    private OkHttpClient getRequestClient() {
+        if (requestClient == null) {
+            requestClient = new OkHttpClient.Builder()
+                    .build();
+        }
+        return requestClient;
+    }
+
+    private OkHttpClient getUploadClient() {
+        if(uploadClient == null) {
+            uploadClient = new OkHttpClient.Builder()
+                    .connectTimeout(10, TimeUnit.SECONDS)
+                    .writeTimeout(180, TimeUnit.SECONDS)
+                    .readTimeout(180, TimeUnit.SECONDS)
+                    .build();
+        }
+        return uploadClient;
+    }
+
     private void performRequestWithTrackingToken(KUSRequestType type,
                                                  String trackingToken,
                                                  URL url,
@@ -176,13 +252,6 @@ public class KUSRequestManager implements Serializable, KUSObjectDataSourceListe
                                                  boolean authenticated,
                                                  HashMap additionalHeaders,
                                                  final KUSRequestCompletionListener completionListener) {
-
-
-//        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-//        logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
-        OkHttpClient client = new OkHttpClient.Builder()
-//                .addInterceptor(logging)
-                .build();
 
         HttpUrl httpUrl = HttpUrl.parse(url.toString());
         HttpUrl.Builder httpBuilder = null;
@@ -260,7 +329,7 @@ public class KUSRequestManager implements Serializable, KUSObjectDataSourceListe
 
             request = requestBuilder.build();
 
-            client.newCall(request).enqueue(new Callback() {
+            getRequestClient().newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(@NonNull Call call, @NonNull IOException e) {
                     safeComplete(completionListener, new Error(e.getMessage()), null);
@@ -290,68 +359,7 @@ public class KUSRequestManager implements Serializable, KUSObjectDataSourceListe
 
     }
 
-    public void uploadImageOnS3(URL url, String filename, byte[] imageBytes,
-                                HashMap<String, String> uploadFields,
-                                final KUSRequestCompletionListener completionListener) {
 
-//        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-//        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient client = new OkHttpClient.Builder()
-                .connectTimeout(10, TimeUnit.SECONDS)
-                .writeTimeout(180, TimeUnit.SECONDS)
-                .readTimeout(180, TimeUnit.SECONDS)
-//                .addInterceptor(logging)
-                .build();
-
-        String[] fieldArrays = new String[uploadFields.keySet().size()];
-        fieldArrays = uploadFields.keySet().toArray(fieldArrays);
-
-        List<String> fieldKeys = new ArrayList<>(Arrays.asList(fieldArrays));
-        if (fieldKeys.contains("key")) {
-            fieldKeys.remove("key");
-            fieldKeys.add(0, "key");
-        }
-
-        MultipartBody.Builder builder = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM);
-
-        for (String field : fieldKeys) {
-            String value = uploadFields.get(field);
-
-            builder.addFormDataPart(field, value);
-        }
-
-        builder.addFormDataPart("file", filename, RequestBody.create(MediaType.parse("image/jpeg"), imageBytes));
-
-        RequestBody requestBody = builder.build();
-        Request request = new Request.Builder().url(url).post(requestBody).build();
-
-
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                completionListener.onCompletion(new Error(e.getMessage()), null);
-            }
-
-            @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                if (response.body() != null) {
-                    boolean twoHundred = response.code() >= 200 && response.code() < 300;
-
-                    if (!twoHundred) {
-                        if (completionListener != null)
-                            safeComplete(completionListener, new Error("Something went wrong"), null);
-                        return;
-                    }
-
-                    if (completionListener != null) {
-                        safeComplete(completionListener, null, null);
-                    }
-                }
-
-            }
-        });
-    }
 
     private void safeComplete(final KUSRequestCompletionListener completionListener, final Error error,
                               final JSONObject jsonObject) {

@@ -20,6 +20,7 @@ import com.bumptech.glide.load.model.LazyHeaders;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.bxlargeimageviewer.BxImageViewer;
+import com.kustomer.kustomersdk.Helpers.KUSLog;
 import com.kustomer.kustomersdk.Helpers.KUSPermission;
 import com.kustomer.kustomersdk.Kustomer;
 import com.kustomer.kustomersdk.R;
@@ -86,7 +87,7 @@ public class KUSLargeImageViewer implements View.OnClickListener {
                         currentImageLink = imageURIs.get(position);
                     }
                 })
-                .setImageMarginPx((int)KUSUtils.dipToPixels(mContext,20.0f))
+                .setImageMarginPx((int) KUSUtils.dipToPixels(mContext, 20.0f))
                 .addDataSet(imageURIs)
                 .setStartPosition(startingIndex)
                 .setOverlayView(header)
@@ -146,7 +147,7 @@ public class KUSLargeImageViewer implements View.OnClickListener {
             out.close();
             bitmapPath = Uri.fromFile(file).toString();
         } catch (IOException e) {
-            e.printStackTrace();
+            KUSLog.KUSLogError(e.getMessage());
         }
 
         return bitmapPath;
@@ -157,11 +158,17 @@ public class KUSLargeImageViewer implements View.OnClickListener {
             imagePath = imagePath.replaceFirst("file://", "");
             Uri bitmapUri = KUSUtils.getUriFromFile(mContext, new File(imagePath));
 
-            Intent intent = new Intent(Intent.ACTION_SEND);
-            intent.setType("image/png");
-            intent.putExtra(Intent.EXTRA_STREAM, bitmapUri);
-            mContext.startActivity(Intent.createChooser(intent,
-                    mContext.getResources().getString(R.string.com_kustomer_share_via)));
+            if (bitmapUri != null) {
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("image/png");
+                intent.putExtra(Intent.EXTRA_STREAM, bitmapUri);
+                mContext.startActivity(Intent.createChooser(intent,
+                        mContext.getResources().getString(R.string.com_kustomer_share_via)));
+            } else {
+                Toast.makeText(Kustomer.getContext(),
+                        Kustomer.getContext().getString(R.string.com_kustomer_unable_to_share_file),
+                        Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

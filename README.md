@@ -8,6 +8,12 @@
   The Android SDK for the <a href="https://www.kustomer.com/">Kustomer.com</a> mobile client
 </p>
 
+
+### Updates:
+No need to declare File Provider in manifest for camera access in SDK v0.1.25 & onwards. See [changelog](CHANGELOG.md)
+
+
+
 ## Requirements
 
 - A [Kustomer.com](https://www.kustomer.com/) API Key
@@ -25,7 +31,7 @@ The Kustomer Android SDK requires a valid API Key with role `org.tracking`. See 
 Include the library in your `app.gradle`:
 
 ```gradle
-implementation 'com.kustomer.kustomersdk:kustomersdk:0.1.23'
+implementation 'com.kustomer.kustomersdk:kustomersdk:0.1.27'
 ```
 
 #### Or through Maven
@@ -34,7 +40,7 @@ implementation 'com.kustomer.kustomersdk:kustomersdk:0.1.23'
 <dependency>
   <groupId>com.kustomer.kustomersdk</groupId>
   <artifactId>kustomersdk</artifactId>
-  <version>0.1.23</version>
+  <version>0.1.27</version>
   <type>pom</type>
 </dependency>
 ```
@@ -81,36 +87,6 @@ Kustomer.showSupport(activity);
 ```
 
 Note: If neither of the Multimedia Permissions is declared, the image attachments button will be hidden.
-
-##### Add File Provider (Required only for Camera access):
-
-First you need to add a FileProvider `<provider>` tag in `AndroidManifest.xml` under `<application>`
-tag like below:
-
-```xml
-<application
-        ...
-    <provider
-        android:name="android.support.v4.content.FileProvider"
-        android:authorities="${applicationId}"
-        android:exported="false"
-        android:grantUriPermissions="true">
-        <meta-data
-            android:name="android.support.FILE_PROVIDER_PATHS"
-            android:resource="@xml/file_paths"/>
-    </provider>
-</application>
-```
-
-Add `res/xml/file_paths.xml` file in project and replace `com.kustomer.kustomer` with your package name.
-
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<paths xmlns:android="http://schemas.android.com/apk/res/android">
-    <external-path name="my_images"
-        path="Android/data/com.kustomer.kustomer/files/Pictures" />
-</paths>
-```
 
 ##### Declaring Activities
 

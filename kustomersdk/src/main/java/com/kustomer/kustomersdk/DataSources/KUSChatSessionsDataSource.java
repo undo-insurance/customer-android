@@ -2,6 +2,7 @@ package com.kustomer.kustomersdk.DataSources;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
 
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Enums.KUSRequestType;
@@ -217,6 +218,13 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource
                 }
 
         );
+    }
+
+    public void updateLocallyLastSeenAtForSessionId(String sessionId) {
+        if (TextUtils.isEmpty(sessionId)) {
+            return;
+        }
+        localLastSeenAtBySessionId.put(sessionId, Calendar.getInstance().getTime());
     }
 
     public void submitFormMessages(final JSONArray messages, String formId, final KUSFormCompletionListener listener) {

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.text.emoji.EmojiCompat;
 import android.support.text.emoji.bundled.BundledEmojiCompatConfig;
+import android.text.TextUtils;
 import android.util.Base64;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -347,7 +348,7 @@ public class Kustomer {
     }
 
     private void mShowSupportWithMessage(Activity activity, String message, JSONObject customAttributes) {
-        if (message == null || message.length() == 0)
+        if (TextUtils.isEmpty(message))
             throw new AssertionError("Requires a valid message to create chat session.");
 
         getUserSession().getChatSessionsDataSource().setMessageToCreateNewChatSession(message);

@@ -168,47 +168,35 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
     private void handleFirstLoadIfNecessary() {
         if (didHandleFirstLoad)
             return;
-
         didHandleFirstLoad = true;
 
-        boolean shouldCreateNewSessionWithMessage = chatSessionsDataSource.getMessageToCreateNewChatSession() != null;
-        if (shouldCreateNewSessionWithMessage) {
-            Intent intent = new Intent(this, KUSChatActivity.class);
+        Intent intent = new Intent(this, KUSChatActivity.class);
+        boolean shouldOpenChatActivity = true;
+
+        if (chatSessionsDataSource.getMessageToCreateNewChatSession() != null) {
             intent.putExtra(KUSConstants.BundleName.CHAT_SCREEN_MESSAGE,
                     chatSessionsDataSource.getMessageToCreateNewChatSession());
-            startActivity(intent);
-            if (shouldAnimateChatScreen)
-                overridePendingTransition(R.anim.kus_slide_up, R.anim.kus_stay);
-            else
-                overridePendingTransition(0, 0);
-            return;
-        }
 
-        if (chatSessionsDataSource != null &&
+        } else if (chatSessionsDataSource != null &&
                 (chatSessionsDataSource.getSize() == 0 || chatSessionsDataSource.getOpenChatSessionsCount() == 0)) {
-
-            Intent intent = new Intent(this, KUSChatActivity.class);
             intent.putExtra(KUSConstants.BundleName.CHAT_SCREEN_BACK_BUTTON_KEY, false);
-            startActivity(intent);
 
-            if (shouldAnimateChatScreen)
-                overridePendingTransition(R.anim.kus_slide_up, R.anim.kus_stay);
-            else
-                overridePendingTransition(0, 0);
         } else if (chatSessionsDataSource != null) {
             // Go directly to the most recent chat session
             KUSChatSession chatSession = chatSessionsDataSource.getMostRecentSession();
 
-            Intent intent = new Intent(this, KUSChatActivity.class);
             intent.putExtra(KUSConstants.BundleName.CHAT_SESSION_BUNDLE_KEY, chatSession);
-            startActivity(intent);
+        } else {
+            shouldOpenChatActivity = false;
+        }
 
+        if (shouldOpenChatActivity) {
+            startActivity(intent);
             if (shouldAnimateChatScreen)
                 overridePendingTransition(R.anim.kus_slide_up, R.anim.kus_stay);
             else
                 overridePendingTransition(0, 0);
         }
-
     }
     //endregion
 

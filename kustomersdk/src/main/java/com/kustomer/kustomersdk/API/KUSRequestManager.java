@@ -103,7 +103,7 @@ public class KUSRequestManager implements Serializable, KUSObjectDataSourceListe
     }
 
     public void performRequestType(KUSRequestType type, String endpoint,
-                                   HashMap<String, Object> params, boolean authenticated,
+                                   Map<String, Object> params, boolean authenticated,
                                    KUSRequestCompletionListener listener) {
 
         performRequestType(type,
@@ -114,7 +114,7 @@ public class KUSRequestManager implements Serializable, KUSObjectDataSourceListe
     }
 
     public void performRequestType(KUSRequestType type, URL url,
-                                   HashMap<String, Object> params,
+                                   Map<String, Object> params,
                                    boolean authenticated,
                                    KUSRequestCompletionListener listener) {
 
@@ -128,7 +128,7 @@ public class KUSRequestManager implements Serializable, KUSObjectDataSourceListe
     }
 
     public void performRequestType(KUSRequestType type, URL url,
-                                   HashMap<String, Object> params,
+                                   Map<String, Object> params,
                                    boolean authenticated,
                                    HashMap additionalHeaders,
                                    KUSRequestCompletionListener listener) {
@@ -144,7 +144,7 @@ public class KUSRequestManager implements Serializable, KUSObjectDataSourceListe
 
     public void performRequestType(final KUSRequestType type,
                                    final URL url,
-                                   final HashMap<String, Object> params,
+                                   final Map<String, Object> params,
                                    final byte[] bodyData,
                                    final boolean authenticated,
                                    final HashMap additionalHeaders,
@@ -247,7 +247,7 @@ public class KUSRequestManager implements Serializable, KUSObjectDataSourceListe
     private void performRequestWithTrackingToken(KUSRequestType type,
                                                  String trackingToken,
                                                  URL url,
-                                                 HashMap<String, Object> params,
+                                                 Map<String, Object> params,
                                                  byte[] bodyData,
                                                  boolean authenticated,
                                                  HashMap additionalHeaders,

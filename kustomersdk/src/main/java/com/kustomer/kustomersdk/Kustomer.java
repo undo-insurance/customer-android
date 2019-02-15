@@ -3,6 +3,10 @@ package com.kustomer.kustomersdk;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.text.emoji.EmojiCompat;
 import android.support.text.emoji.bundled.BundledEmojiCompatConfig;
 import android.util.Base64;
@@ -17,6 +21,7 @@ import com.kustomer.kustomersdk.Activities.KUSSessionsActivity;
 import com.kustomer.kustomersdk.Enums.KUSRequestType;
 import com.kustomer.kustomersdk.Interfaces.KUSChatAvailableListener;
 import com.kustomer.kustomersdk.Helpers.KUSLocalization;
+import com.kustomer.kustomersdk.Interfaces.KUSIdentifyListener;
 import com.kustomer.kustomersdk.Interfaces.KUSKustomerListener;
 import com.kustomer.kustomersdk.Interfaces.KUSLogOptions;
 import com.kustomer.kustomersdk.Interfaces.KUSRequestCompletionListener;
@@ -106,8 +111,8 @@ public class Kustomer {
         getSharedInstance().mDescribeCustomer(customerDescription);
     }
 
-    public static void identify(String externalToken) {
-        getSharedInstance().mIdentify(externalToken);
+    public static void identify(@NonNull String externalToken, @Nullable KUSIdentifyListener listener) {
+        getSharedInstance().mIdentify(externalToken, listener);
     }
 
     public static void resetTracking() {
@@ -166,11 +171,11 @@ public class Kustomer {
         getSharedInstance().mSetFormId(formId);
     }
 
-    public static int getOpenConversationsCount(){
+    public static int getOpenConversationsCount() {
         return getSharedInstance().mGetOpenConversationsCount();
     }
 
-    public static void hideNewConversationButtonInClosedChat(Boolean status){
+    public static void hideNewConversationButtonInClosedChat(Boolean status) {
         getSharedInstance().mHideNewConversationButtonInClosedChat(status);
     }
     //endregion
@@ -225,7 +230,7 @@ public class Kustomer {
         userSession.describeCustomer(customerDescription, null);
     }
 
-    private void mIdentify(final String externalToken) {
+    private void mIdentify(final String externalToken, @Nullable final KUSIdentifyListener listener) {
         if (externalToken == null) {
             throw new AssertionError("Kustomer expects externalToken to be non-null");
         }
@@ -245,8 +250,16 @@ public class Kustomer {
                 true,
                 new KUSRequestCompletionListener() {
                     @Override
-                    public void onCompletion(Error error, JSONObject response) {
+                    public void onCompletion(final Error error, JSONObject response) {
                         instance.get().getTrackingTokenDataSource().fetch();
+                        if (listener != null) {
+                            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    listener.onComplete(error == null);
+                                }
+                            });
+                        }
                     }
                 }
         );
@@ -330,11 +343,11 @@ public class Kustomer {
         userSession.getSharedPreferences().setFormId(formId);
     }
 
-    private int mGetOpenConversationsCount(){
+    private int mGetOpenConversationsCount() {
         return getUserSession().getSharedPreferences().getOpenChatSessionsCount();
     }
 
-    private void mHideNewConversationButtonInClosedChat(Boolean status){
+    private void mHideNewConversationButtonInClosedChat(Boolean status) {
         getUserSession().getSharedPreferences().setShouldHideConversationButton(status);
     }
     //endregion

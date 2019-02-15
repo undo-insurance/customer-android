@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.text.emoji.EmojiCompat;
 import android.support.text.emoji.bundled.BundledEmojiCompatConfig;
+import android.text.TextUtils;
 import android.util.Base64;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -177,6 +178,14 @@ public class Kustomer {
 
     public static void hideNewConversationButtonInClosedChat(Boolean status) {
         getSharedInstance().mHideNewConversationButtonInClosedChat(status);
+    }
+
+    public static void showSupportWithMessage(Activity activity, String message, JSONObject customAttributes) {
+        getSharedInstance().mShowSupportWithMessage(activity, message, customAttributes);
+    }
+
+    public static void showSupportWithMessage(Activity activity, String message) {
+        getSharedInstance().mShowSupportWithMessage(activity, message, null);
     }
     //endregion
 
@@ -349,6 +358,18 @@ public class Kustomer {
 
     private void mHideNewConversationButtonInClosedChat(Boolean status) {
         getUserSession().getSharedPreferences().setShouldHideConversationButton(status);
+    }
+
+    private void mShowSupportWithMessage(Activity activity, String message, JSONObject customAttributes) {
+        if (TextUtils.isEmpty(message))
+            throw new AssertionError("Requires a valid message to create chat session.");
+
+        getUserSession().getChatSessionsDataSource().setMessageToCreateNewChatSession(message);
+
+        if (customAttributes != null)
+            mDescribeNextConversation(customAttributes);
+
+        showSupport(activity);
     }
     //endregion
 

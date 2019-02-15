@@ -113,6 +113,8 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
     boolean backPressed = false;
     boolean shouldShowNonBusinessHoursImage = false;
 
+    String message;
+
     String mCurrentPhotoPath;
     //endregion
 
@@ -250,6 +252,8 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         userSession = Kustomer.getSharedInstance().getUserSession();
         kusChatSession = (KUSChatSession) getIntent().getSerializableExtra(KUSConstants.BundleName.CHAT_SESSION_BUNDLE_KEY);
         shouldShowBackButton = getIntent().getBooleanExtra(KUSConstants.BundleName.CHAT_SCREEN_BACK_BUTTON_KEY, true);
+        message = getIntent().getStringExtra(KUSConstants.BundleName.CHAT_SCREEN_MESSAGE);
+
         shouldShowNonBusinessHoursImage = !userSession.getScheduleDataSource().isActiveBusinessHours();
 
         KUSChatSettings settings = (KUSChatSettings) userSession.getChatSettingsDataSource().getObject();
@@ -261,6 +265,12 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
             chatMessagesDataSource = userSession.chatMessageDataSourceForSessionId(chatSessionId);
         } else {
             chatMessagesDataSource = new KUSChatMessagesDataSource(userSession, true);
+        }
+
+        if (message != null) {
+            shouldShowBackButton = false;
+            chatMessagesDataSource.sendMessageWithText(message, null);
+            userSession.getChatSessionsDataSource().setMessageToCreateNewChatSession(null);
         }
 
         chatMessagesDataSource.addListener(this);

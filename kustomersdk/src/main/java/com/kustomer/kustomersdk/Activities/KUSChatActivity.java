@@ -496,7 +496,9 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
             return;
         }
 
-        boolean wantsClosedView = chatMessagesDataSource.isChatClosed();
+        boolean wantsClosedView = chatMessagesDataSource != null &&
+                chatMessagesDataSource.isChatClosed() &&
+                chatMessagesDataSource.getOtherUserIds().size() == 0;
         if (wantsClosedView) {
             kusInputBarView.setVisibility(View.GONE);
             kusInputBarView.clearInputFocus();

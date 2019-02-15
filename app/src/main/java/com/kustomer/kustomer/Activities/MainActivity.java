@@ -55,6 +55,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 //        }
 //        Kustomer.describeConversation(conversationObject);
 
+//        // Describing Next Conversation
+//        JSONObject nextConversationObject = new JSONObject();
+//        try {
+//            nextConversationObject.put("nameStr","Test Name");
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//        Kustomer.describeNextConversation(nextConversationObject);
+
 //        Kustomer.identify("[INSERT_JWT_TOKEN_HERE");
 
 //        Kustomer.setListener(new KUSKustomerListener() {

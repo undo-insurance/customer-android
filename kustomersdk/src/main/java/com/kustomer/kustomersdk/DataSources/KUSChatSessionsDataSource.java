@@ -2,6 +2,7 @@ package com.kustomer.kustomersdk.DataSources;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.kustomer.kustomersdk.API.KUSUserSession;
@@ -133,12 +134,7 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource
                         }
 
                         if (session != null) {
-                            if (pendingCustomChatSessionAttributesForNextConversation != null) {
-                                flushCustomAttributes(pendingCustomChatSessionAttributesForNextConversation
-                                        , session.getId());
-
-                                pendingCustomChatSessionAttributesForNextConversation = null;
-                            }
+                            checkShouldFlushCustomAttributesToChatSessionId(session.getId());
 
                             ArrayList<KUSModel> sessions = new ArrayList<>();
                             sessions.add(session);
@@ -268,12 +264,7 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource
                         }
 
                         if (chatSession != null) {
-                            if (pendingCustomChatSessionAttributesForNextConversation != null) {
-                                flushCustomAttributes(pendingCustomChatSessionAttributesForNextConversation
-                                        , chatSession.getId());
-
-                                pendingCustomChatSessionAttributesForNextConversation = null;
-                            }
+                            checkShouldFlushCustomAttributesToChatSessionId(chatSession.getId());
 
                             final KUSChatSession finalChatSession = chatSession;
                             weakReference.get().upsertAll(new ArrayList<KUSModel>() {{
@@ -289,32 +280,22 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource
         );
     }
 
-    public void describeActiveConversation(JSONObject customAttributes) {
-        KUSChatSession mostRecentSession = getMostRecentSession();
-
-        String mostRecentSessionId = null;
-        if (mostRecentSession != null)
-            mostRecentSessionId = mostRecentSession.getId();
-
-        if (mostRecentSessionId != null)
-            flushCustomAttributes(customAttributes, mostRecentSessionId);
-        else {
-            // Merge previously queued custom attributes with the latest custom attributes
-            JSONObject pendingCustomChatSessionAttributes = new JSONObject();
-
-            if (this.pendingCustomChatSessionAttributes != null) {
-                Iterator iterator = this.pendingCustomChatSessionAttributes.keys();
-                while (iterator.hasNext()) {
-                    String key = iterator.next().toString();
-                    try {
-                        pendingCustomChatSessionAttributes.put(key, this.pendingCustomChatSessionAttributes.get(key));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+    public void describeActiveConversation(@Nullable JSONObject customAttributes) {
+        JSONObject pendingCustomChatSessionAttributes = new JSONObject();
+        if (this.pendingCustomChatSessionAttributes != null) {
+            Iterator iterator = this.pendingCustomChatSessionAttributes.keys();
+            while (iterator.hasNext()) {
+                String key = iterator.next().toString();
+                try {
+                    pendingCustomChatSessionAttributes.put(key, this.pendingCustomChatSessionAttributes.get(key));
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
-
-            Iterator iterator = customAttributes.keys();
+        }
+        Iterator iterator;
+        if (customAttributes != null) {
+            iterator = customAttributes.keys();
             while (iterator.hasNext()) {
                 String key = iterator.next().toString();
                 try {
@@ -323,11 +304,17 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource
                     e.printStackTrace();
                 }
             }
-
-            this.pendingCustomChatSessionAttributes = pendingCustomChatSessionAttributes;
-
-            fetchLatest();
         }
+        this.pendingCustomChatSessionAttributes = pendingCustomChatSessionAttributes;
+
+        KUSChatSession mostRecentSession = getMostRecentSession();
+
+        String mostRecentSessionId = null;
+        if (mostRecentSession != null)
+            mostRecentSessionId = mostRecentSession.getId();
+
+        if (mostRecentSessionId != null)
+            flushCustomAttributes(pendingCustomChatSessionAttributes, mostRecentSessionId);
     }
 
     public void describeNextConversation(JSONObject customAttributes) {
@@ -394,6 +381,45 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource
     //endregion
 
     //region Private Methods
+
+    private void checkShouldFlushCustomAttributesToChatSessionId(String chatSessionId) {
+        boolean hasChatSessionAttributes = pendingCustomChatSessionAttributes != null ||
+                pendingCustomChatSessionAttributesForNextConversation != null;
+
+        if (hasChatSessionAttributes) {
+            JSONObject pendingCustomChatSessionAttributes = new JSONObject();
+
+            if (this.pendingCustomChatSessionAttributes != null) {
+                Iterator<String> keys = this.pendingCustomChatSessionAttributes.keys();
+
+                while (keys.hasNext()) {
+                    String key = keys.next();
+                    try {
+                        pendingCustomChatSessionAttributes.put(key,
+                                this.pendingCustomChatSessionAttributes.get(key));
+                    } catch (JSONException e) {
+                    }
+                }
+            }
+            if (this.pendingCustomChatSessionAttributesForNextConversation != null) {
+                Iterator<String> keys = this.pendingCustomChatSessionAttributesForNextConversation.keys();
+
+                while (keys.hasNext()) {
+                    String key = keys.next();
+                    try {
+                        pendingCustomChatSessionAttributes.put(key,
+                                this.pendingCustomChatSessionAttributesForNextConversation.get(key));
+                    } catch (JSONException e) {
+                    }
+                }
+
+                this.pendingCustomChatSessionAttributesForNextConversation = null;
+            }
+
+            flushCustomAttributes(pendingCustomChatSessionAttributes, chatSessionId);
+        }
+    }
+
     private void flushCustomAttributes(final JSONObject customAttributes, String chatSessionId) {
         if (getUserSession() == null)
             return;
@@ -411,7 +437,7 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource
                 new KUSRequestCompletionListener() {
                     @Override
                     public void onCompletion(Error error, JSONObject response) {
-                        if(getUserSession()==null)
+                        if (getUserSession() == null)
                             return;
 
                         if (error != null) {
@@ -543,14 +569,6 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource
     public void onContentChange(KUSPaginatedDataSource dataSource) {
         if (getUserSession() != null && dataSource == this) {
             getUserSession().getSharedPreferences().setOpenChatSessionsCount(getOpenChatSessionsCount());
-            if (pendingCustomChatSessionAttributes != null) {
-                KUSChatSession mostRecentSession = getMostRecentSession();
-                String mostRecentSessionId = mostRecentSession.getId();
-                if (mostRecentSessionId != null) {
-                    flushCustomAttributes(pendingCustomChatSessionAttributes, mostRecentSessionId);
-                    pendingCustomChatSessionAttributes = null;
-                }
-            }
 
             for (KUSModel model : getList()) {
                 KUSChatSession chatSession = (KUSChatSession) model;

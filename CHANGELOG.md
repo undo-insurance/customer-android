@@ -1,5 +1,22 @@
 # Changelog for Kustomer Android SDK
 
+## 0.1.28
+Release Date: 02/18/2019
+Updates
+* Changed pusher connection logic to maximum rely on pusher and removed the unnecessary API calls
+* Added a callback handler for identify method
+* Added 'Twi' language support
+* Updated 'End Chat' translation in French, Georgian, Italian, Portuguese, Romanian, Turkish, U
+kranian and Arabic
+* Present support with message & form messages allowed
+
+Fixes
+* Fixed Input field issue in case of non-business hours and chat is temporarily closed and message 
+received from the agent
+* Fixed transparent agent icon issue.
+* Fixed form message option values issue
+* Won't Clear Pending Describe After Describing Conversation.
+
 ## 0.1.27
 Release Date: 02/1/2019
 * Fix: Updated pusher polling logic and pusher issue in case of subscription failure

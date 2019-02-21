@@ -81,12 +81,15 @@ public class KUSScheduleDataSource extends KUSObjectDataSource {
 
             JSONArray businessHoursOfCurrentDay = JsonHelper.arrayFromKeyPath(businessHours.getHours(),
                     String.valueOf(weekDay));
-            if(businessHoursOfCurrentDay != null){
+            if (businessHoursOfCurrentDay == null)
+                return false;
+
+            for (int i = 0; i < businessHoursOfCurrentDay.length(); i++) {
                 try {
-                    JSONArray businessHoursRange = businessHoursOfCurrentDay.getJSONArray(0);
-                    if(businessHoursRange != null && businessHoursRange.length() == 2
+                    JSONArray businessHoursRange = businessHoursOfCurrentDay.getJSONArray(i);
+                    if (businessHoursRange != null && businessHoursRange.length() == 2
                             && businessHoursRange.getInt(0) <= minutes
-                            && businessHoursRange.getInt(1) >= minutes){
+                            && businessHoursRange.getInt(1) >= minutes) {
                         return true;
                     }
                 } catch (JSONException e) {

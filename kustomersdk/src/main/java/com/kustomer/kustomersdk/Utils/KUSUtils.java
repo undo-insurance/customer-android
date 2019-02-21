@@ -53,6 +53,9 @@ public class KUSUtils {
         String endingString = string.substring(startingIndex);
         updatedString = updatedString.concat(endingString);
 
+        //remove zero_width_white_space from updatedString
+        updatedString = updatedString.replaceAll("\u200B", "");
+
         return updatedString;
     }
 

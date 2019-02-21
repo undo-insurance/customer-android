@@ -1,5 +1,11 @@
 # Changelog for Kustomer Android SDK
 
+## 0.1.29
+Release Date: 02/22/2019
+* Update: Added support for multiple business hours range.
+* Fix: Removed extra empty message image.
+
+
 ## 0.1.28
 Release Date: 02/18/2019
 Updates

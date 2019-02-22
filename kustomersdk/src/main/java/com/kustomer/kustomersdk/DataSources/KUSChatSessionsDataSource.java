@@ -98,7 +98,7 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource
         return getUserSession().getRequestManager().urlForEndpoint(KUSConstants.URL.CHAT_SESSIONS_ENDPOINT);
     }
 
-    public String getMessageToCreateNewChatSession(){
+    public String getMessageToCreateNewChatSession() {
         return messageToCreateNewChatSession;
     }
     //endregion
@@ -175,6 +175,15 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource
         Date lastSeenAtDate = Calendar.getInstance().getTime();
         localLastSeenAtBySessionId.put(sessionId, lastSeenAtDate);
         final String lastSeenAtString = KUSDate.stringFromDate(lastSeenAtDate);
+
+        boolean isLocalSession = sessionId.equals(KUSConstants.ChatSession.TEMP_SESSION_ID);
+        if (isLocalSession) {
+            KUSChatSession session = (KUSChatSession) findById(sessionId);
+            removeAll(Collections.singletonList((KUSModel) session));
+            session.setLastSeenAt(lastSeenAtDate);
+            upsertAll(Collections.singletonList((KUSModel) session));
+            return;
+        }
 
         String url = String.format(KUSConstants.URL.CHAT_SESSIONS_ENDPOINT + "/%s", sessionId);
         HashMap<String, Object> params = new HashMap<String, Object>() {{

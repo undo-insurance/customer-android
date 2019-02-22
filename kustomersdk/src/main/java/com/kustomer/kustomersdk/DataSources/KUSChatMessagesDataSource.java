@@ -136,6 +136,11 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     //endregion
 
     //region Public Methods
+
+    public boolean isActualSession() {
+        return sessionId != null && !sessionId.equals(KUSConstants.ChatSession.TEMP_SESSION_ID);
+    }
+
     public void upsertNewMessages(List<KUSModel> chatMessages) {
         if (chatMessages.size() > 1)
             Collections.reverse(chatMessages);
@@ -155,7 +160,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     }
 
     public URL getFirstUrl() {
-        if (sessionId != null && getUserSession() != null) {
+        if (getUserSession() != null && isActualSession()) {
             String endPoint = String.format(KUSConstants.URL.MESSAGES_LIST_ENDPOINT, sessionId);
             return getUserSession().getRequestManager().urlForEndpoint(endPoint);
         }
@@ -173,45 +178,99 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         isProactiveCampaign = !isAnyMessageByCurrentUser();
 
         KUSChatSettings chatSettings = (KUSChatSettings) getUserSession().getChatSettingsDataSource().getObject();
-        if (sessionId == null && chatSettings != null && chatSettings.getActiveFormId() != null) {
+        if (chatSettings != null && chatSettings.getActiveFormId() != null && !isActualSession()) {
 
             if (attachments != null && attachments.size() > 0)
                 throw new AssertionError("Should not have been able to send attachments without a sessionId");
 
-
-            JSONObject attributes = new JSONObject();
-            try {
-                attributes.put("body", text);
-                attributes.put("direction", "in");
-                attributes.put("createdAt", KUSDate.stringFromDate(Calendar.getInstance().getTime()));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            JSONObject messageJSON = new JSONObject();
-            try {
-                messageJSON.put("type", "chat_message");
-                messageJSON.put("id", UUID.randomUUID().toString());
-                messageJSON.put("attributes", attributes);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            List<KUSModel> temporaryMessages = objectsFromJSON(messageJSON);
-
-            if (temporaryMessages != null) {
-
-                for (KUSModel model : temporaryMessages) {
-                    KUSChatMessage message = (KUSChatMessage) model;
-                    message.setValue(value);
+            if (sessionId == null) {
+                JSONObject attributes = new JSONObject();
+                try {
+                    attributes.put("body", text);
+                    attributes.put("direction", "in");
+                    attributes.put("createdAt", KUSDate.stringFromDate(Calendar.getInstance().getTime()));
+                } catch (JSONException e) {
+                    KUSLog.KUSLogError(e.getMessage());
                 }
 
-                upsertNewMessages(temporaryMessages);
+                JSONObject relationships = new JSONObject();
+                try {
+                    JSONObject data = new JSONObject();
+                    data.put("id", KUSConstants.ChatSession.TEMP_SESSION_ID);
+
+                    JSONObject session = new JSONObject();
+                    session.put("data", data);
+
+                    relationships.put("session", session);
+                } catch (JSONException e) {
+                    KUSLog.KUSLogError(e.getMessage());
+                }
+
+                JSONObject messageJSON = new JSONObject();
+                try {
+                    messageJSON.put("type", "chat_message");
+                    messageJSON.put("id", UUID.randomUUID().toString());
+                    messageJSON.put("attributes", attributes);
+                    messageJSON.put("relationships", relationships);
+                } catch (JSONException e) {
+                    KUSLog.KUSLogError(e.getMessage());
+                }
+
+                try {
+                    KUSChatMessage tempMessage = new KUSChatMessage(messageJSON);
+                    KUSChatSession tempSession = KUSChatSession.tempSessionFromChatMessage(tempMessage);
+
+                    upsertNewMessages(Collections.singletonList((KUSModel) tempMessage));
+                    getUserSession().getChatSessionsDataSource()
+                            .upsertNewSessions(Collections.singletonList((KUSModel) tempSession));
+
+                    sessionId = KUSConstants.ChatSession.TEMP_SESSION_ID;
+                    getUserSession().getChatMessagesDataSources().put(sessionId, this);
+
+                    //Notify Listeners
+                    for (KUSPaginatedDataSourceListener listener : listeners) {
+                        if (listener instanceof KUSChatMessagesDataSourceListener) {
+                            ((KUSChatMessagesDataSourceListener) listener).onCreateSessionId(
+                                    KUSChatMessagesDataSource.this, KUSConstants.ChatSession.TEMP_SESSION_ID);
+                        }
+                    }
+
+                } catch (KUSInvalidJsonException e) {
+                    KUSLog.KUSLogError(e.getMessage());
+                }
+
+            } else if (sessionId.equals(KUSConstants.ChatSession.TEMP_SESSION_ID)) {
+                JSONObject attributes = new JSONObject();
+                try {
+                    attributes.put("body", text);
+                    attributes.put("direction", "in");
+                    attributes.put("createdAt", KUSDate.stringFromDate(Calendar.getInstance().getTime()));
+                } catch (JSONException e) {
+                    KUSLog.KUSLogError(e.getMessage());
+                }
+
+                JSONObject messageJSON = new JSONObject();
+                try {
+                    messageJSON.put("type", "chat_message");
+                    messageJSON.put("id", UUID.randomUUID().toString());
+                    messageJSON.put("attributes", attributes);
+                } catch (JSONException e) {
+                    KUSLog.KUSLogError(e.getMessage());
+                }
+
+                try {
+                    KUSChatMessage tempMessage = new KUSChatMessage(messageJSON);
+                    tempMessage.setValue(value);
+
+                    upsertNewMessages(Collections.singletonList((KUSModel) tempMessage));
+                } catch (KUSInvalidJsonException e) {
+                    KUSLog.KUSLogError(e.getMessage());
+                }
             }
 
             return;
 
-        } else if (sessionId != null && vcFormActive) {
+        } else if (isActualSession() && vcFormActive) {
             if (attachments != null && attachments.size() > 0)
                 throw new AssertionError("Should not have been able to send attachments without a sessionId");
             JSONObject attributes = new JSONObject();
@@ -251,7 +310,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     }
 
     public void createSessionIfNecessaryWithTitle(String title, final onCreateSessionListener listener) {
-        if (sessionId != null) {
+        if (isActualSession()) {
             listener.onComplete(true, null);
         } else {
             if (onCreateSessionListeners != null) {
@@ -290,9 +349,11 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
                         getUserSession().getChatMessagesDataSources().put(session.getId(), KUSChatMessagesDataSource.this);
 
                         //Notify Listeners
-                        for (KUSPaginatedDataSourceListener listener1 : new ArrayList<>(listeners)) {
-                            KUSChatMessagesDataSourceListener chatListener = (KUSChatMessagesDataSourceListener) listener1;
-                            chatListener.onCreateSessionId(KUSChatMessagesDataSource.this, session.getId());
+                        for (KUSPaginatedDataSourceListener listener : listeners) {
+                            if (listener instanceof KUSChatMessagesDataSourceListener) {
+                                ((KUSChatMessagesDataSourceListener) listener).onCreateSessionId(
+                                        KUSChatMessagesDataSource.this, sessionId);
+                            }
                         }
 
                         for (onCreateSessionListener listener1 : callbacks)
@@ -478,7 +539,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
 
         if (getList().size() > 0) {
             KUSChatMessage firstMessage = (KUSChatMessage) getList().get(getList().size() - 1);
-            if (sessionId == null
+            if (!isActualSession()
                     && getSize() == 1
                     && firstMessage.getState() != KUSChatMessageState.KUS_CHAT_MESSAGE_STATE_SENT)
                 return true;
@@ -488,7 +549,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     }
 
     public KUSFormQuestion currentQuestion() {
-        if (sessionId != null)
+        if (isActualSession())
             return null;
 
         if (KUSChatMessageSentByUser(this.getLatestMessage()))
@@ -504,7 +565,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         if (!vcFormActive)
             return null;
 
-        if (sessionId == null)
+        if (!isActualSession())
             return null;
 
         KUSChatSettings chatSettings = (KUSChatSettings) getUserSession().getChatSettingsDataSource().getObject();
@@ -531,7 +592,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         if (vcFormActive) {
             return false;
         }
-        if (sessionId == null) {
+        if (!isActualSession()) {
             return false;
         }
 
@@ -667,7 +728,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         if (getSize() == 0)
             return;
 
-        if (sessionId != null)
+        if (isActualSession())
             return;
 
         if (form == null)
@@ -739,7 +800,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         if (getUserSession() == null)
             return true;
 
-        if (sessionId == null) {
+        if (!isActualSession()) {
             return true;
         }
 
@@ -1138,6 +1199,15 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
                             nonBusinessHours = true;
                         }
 
+                        if (!isActualSession()) {
+                            KUSChatSession tempSession = (KUSChatSession) getUserSession()
+                                    .getChatSessionsDataSource().findById(sessionId);
+
+                            getUserSession().getChatMessagesDataSources().remove(sessionId);
+                            getUserSession().getChatSessionsDataSource()
+                                    .removeAll(Collections.singletonList((KUSModel) tempSession));
+                        }
+
                         // Grab the session id
                         sessionId = chatSession != null ? chatSession.getId() : null;
                         form = null;
@@ -1157,17 +1227,17 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
                         getUserSession().getChatMessagesDataSources().put(sessionId, KUSChatMessagesDataSource.this);
 
                         //Notify Listeners
-                        for (KUSPaginatedDataSourceListener listener1 : new ArrayList<>(listeners)) {
-                            KUSChatMessagesDataSourceListener chatListener = (KUSChatMessagesDataSourceListener) listener1;
-                            chatListener.onCreateSessionId(KUSChatMessagesDataSource.this, sessionId);
+                        for (KUSPaginatedDataSourceListener listener : listeners) {
+                            if (listener instanceof KUSChatMessagesDataSourceListener) {
+                                ((KUSChatMessagesDataSourceListener) listener).onCreateSessionId(
+                                        KUSChatMessagesDataSource.this, sessionId);
+                            }
                         }
 
                         // Update last seen locally for the session
                         getUserSession().getChatSessionsDataSource().updateLocallyLastSeenAtForSessionId(sessionId);
-
                     }
                 }
-
         );
     }
 
@@ -1223,7 +1293,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         if (getUserSession() == null)
             return;
 
-        if (getSessionId() == null) {
+        if (!isActualSession()) {
             return;
         }
 

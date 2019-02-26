@@ -675,6 +675,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
 
         // Make sure we submit the form if we just inserted a non-response question
         if (!submittingForm && !KUSFormQuestion.KUSFormQuestionRequiresResponse(formQuestion)
+                && form.getQuestions() != null
                 && questionIndex == form.getQuestions().size() - 1 && delayedChatMessageIds.size() == 0)
             submitFormResponses();
 

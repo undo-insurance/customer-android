@@ -93,9 +93,9 @@ public class KUSModel implements Comparable<KUSModel>, Serializable {
 
         KUSModel kus = (KUSModel) obj;
         return kus.id.equals(this.id)
-                && kus.orgId.equals(this.orgId)
-                && kus.customerId.equals(this.customerId)
-                && kus.sessionId.equals(this.sessionId);
+                && kus.orgId != null && kus.orgId.equals(this.orgId)
+                && kus.customerId != null && kus.customerId.equals(this.customerId)
+                && kus.sessionId != null && kus.sessionId.equals(this.sessionId);
     }
     //endregion
 

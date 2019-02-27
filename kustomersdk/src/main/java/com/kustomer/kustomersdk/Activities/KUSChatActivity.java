@@ -284,7 +284,8 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
     private void initViews() {
         kusInputBarView.initWithUserSession(userSession);
         kusInputBarView.setListener(this);
-        kusInputBarView.setAllowsAttachment(getValidChatSessionId() != null);
+        kusInputBarView.setAllowsAttachment(chatMessagesDataSource != null
+                && chatMessagesDataSource.shouldAllowAttachments());
         kusOptionPickerView.setListener(this);
         mlFormValuesPickerView.setListener(this);
         updateOptionPickerHeight();
@@ -785,6 +786,12 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
                     if (dataSource.getSize() >= 1)
                         setupToolbar();
+
+                    boolean shouldAllowAttachments =chatMessagesDataSource.shouldAllowAttachments();
+                    if (!shouldAllowAttachments) {
+                        kusInputBarView.removeAllAttachments();
+                    }
+                    kusInputBarView.setAllowsAttachment(shouldAllowAttachments);
 
                     shouldShowNonBusinessHoursImage = false;
                     ivNonBusinessHours.setVisibility(View.GONE);

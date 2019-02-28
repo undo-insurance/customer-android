@@ -56,11 +56,11 @@ public class KUSPaginatedDataSource {
     //endregion
 
     //region Methods
-    public int getSize() {
+    public synchronized int getSize() {
         return fetchedModels.size();
     }
 
-    public List<KUSModel> getList() {
+    public synchronized List<KUSModel> getList() {
         return fetchedModels;
     }
 
@@ -69,7 +69,10 @@ public class KUSPaginatedDataSource {
     }
 
     public synchronized KUSModel get(int index) {
-        return fetchedModels.get(index);
+        if (index < getSize() && index >= 0)
+            return fetchedModels.get(index);
+        else
+            return null;
     }
 
     private int indexOf(KUSModel obj) {

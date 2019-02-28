@@ -19,6 +19,7 @@ import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -64,6 +65,8 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
     KUSInputBarViewListener listener;
     ImageAttachmentListAdapter adapter;
     KUSUserSession userSession;
+
+    Handler handler;
     //endregion
 
     //region LifeCycle
@@ -102,7 +105,7 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
         etTypeMessage.setImeOptions(EditorInfo.IME_ACTION_SEND);
         etTypeMessage.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
 
-        KUSUtils.showKeyboard(etTypeMessage, 800);
+        showKeyboard();
     }
 
     private void setListeners() {
@@ -122,23 +125,36 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
     //endregion
 
     //region Private Methods
-    private void updatePlaceHolder(){
-        if(userSession != null && !userSession.getScheduleDataSource().isActiveBusinessHours()){
+
+    private void showKeyboard() {
+        handler = new Handler(Looper.getMainLooper());
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                KUSUtils.showKeyboard(etTypeMessage);
+            }
+        };
+        handler.postDelayed(runnable, 800);
+    }
+
+    private void updatePlaceHolder() {
+        if (userSession != null && !userSession.getScheduleDataSource().isActiveBusinessHours()) {
             etTypeMessage.setHint(String.format("%s%s",
-                    getResources().getString(R.string.com_kustomer_leave_a_message),"…"));
-        }else{
+                    getResources().getString(R.string.com_kustomer_leave_a_message), "…"));
+        } else {
             etTypeMessage.setHint(getResources().getString(R.string.com_kustomer_type_a_message___));
         }
     }
     //endregion
 
     //region Public Methods
-    public void initWithUserSession(KUSUserSession userSession){
+    public void initWithUserSession(KUSUserSession userSession) {
         this.userSession = userSession;
         this.userSession.getChatSettingsDataSource().addListener(this);
         this.userSession.getScheduleDataSource().addListener(this);
         updatePlaceHolder();
     }
+
     public void setListener(KUSInputBarViewListener listener) {
         this.listener = listener;
     }
@@ -224,6 +240,10 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
     }
 
     public void clearInputFocus() {
+        if (handler != null) {
+            handler.removeCallbacksAndMessages(null);
+            handler = null;
+        }
         etTypeMessage.clearFocus();
         KUSUtils.hideKeyboard(this);
     }

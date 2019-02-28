@@ -428,7 +428,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
         if (wantMultiLevelValuesPicker) {
             kusInputBarView.setVisibility(View.GONE);
-            KUSUtils.hideKeyboard(kusInputBarView);
+            kusInputBarView.clearInputFocus();
 
             if (currentQuestion.getMlFormValues() != null
                     && currentQuestion.getMlFormValues().getMlNodes() != null) {

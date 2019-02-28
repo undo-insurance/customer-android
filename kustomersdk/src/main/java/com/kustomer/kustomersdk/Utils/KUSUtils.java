@@ -97,18 +97,11 @@ public class KUSUtils {
         return diagonalInches < MIN_TABLET_SIZE_IN_INCH;
     }
 
-    public static void showKeyboard(final View view, long delay) {
-        Handler handler = new Handler(Looper.getMainLooper());
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                InputMethodManager imm = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                if (imm != null) {
-                    imm.showSoftInput(view, 0);
-                }
-            }
-        };
-        handler.postDelayed(runnable, delay);
+    public static void showKeyboard(final View view) {
+        InputMethodManager imm = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.showSoftInput(view, 0);
+        }
     }
 
     public static void hideKeyboard(final View view) {

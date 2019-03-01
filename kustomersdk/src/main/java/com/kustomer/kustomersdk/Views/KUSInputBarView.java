@@ -2,12 +2,9 @@ package com.kustomer.kustomersdk.Views;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.LinearLayoutManager;
@@ -35,7 +32,6 @@ import com.kustomer.kustomersdk.R;
 import com.kustomer.kustomersdk.R2;
 import com.kustomer.kustomersdk.Utils.KUSUtils;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,9 +44,6 @@ import butterknife.OnClick;
  */
 
 public class KUSInputBarView extends LinearLayout implements TextWatcher, TextView.OnEditorActionListener, ImageAttachmentListAdapter.onItemClickListener, KUSObjectDataSourceListener {
-
-    //region Properties
-    private static final int MAX_BITMAP_PIXELS = 1000000;
 
     @BindView(R2.id.etTypeMessage)
     EditText etTypeMessage;
@@ -180,39 +173,11 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
         List<String> imageURIs = new ArrayList<>(adapter.getImageURIs());
         if (imageURIs.size() != 0) {
             List<Bitmap> images = new ArrayList<>();
-
             for (String uri : imageURIs) {
-                if (!uri.startsWith("content")) {
-                    Bitmap bitmap = BitmapFactory.decodeFile(Uri.parse(uri).getPath());
 
-                    try {
-                        bitmap = KUSImage.rotateBitmapIfNeeded(bitmap, getContext().getContentResolver().openInputStream(Uri.parse(uri)));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    if (bitmap != null)
-                        images.add(KUSImage.getScaledImage(bitmap, MAX_BITMAP_PIXELS));
-
-                    bitmap = null;
-                } else {
-                    try {
-                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), Uri.parse(uri));
-
-                        try {
-                            bitmap = KUSImage.rotateBitmapIfNeeded(bitmap, getContext().getContentResolver().openInputStream(Uri.parse(uri)));
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-
-                        if (bitmap != null)
-                            images.add(KUSImage.getScaledImage(bitmap, MAX_BITMAP_PIXELS));
-
-                        bitmap = null;
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
+                Bitmap bitmap = KUSImage.getBitmapForUri(uri);
+                if (bitmap != null)
+                    images.add(bitmap);
             }
             return images;
         } else

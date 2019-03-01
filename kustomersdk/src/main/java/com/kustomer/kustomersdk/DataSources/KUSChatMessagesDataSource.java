@@ -321,8 +321,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
 
                     URL attachmentURL = KUSChatMessage.attachmentUrlForMessageId(tempMessageId, attachmentId);
                     String imageKey = attachmentURL.toString();
-                    new KUSCache().addBitmapToMemoryCache(imageKey,
-                            KUSImage.getScaledImage(bitmap, MAX_PIXEL_COUNT_FOR_CACHED_IMAGES));
+                    new KUSCache().addBitmapToMemoryCache(imageKey, bitmap);
                     attachmentObjects.put(new JSONObject() {{
                         put("id", attachmentId);
                     }});
@@ -1386,7 +1385,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         //Store the local image data in our cache for the remote image urls
         KUSChatMessage firstMessage = (KUSChatMessage) finalMessages.get(0);
         for (int i = 0; i < (firstMessage.getAttachmentIds() != null ? firstMessage.getAttachmentIds().size() : 0); i++) {
-            Bitmap attachment = KUSImage.getScaledImage(attachments.get(i), MAX_PIXEL_COUNT_FOR_CACHED_IMAGES);
+            Bitmap attachment = attachments.get(i);
             String attachmentId = (String) firstMessage.getAttachmentIds().get(i);
             try {
                 URL attachmentURL = KUSChatMessage.attachmentUrlForMessageId(firstMessage.getId(), attachmentId);

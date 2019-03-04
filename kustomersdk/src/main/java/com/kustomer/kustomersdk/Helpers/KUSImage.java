@@ -12,7 +12,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.net.Uri;
-import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.media.ExifInterface;
 import android.support.v4.content.ContextCompat;
@@ -20,7 +20,6 @@ import android.support.v4.content.ContextCompat;
 import com.kustomer.kustomersdk.Kustomer;
 import com.kustomer.kustomersdk.R;
 
-import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -155,10 +154,9 @@ public class KUSImage {
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inJustDecodeBounds = true;
             BitmapFactory.decodeStream(getInputStream(uri), null, options);
-            Bitmap bitmap = getFromInputStream(getInputStream(uri), options);
+            Bitmap bitmap = getBitmapFromInputStream(getInputStream(uri), options);
 
-            return KUSImage.rotateBitmapIfNeeded(bitmap,
-                    Kustomer.getContext().getContentResolver().openInputStream(Uri.parse(uri)));
+            return KUSImage.rotateBitmapIfNeeded(bitmap, getInputStream(uri));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -166,7 +164,7 @@ public class KUSImage {
     }
 
     @Nullable
-    static byte[] getByteArrayFromBitmap(Bitmap bitmap) {
+    static byte[] getByteArrayFromBitmap(@Nullable Bitmap bitmap) {
         if (bitmap != null) {
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
@@ -223,7 +221,7 @@ public class KUSImage {
         int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
                 ExifInterface.ORIENTATION_UNDEFINED);
 
-        Bitmap rotatedBitmap = null;
+        Bitmap rotatedBitmap;
         switch (orientation) {
 
             case ExifInterface.ORIENTATION_ROTATE_90:
@@ -247,13 +245,17 @@ public class KUSImage {
     }
 
     private static Bitmap rotateImage(Bitmap source, float angle) {
+
         Matrix matrix = new Matrix();
         matrix.postRotate(angle);
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
                 matrix, true);
     }
 
-    private static Bitmap getFromInputStream(InputStream inputStream, BitmapFactory.Options options) {
+    @Nullable
+    private static Bitmap getBitmapFromInputStream(@Nullable InputStream inputStream,
+                                                   @NonNull BitmapFactory.Options options) {
+
         options.inSampleSize = calculateInSampleSize(options.outHeight, options.outWidth);
         options.inJustDecodeBounds = false;
         return BitmapFactory.decodeStream(inputStream, null, options);
@@ -270,7 +272,7 @@ public class KUSImage {
     }
 
     @Nullable
-    private static InputStream getInputStream(String uri) {
+    private static InputStream getInputStream(@NonNull String uri) {
         try {
             return !uri.startsWith("content") ?
                     new FileInputStream(Uri.parse(uri).getPath()) :

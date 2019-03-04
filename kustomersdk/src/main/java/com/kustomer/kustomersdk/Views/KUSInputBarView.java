@@ -132,6 +132,7 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
         this.userSession.getScheduleDataSource().addListener(this);
         updatePlaceHolder();
     }
+
     public void setListener(KUSInputBarViewListener listener) {
         this.listener = listener;
     }
@@ -174,10 +175,19 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
         if (imageURIs.size() != 0) {
             List<Bitmap> images = new ArrayList<>();
             for (String uri : imageURIs) {
+                try {
 
-                Bitmap bitmap = KUSImage.getBitmapForUri(uri);
-                if (bitmap != null)
-                    images.add(bitmap);
+                    Bitmap bitmap = KUSImage.getBitmapForUri(uri);
+                    if (bitmap != null)
+                        images.add(bitmap);
+
+                } catch (OutOfMemoryError outOfMemoryError) {
+                    // Clearing memory in case memory is low.
+                    for (Bitmap bitmap : images) {
+                        bitmap.recycle();
+                    }
+                    throw outOfMemoryError;
+                }
             }
             return images;
         } else

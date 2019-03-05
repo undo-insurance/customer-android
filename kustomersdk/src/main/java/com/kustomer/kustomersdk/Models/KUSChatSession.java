@@ -60,12 +60,14 @@ public class KUSChatSession extends KUSModel implements Serializable {
         JSONObject attributes = new JSONObject();
         try {
             attributes.put("preview", message.getBody() != null ? message.getBody() : "");
-            attributes.put("createdAt", message.getCreatedAt() != null ? message.getCreatedAt()
-                    : KUSDate.stringFromDate(Calendar.getInstance().getTime()));
-            attributes.put("lastSeenAt", message.getCreatedAt() != null ? message.getCreatedAt()
-                    : KUSDate.stringFromDate(Calendar.getInstance().getTime()));
-            attributes.put("lastMessageAt", message.getCreatedAt() != null ? message.getCreatedAt()
-                    : KUSDate.stringFromDate(Calendar.getInstance().getTime()));
+            attributes.put("createdAt", KUSDate.stringFromDate(message.getCreatedAt() != null ?
+                    message.getCreatedAt() : Calendar.getInstance().getTime()));
+
+            attributes.put("lastSeenAt", KUSDate.stringFromDate(message.getCreatedAt() != null ?
+                    message.getCreatedAt() : Calendar.getInstance().getTime()));
+
+            attributes.put("lastMessageAt", KUSDate.stringFromDate(message.getCreatedAt() != null ?
+                    message.getCreatedAt() : Calendar.getInstance().getTime()));
         } catch (JSONException e) {
             e.printStackTrace();
         }

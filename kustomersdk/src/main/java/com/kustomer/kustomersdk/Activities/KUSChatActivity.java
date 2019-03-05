@@ -13,6 +13,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
@@ -284,7 +285,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
     private void initViews() {
         kusInputBarView.initWithUserSession(userSession);
         kusInputBarView.setListener(this);
-        kusInputBarView.setAllowsAttachment(chatSessionId != null);
+        kusInputBarView.setAllowsAttachment(getValidChatSessionId() != null);
         kusOptionPickerView.setListener(this);
         mlFormValuesPickerView.setListener(this);
         updateOptionPickerHeight();
@@ -337,25 +338,34 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         checkShouldShowEmailInput();
     }
 
+    @Nullable
+    private String getValidChatSessionId() {
+        return chatSessionId == null ||
+                chatSessionId.equals(KUSConstants.ChatSession.TEMP_SESSION_ID) ? null : chatSessionId;
+    }
+
     private void checkShouldShowCloseChatButtonView() {
         KUSChatSettings settings = (KUSChatSettings) userSession.getChatSettingsDataSource().getObject();
-        if (settings != null && settings.getClosableChat() && chatSessionId != null) {
-            KUSChatSession session = (KUSChatSession) userSession.getChatSessionsDataSource().findById(chatSessionId);
+
+        if (settings != null && settings.getClosableChat() && getValidChatSessionId() != null) {
+            KUSChatSession session = (KUSChatSession) userSession
+                    .getChatSessionsDataSource().findById(getValidChatSessionId());
 
             if (session.getLockedAt() == null && chatMessagesDataSource.isAnyMessageByCurrentUser()) {
-
-                Handler handler = new Handler(Looper.getMainLooper());
-                Runnable runnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        btnEndChat.setVisibility(View.VISIBLE);
-                    }
-                };
-                handler.postDelayed(runnable, 500);
-
+                if (btnEndChat.getVisibility() != View.VISIBLE) {
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    Runnable runnable = new Runnable() {
+                        @Override
+                        public void run() {
+                            btnEndChat.setVisibility(View.VISIBLE);
+                        }
+                    };
+                    handler.postDelayed(runnable, 500);
+                }
                 return;
             }
         }
+
         btnEndChat.setVisibility(View.GONE);
     }
 
@@ -371,7 +381,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
             boolean isChatCloseable = settings != null && settings.getClosableChat();
 
             boolean shouldShowEmailInput = userSession.isShouldCaptureEmail()
-                    && chatSessionId != null && !isChatCloseable;
+                    && getValidChatSessionId() != null && !isChatCloseable;
 
             appBarLayout.setLayoutTransition(new LayoutTransition());
 
@@ -385,7 +395,8 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
     }
 
     private void checkShouldShowOptionPicker() {
-        KUSChatSession session = (KUSChatSession) userSession.getChatSessionsDataSource().findById(chatSessionId);
+        KUSChatSession session = (KUSChatSession) userSession
+                .getChatSessionsDataSource().findById(getValidChatSessionId());
         if (session != null && session.getLockedAt() != null) {
             return;
         }
@@ -418,7 +429,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
         if (wantMultiLevelValuesPicker) {
             kusInputBarView.setVisibility(View.GONE);
-            KUSUtils.hideKeyboard(kusInputBarView);
+            kusInputBarView.clearInputFocus();
 
             if (currentQuestion.getMlFormValues() != null
                     && currentQuestion.getMlFormValues().getMlNodes() != null) {
@@ -479,7 +490,8 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
     }
 
     private void checkShouldShowInputView() {
-        KUSChatSession session = (KUSChatSession) userSession.getChatSessionsDataSource().findById(chatSessionId);
+        KUSChatSession session = (KUSChatSession) userSession
+                .getChatSessionsDataSource().findById(getValidChatSessionId());
 
         if (session != null && session.getLockedAt() != null) {
             kusInputBarView.setVisibility(View.GONE);
@@ -805,7 +817,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
             @Override
             public void run() {
                 chatSessionId = sessionId;
-                kusInputBarView.setAllowsAttachment(true);
+                kusInputBarView.setAllowsAttachment(getValidChatSessionId() != null);
                 kusToolbar.setSessionId(chatSessionId);
                 shouldShowBackButton = true;
 

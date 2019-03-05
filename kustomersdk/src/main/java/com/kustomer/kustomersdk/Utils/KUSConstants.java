@@ -62,4 +62,9 @@ public class KUSConstants {
         String NOTIFICATION_ID_BUNDLE_KEY = "Notification_ID";
         String CHAT_SCREEN_MESSAGE = "Chat_screen_message";
     }
+
+    public interface ChatSession {
+        String TEMP_SESSION_ID = "temp_session_id";
+    }
+
 }

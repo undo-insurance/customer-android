@@ -1,6 +1,7 @@
 package com.kustomer.kustomersdk.Utils;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -207,7 +208,7 @@ public class JsonHelper {
         int lastId = 0;
         int lastLocation = 0;
 
-        if (body != null && body.length() > 0) {
+        if (!TextUtils.isEmpty(body)) {
             Matcher matcher = regex.matcher(body);
 
             while (matcher.find()) {

@@ -40,7 +40,11 @@ public class KUSUtils {
         return displayMetrics.heightPixels;
     }
 
-    public static String KUSUnescapeBackslashesFromString(String string) {
+    @Nullable
+    public static String KUSUnescapeBackslashesFromString(@Nullable String string) {
+        if (string == null)
+            return null;
+
         String updatedString = "";
 
         int startingIndex = 0;

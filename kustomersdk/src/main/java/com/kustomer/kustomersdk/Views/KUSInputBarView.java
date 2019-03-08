@@ -173,6 +173,7 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
 
     public void removeAllAttachments() {
         adapter.removeAll();
+        updateSendButton();
     }
 
     public void attachImage(String imageUri) {
@@ -182,6 +183,7 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
             rvImageAttachment.setVisibility(VISIBLE);
 
         rvImageAttachment.scrollToPosition(adapter.getItemCount() - 1);
+        updateSendButton();
     }
 
     public List<Bitmap> getAllImages() {
@@ -233,7 +235,8 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
     @OnClick(R2.id.btnSendMessage)
     void sendPressed() {
         String text = getText();
-        if (text.length() == 0)
+        boolean shouldSend = (adapter != null && adapter.getItemCount() > 0) || text.length() > 0;
+        if (!shouldSend)
             return;
 
         if (listener != null)
@@ -242,10 +245,10 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
 
     private void updateSendButton() {
         String text = getText();
-        boolean shouldEnableSend = text.length() > 0;
+        boolean shouldEnableSend = (adapter != null && adapter.getItemCount() > 0) || text.length() > 0;
 
         if (listener != null)
-            shouldEnableSend = listener.inputBarShouldEnableSend();
+            shouldEnableSend = shouldEnableSend && listener.inputBarShouldEnableSend();
 
         btnSendMessage.setEnabled(shouldEnableSend);
         btnSendMessage.setAlpha(shouldEnableSend ? 1.0f : 0.5f);
@@ -287,6 +290,7 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
     public void onAttachmentImageRemoved() {
         if (adapter.getItemCount() == 0)
             rvImageAttachment.setVisibility(GONE);
+        updateSendButton();
     }
 
     @Override

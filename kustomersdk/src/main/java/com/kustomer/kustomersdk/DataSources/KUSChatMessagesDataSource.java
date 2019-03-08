@@ -3,6 +3,7 @@ package com.kustomer.kustomersdk.DataSources;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
 
 import com.kustomer.kustomersdk.API.KUSSessionQueuePollingManager;
 import com.kustomer.kustomersdk.API.KUSUserSession;
@@ -367,11 +368,9 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     }
 
     private void actuallySendMessage(String text, List<Bitmap> attachments) {
-
-        JSONArray attachmentObjects = new JSONArray();
-
-        List<String> cachedImageKeys = null;
         String tempMessageId = UUID.randomUUID().toString();
+        JSONArray attachmentObjects = new JSONArray();
+        List<String> cachedImageKeys = null;
 
         if (attachments != null) {
             cachedImageKeys = new ArrayList<>();
@@ -412,7 +411,9 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
 
         JSONObject attributes = new JSONObject();
         try {
-            attributes.put("body", text);
+            if (!TextUtils.isEmpty(text))
+                attributes.put("body", text);
+
             attributes.put("direction", "in");
             attributes.put("createdAt", KUSDate.stringFromDate(Calendar.getInstance().getTime()));
         } catch (JSONException e) {
@@ -685,17 +686,18 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
                 }
 
                 final JSONArray attachmentIds = getAttachmentIds(attachments);
+                HashMap<String, Object> params = new HashMap<String, Object>() {{
+                    put("session", sessionId);
+                    put("attachments", attachmentIds);
+                }};
+
+                if(!TextUtils.isEmpty(text))
+                    params.put("body",text);
 
                 getUserSession().getRequestManager().performRequestType(
                         KUSRequestType.KUS_REQUEST_TYPE_POST,
                         KUSConstants.URL.SEND_MESSAGE_ENDPOINT,
-                        new HashMap<String, Object>() {
-                            {
-                                put("body", text);
-                                put("session", sessionId);
-                                put("attachments", attachmentIds);
-                            }
-                        },
+                        params,
                         true,
                         new KUSRequestCompletionListener() {
                             @Override
@@ -1455,11 +1457,13 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
 
         //Store the local image data in our cache for the remote image urls
         KUSChatMessage firstMessage = (KUSChatMessage) finalMessages.get(0);
+        String messageId= firstMessage.getId().split("_")[0];
+
         for (int i = 0; i < (firstMessage.getAttachmentIds() != null ? firstMessage.getAttachmentIds().size() : 0); i++) {
             Bitmap attachment = attachments.get(i);
             String attachmentId = (String) firstMessage.getAttachmentIds().get(i);
             try {
-                URL attachmentURL = KUSChatMessage.attachmentUrlForMessageId(firstMessage.getId(), attachmentId);
+                URL attachmentURL = KUSChatMessage.attachmentUrlForMessageId(messageId, attachmentId);
                 new KUSCache().addBitmapToMemoryCache(attachmentURL.toString(), attachment);
             } catch (MalformedURLException e) {
                 e.printStackTrace();

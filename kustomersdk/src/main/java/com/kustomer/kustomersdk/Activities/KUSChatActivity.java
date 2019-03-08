@@ -800,7 +800,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
                     if (dataSource.getSize() >= 1)
                         setupToolbar();
 
-                    boolean shouldAllowAttachments =chatMessagesDataSource.shouldAllowAttachments();
+                    boolean shouldAllowAttachments = chatMessagesDataSource.shouldAllowAttachments();
                     if (!shouldAllowAttachments) {
                         kusInputBarView.removeAllAttachments();
                     }
@@ -900,23 +900,22 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
         final String text = kusInputBarView.getText();
 
-        if (!text.isEmpty()) {
-            //Sending Data in background
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        chatMessagesDataSource.sendMessageWithText(text, kusInputBarView.getAllImages());
-                    } catch (OutOfMemoryError e) {
-                        KUSLog.KUSLogError(e.getMessage());
-                        showMemoryError();
-                    }
+        //Sending Data in background
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    chatMessagesDataSource.sendMessageWithText(text, kusInputBarView.getAllImages());
+                } catch (OutOfMemoryError e) {
+                    KUSLog.KUSLogError(e.getMessage());
+                    showMemoryError();
                 }
-            }).start();
+            }
+        }).start();
 
-            kusInputBarView.setText("");
-            kusInputBarView.removeAllAttachments();
-        }
+        kusInputBarView.setText("");
+        kusInputBarView.removeAllAttachments();
+
     }
 
     @Override
@@ -935,7 +934,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         if (currentQuestion != null && currentQuestion.getProperty() == KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_CUSTOMER_EMAIL)
             return KUSText.isValidEmail(kusInputBarView.getText());
 
-        return kusInputBarView.getText().length() > 0;
+        return true;
     }
 
     @Override

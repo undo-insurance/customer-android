@@ -1506,6 +1506,10 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
 
     //region Accessors
 
+    public boolean shouldAllowAttachments() {
+        return isActualSession() && !vcFormActive;
+    }
+
     public boolean isAnyMessageByCurrentUser() {
         for (KUSModel message : getList()) {
             KUSChatMessage chatMessage = (KUSChatMessage) message;

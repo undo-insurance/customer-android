@@ -36,12 +36,16 @@ public class KUSAudio implements MediaPlayer.OnCompletionListener {
 
     //region Private Methods
     private void playMsgReceivedSound() {
-        MediaPlayer mPlayer = MediaPlayer.create(Kustomer.getContext(), R.raw.kus_message_received);
+        try {
+            MediaPlayer mPlayer = MediaPlayer.create(Kustomer.getContext(), R.raw.kus_message_received);
 
-        if (mPlayer != null) {
-            playingMediaPlayers.add(mPlayer);
-            mPlayer.setOnCompletionListener(this);
-            mPlayer.start();
+            if (mPlayer != null) {
+                playingMediaPlayers.add(mPlayer);
+                mPlayer.setOnCompletionListener(this);
+                mPlayer.start();
+            }
+        } catch (Exception e) {
+            KUSLog.KUSLogError(e.getMessage());
         }
     }
 

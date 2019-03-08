@@ -381,8 +381,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
 
                     URL attachmentURL = KUSChatMessage.attachmentUrlForMessageId(tempMessageId, attachmentId);
                     String imageKey = attachmentURL.toString();
-                    new KUSCache().addBitmapToMemoryCache(imageKey,
-                            KUSImage.getScaledImage(bitmap, MAX_PIXEL_COUNT_FOR_CACHED_IMAGES));
+                    new KUSCache().addBitmapToMemoryCache(imageKey, bitmap);
                     attachmentObjects.put(new JSONObject() {{
                         put("id", attachmentId);
                     }});
@@ -738,6 +737,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
 
         // Make sure we submit the form if we just inserted a non-response question
         if (!submittingForm && !KUSFormQuestion.KUSFormQuestionRequiresResponse(formQuestion)
+                && form.getQuestions() != null
                 && questionIndex == form.getQuestions().size() - 1 && delayedChatMessageIds.size() == 0)
             submitFormResponses();
 
@@ -1460,7 +1460,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         String messageId= firstMessage.getId().split("_")[0];
 
         for (int i = 0; i < (firstMessage.getAttachmentIds() != null ? firstMessage.getAttachmentIds().size() : 0); i++) {
-            Bitmap attachment = KUSImage.getScaledImage(attachments.get(i), MAX_PIXEL_COUNT_FOR_CACHED_IMAGES);
+            Bitmap attachment = attachments.get(i);
             String attachmentId = (String) firstMessage.getAttachmentIds().get(i);
             try {
                 URL attachmentURL = KUSChatMessage.attachmentUrlForMessageId(messageId, attachmentId);

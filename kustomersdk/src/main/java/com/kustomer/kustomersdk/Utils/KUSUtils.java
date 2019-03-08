@@ -13,10 +13,9 @@ import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
-import com.kustomer.kustomersdk.Activities.KUSChatActivity;
 import com.kustomer.kustomersdk.Helpers.KUSLog;
-import com.kustomer.kustomersdk.R;
 
 import java.io.File;
 import java.util.List;
@@ -29,6 +28,11 @@ public class KUSUtils {
 
     public static final double MIN_TABLET_SIZE_IN_INCH = 6.5;
     private static final String AUTHORITY_SUFFIX = ".kustomersdk";
+
+    public static void showShortToast(@NonNull Context context, @Nullable String message){
+        if(message != null)
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+    }
 
     public static int getWindowHeight(Activity activity) {
         DisplayMetrics displayMetrics = new DisplayMetrics();

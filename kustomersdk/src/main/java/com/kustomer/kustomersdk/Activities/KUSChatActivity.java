@@ -37,6 +37,7 @@ import com.kustomer.kustomersdk.DataSources.KUSTeamsDataSource;
 import com.kustomer.kustomersdk.Enums.KUSChatMessageType;
 import com.kustomer.kustomersdk.Enums.KUSFormQuestionProperty;
 import com.kustomer.kustomersdk.Helpers.KUSLocalization;
+import com.kustomer.kustomersdk.Helpers.KUSLog;
 import com.kustomer.kustomersdk.Helpers.KUSPermission;
 import com.kustomer.kustomersdk.Helpers.KUSText;
 import com.kustomer.kustomersdk.Interfaces.KUSChatMessagesDataSourceListener;
@@ -661,6 +662,18 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         int proactiveChats = userSession.getChatSessionsDataSource().getOpenProactiveCampaignsCount();
         return (settings != null && settings.getSingleSessionChat() && (openChats - proactiveChats) >= 1);
     }
+
+    private void showMemoryError() {
+        Handler handler = new Handler(Looper.getMainLooper());
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                KUSUtils.showShortToast(KUSChatActivity.this,
+                        getString(R.string.com_kustomer_low_memory_error));
+            }
+        };
+        handler.post(runnable);
+    }
     //endregion
 
     //region Listeners
@@ -891,7 +904,12 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         new Thread(new Runnable() {
             @Override
             public void run() {
-                chatMessagesDataSource.sendMessageWithText(text, kusInputBarView.getAllImages());
+                try {
+                    chatMessagesDataSource.sendMessageWithText(text, kusInputBarView.getAllImages());
+                } catch (OutOfMemoryError e) {
+                    KUSLog.KUSLogError(e.getMessage());
+                    showMemoryError();
+                }
             }
         }).start();
 

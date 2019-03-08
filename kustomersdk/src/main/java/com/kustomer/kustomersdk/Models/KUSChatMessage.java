@@ -164,7 +164,17 @@ public class KUSChatMessage extends KUSModel {
     @Override
     public int compareTo(@NonNull KUSModel kusModel) {
         KUSChatMessage message = (KUSChatMessage) kusModel;
-        int date = message.createdAt.compareTo(this.createdAt);
+
+        int date;
+        if (this.createdAt == null && message.createdAt == null)
+            date = 0;
+        else if (this.createdAt == null)
+            date = 1;
+        else if (message.createdAt == null)
+            date = -1;
+        else
+            date = message.createdAt.compareTo(this.createdAt);
+
         int parent = super.compareTo(kusModel);
         return date == 0 ? parent : date;
     }

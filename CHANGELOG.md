@@ -1,5 +1,15 @@
 # Changelog for Kustomer Android SDK
 
+## 0.1.30
+Release Date: 03/08/2019 
+* Fixed null pointer exceptions
+* Optimized bitmap loading in memory
+* Updated audio file from m4a to mp3
+* Keeping conversational assistant form state when exiting away from the chat sdk
+* Allowed chat messages with only attachments, message body not required 
+* Hide attachment icon on volume control input prompts
+* Romanian translation updated for "Chat Has Ended"
+
 ## 0.1.29
 Release Date: 02/22/2019
 * Update: Added support for multiple business hours range.

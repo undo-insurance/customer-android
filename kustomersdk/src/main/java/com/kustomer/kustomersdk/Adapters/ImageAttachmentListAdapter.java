@@ -1,5 +1,6 @@
 package com.kustomer.kustomersdk.Adapters;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -30,14 +31,15 @@ public class ImageAttachmentListAdapter extends RecyclerView.Adapter<RecyclerVie
         mListener = listener;
     }
 
+    @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new ImageAttachmentViewHolder(LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.kus_item_image_attachment_view_holder, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ((ImageAttachmentViewHolder) holder).onBind(imageBitmaps.get(position), this);
     }
 
@@ -64,9 +66,9 @@ public class ImageAttachmentListAdapter extends RecyclerView.Adapter<RecyclerVie
         notifyDataSetChanged();
     }
 
-    public List<String> getImageUris() {
+    private List<String> getImageUris() {
         List<String> imageUris = new ArrayList<>();
-        for (KUSBitmap kusBitmap :imageBitmaps) {
+        for (KUSBitmap kusBitmap : imageBitmaps) {
             if (kusBitmap.getBitmap() != null)
                 imageUris.add(kusBitmap.getUri());
         }

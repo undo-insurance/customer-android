@@ -141,6 +141,12 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
             etTypeMessage.setHint(getResources().getString(R.string.com_kustomer_type_a_message___));
         }
     }
+
+    private boolean isSendEnabled(){
+        String text = getText();
+        return  ((adapter != null && adapter.getItemCount() > 0) || text.length() > 0)
+                && imageProcessingCount == 0;
+    }
     //endregion
 
     //region Public Methods
@@ -224,12 +230,7 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
 
     @OnClick(R2.id.btnSendMessage)
     void sendPressed() {
-        String text = getText();
-        boolean shouldSend = ((adapter != null && adapter.getItemCount() > 0)
-                || text.length() > 0)
-                && imageProcessingCount == 0;
-
-        if (!shouldSend)
+        if (!isSendEnabled())
             return;
 
         if (listener != null)
@@ -237,10 +238,7 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
     }
 
     private void updateSendButton() {
-        String text = getText();
-        boolean shouldEnableSend = ((adapter != null && adapter.getItemCount() > 0)
-                || text.length() > 0)
-                && imageProcessingCount == 0;
+        boolean shouldEnableSend = isSendEnabled();
 
         if (listener != null)
             shouldEnableSend = shouldEnableSend && listener.inputBarShouldEnableSend();

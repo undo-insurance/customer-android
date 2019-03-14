@@ -1,7 +1,6 @@
 package com.kustomer.kustomersdk.Views;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -24,9 +23,8 @@ import android.widget.TextView;
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Adapters.ImageAttachmentListAdapter;
 import com.kustomer.kustomersdk.DataSources.KUSObjectDataSource;
-import com.kustomer.kustomersdk.Helpers.KUSImage;
 import com.kustomer.kustomersdk.Helpers.KUSPermission;
-import com.kustomer.kustomersdk.Interfaces.BitmapListener;
+import com.kustomer.kustomersdk.Interfaces.KUSBitmapListener;
 import com.kustomer.kustomersdk.Interfaces.KUSInputBarViewListener;
 import com.kustomer.kustomersdk.Interfaces.KUSObjectDataSourceListener;
 import com.kustomer.kustomersdk.Models.KUSBitmap;
@@ -34,7 +32,6 @@ import com.kustomer.kustomersdk.R;
 import com.kustomer.kustomersdk.R2;
 import com.kustomer.kustomersdk.Utils.KUSUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -186,7 +183,7 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
         imageProcessingCount++;
         updateSendButton();
 
-        adapter.attachImage(new KUSBitmap(imageUri, new BitmapListener() {
+        adapter.attachImage(new KUSBitmap(imageUri, new KUSBitmapListener() {
             @Override
             public void onBitmapCreated() {
                 imageProcessingCount--;
@@ -228,7 +225,10 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
     @OnClick(R2.id.btnSendMessage)
     void sendPressed() {
         String text = getText();
-        boolean shouldSend = (adapter != null && adapter.getItemCount() > 0) || text.length() > 0;
+        boolean shouldSend = ((adapter != null && adapter.getItemCount() > 0)
+                || text.length() > 0)
+                && imageProcessingCount == 0;
+
         if (!shouldSend)
             return;
 
@@ -238,12 +238,12 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
 
     private void updateSendButton() {
         String text = getText();
-        boolean shouldEnableSend = (adapter != null && adapter.getItemCount() > 0) || text.length() > 0;
+        boolean shouldEnableSend = ((adapter != null && adapter.getItemCount() > 0)
+                || text.length() > 0)
+                && imageProcessingCount == 0;
 
         if (listener != null)
-            shouldEnableSend = shouldEnableSend
-                    && listener.inputBarShouldEnableSend()
-                    && imageProcessingCount == 0;
+            shouldEnableSend = shouldEnableSend && listener.inputBarShouldEnableSend();
 
         btnSendMessage.setEnabled(shouldEnableSend);
         btnSendMessage.setAlpha(shouldEnableSend ? 1.0f : 0.5f);

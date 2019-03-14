@@ -4,7 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
-import com.kustomer.kustomersdk.Interfaces.BitmapListener;
+import com.kustomer.kustomersdk.Interfaces.KUSBitmapListener;
 import com.kustomer.kustomersdk.Models.KUSBitmap;
 import com.kustomer.kustomersdk.R;
 import com.kustomer.kustomersdk.ViewHolders.ImageAttachmentViewHolder;
@@ -20,14 +20,12 @@ public class ImageAttachmentListAdapter extends RecyclerView.Adapter<RecyclerVie
         implements ImageAttachmentViewHolder.ImageAttachmentListener {
 
     //region Properties
-    private List<String> imageURIs;
     private List<KUSBitmap> imageBitmaps;
     private onItemClickListener mListener;
     //endregion
 
     //region LifeCycle
     public ImageAttachmentListAdapter(onItemClickListener listener) {
-        imageURIs = new ArrayList<>();
         imageBitmaps = new ArrayList<>();
         mListener = listener;
     }
@@ -49,10 +47,9 @@ public class ImageAttachmentListAdapter extends RecyclerView.Adapter<RecyclerVie
     }
 
     public void attachImage(final KUSBitmap kusBitmap) {
-        imageURIs.add(kusBitmap.getUri());
         imageBitmaps.add(kusBitmap);
 
-        kusBitmap.addBitmapListeners(new BitmapListener() {
+        kusBitmap.addListener(new KUSBitmapListener() {
             @Override
             public void onBitmapCreated() {
                 notifyItemChanged(imageBitmaps.indexOf(kusBitmap));
@@ -63,13 +60,17 @@ public class ImageAttachmentListAdapter extends RecyclerView.Adapter<RecyclerVie
     }
 
     public void removeAll() {
-        imageURIs.clear();
         imageBitmaps.clear();
         notifyDataSetChanged();
     }
 
-    public List<String> getImageURIs() {
-        return imageURIs;
+    public List<String> getImageUris() {
+        List<String> imageUris = new ArrayList<>();
+        for (KUSBitmap kusBitmap :imageBitmaps) {
+            if (kusBitmap.getBitmap() != null)
+                imageUris.add(kusBitmap.getUri());
+        }
+        return imageUris;
     }
 
     public List<KUSBitmap> getImageBitmaps() {
@@ -83,7 +84,6 @@ public class ImageAttachmentListAdapter extends RecyclerView.Adapter<RecyclerVie
     public void onImageCancelClicked(KUSBitmap imageBitmap) {
         int pos = imageBitmaps.indexOf(imageBitmap);
 
-        imageURIs.remove(imageBitmap.getUri());
         imageBitmaps.remove(imageBitmap);
         notifyItemRemoved(pos);
         mListener.onAttachmentImageRemoved();
@@ -91,7 +91,7 @@ public class ImageAttachmentListAdapter extends RecyclerView.Adapter<RecyclerVie
 
     @Override
     public void onImageTapped(int position) {
-        mListener.onAttachmentImageClicked(position, imageURIs);
+        mListener.onAttachmentImageClicked(position, getImageUris());
     }
     //endregion
 

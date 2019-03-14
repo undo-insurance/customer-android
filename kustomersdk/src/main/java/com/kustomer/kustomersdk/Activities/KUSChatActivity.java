@@ -912,9 +912,9 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         final String text = kusInputBarView.getText();
 
         final List<Bitmap> bitmapList = new ArrayList<>();
-        for (KUSBitmap bitmap : kusInputBarView.getKUSBitmapList()) {
-            if (bitmap.getBitmap() != null)
-                bitmapList.add(bitmap.getBitmap());
+        for (KUSBitmap kusBitmap : kusInputBarView.getKUSBitmapList()) {
+            if (kusBitmap.getBitmap() != null)
+                bitmapList.add(kusBitmap.getBitmap());
         }
 
         //Sending Data in background

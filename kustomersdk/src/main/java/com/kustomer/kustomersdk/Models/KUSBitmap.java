@@ -5,7 +5,7 @@ import android.os.Handler;
 import android.os.Looper;
 
 import com.kustomer.kustomersdk.Helpers.KUSImage;
-import com.kustomer.kustomersdk.Interfaces.BitmapListener;
+import com.kustomer.kustomersdk.Interfaces.KUSBitmapListener;
 
 import java.util.ArrayList;
 
@@ -14,7 +14,7 @@ public class KUSBitmap {
 
     private String uri;
     private Bitmap bitmap;
-    private ArrayList<BitmapListener> bitmapListeners = new ArrayList<>();
+    private ArrayList<KUSBitmapListener> bitmapListeners = new ArrayList<>();
     //endregion
 
     //region constructor
@@ -27,7 +27,7 @@ public class KUSBitmap {
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
-                        for (BitmapListener listener : bitmapListeners)
+                        for (KUSBitmapListener listener : bitmapListeners)
                             listener.onBitmapCreated();
                         bitmapListeners.clear();
                     }
@@ -36,9 +36,9 @@ public class KUSBitmap {
         }).start();
     }
 
-    public KUSBitmap(final String imageUri, BitmapListener listeners) {
+    public KUSBitmap(final String imageUri, KUSBitmapListener listener) {
         this(imageUri);
-        bitmapListeners.add(listeners);
+        bitmapListeners.add(listener);
     }
 
     //endregion
@@ -49,8 +49,8 @@ public class KUSBitmap {
         return uri;
     }
 
-    public void addBitmapListeners(BitmapListener bitmapListener) {
-        this.bitmapListeners.add(bitmapListener);
+    public void addListener(KUSBitmapListener listener) {
+        this.bitmapListeners.add(listener);
     }
 
     public Bitmap getBitmap() {

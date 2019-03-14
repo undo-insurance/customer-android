@@ -1,5 +1,5 @@
 package com.kustomer.kustomersdk.Interfaces;
 
-public interface BitmapListener {
+public interface KUSBitmapListener {
         void onBitmapCreated();
     }

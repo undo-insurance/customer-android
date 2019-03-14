@@ -28,9 +28,9 @@ public class ImageAttachmentViewHolder extends RecyclerView.ViewHolder {
         ButterKnife.bind(this, itemView);
     }
 
-    public void onBind(final KUSBitmap imageUri, final ImageAttachmentListener listener) {
-        if (imageUri != null)
-            ivAttachment.setImageBitmap(imageUri.getBitmap());
+    public void onBind(final KUSBitmap kusBitmap, final ImageAttachmentListener listener) {
+        if (kusBitmap != null)
+            ivAttachment.setImageBitmap(kusBitmap.getBitmap());
         else
             ivAttachment.setImageBitmap(null);
         itemView.setOnClickListener(new View.OnClickListener() {
@@ -45,7 +45,7 @@ public class ImageAttachmentViewHolder extends RecyclerView.ViewHolder {
         ivRemoveImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.onImageCancelClicked(imageUri);
+                listener.onImageCancelClicked(kusBitmap);
             }
         });
     }

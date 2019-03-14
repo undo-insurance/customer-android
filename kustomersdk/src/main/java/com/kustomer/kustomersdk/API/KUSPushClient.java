@@ -36,7 +36,6 @@ import org.json.JSONObject;
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.net.URL;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -153,7 +152,7 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
             pusherClient = new Pusher(chatSettings.getPusherAccessKey(), options);
         }
 
-        boolean shouldConnectToPusher= pusherClient != null &&
+        boolean shouldConnectToPusher = pusherClient != null &&
                 pusherClient.getConnection().getState() != ConnectionState.CONNECTED;
 
         if (shouldConnectToPusher) {
@@ -167,7 +166,7 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
             Runnable runnable = new Runnable() {
                 @Override
                 public void run() {
-                    if(userSession.get()==null)
+                    if (userSession.get() == null)
                         return;
 
                     isPusherTrackingStarted = false;
@@ -189,138 +188,16 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
         }
 
         String pusherChannelName = getPusherChannelName();
-
         if (pusherClient != null && pusherChannelName != null && pusherChannel == null) {
+
             try {
                 pusherChannel = pusherClient.subscribePresence(pusherChannelName);
-                pusherChannel.bind(KUSConstants.PusherEventNames.SEND_MESSAGE_EVENT,
-                        new PresenceChannelEventListener() {
-                            @Override
-                            public void onUsersInformationReceived(String channelName, Set<User> users) {
 
-                            }
-
-                            @Override
-                            public void userSubscribed(String channelName, User user) {
-
-                            }
-
-                            @Override
-                            public void userUnsubscribed(String channelName, User user) {
-
-                            }
-
-                            @Override
-                            public void onAuthenticationFailure(String message, Exception e) {
-                                updatePollingTimer();
-                            }
-
-                            @Override
-                            public void onSubscriptionSucceeded(String channelName) {
-                                updatePollingTimer();
-                            }
-
-                            @Override
-                            public void onEvent(String channelName, String eventName, String data) {
-                                JSONObject jsonObject = JsonHelper.stringToJson(data);
-                                final List<KUSModel> chatMessages = JsonHelper.kusChatModelsFromJSON(
-                                        Kustomer.getContext(),
-                                        JsonHelper.jsonObjectFromKeyPath(jsonObject, "data"));
-
-                                if (chatMessages == null || chatMessages.isEmpty())
-                                    return;
-
-                                final KUSChatMessage chatMessage = (KUSChatMessage) chatMessages.get(0);
-                                final KUSChatMessagesDataSource messagesDataSource = userSession.get()
-                                        .chatMessageDataSourceForSessionId(chatMessage.getSessionId());
-
-                                final boolean doesNotAlreadyContainMessage = messagesDataSource == null ||
-                                        messagesDataSource.findById(chatMessage.getId()) == null;
-
-                                if (messagesDataSource != null)
-                                    messagesDataSource.upsertNewMessages(chatMessages);
-
-                                Handler handler = new Handler(Looper.getMainLooper());
-                                Runnable runnable = new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if (doesNotAlreadyContainMessage)
-                                            notifyForUpdatedChatSession(chatMessage.getSessionId());
-                                    }
-                                };
-                                handler.post(runnable);
-
-                            }
-                        });
-
-                pusherChannel.bind(KUSConstants.PusherEventNames.END_SESSION_EVENT,
-                        new PresenceChannelEventListener() {
-                            @Override
-                            public void onUsersInformationReceived(String channelName, Set<User> users) {
-
-                            }
-
-                            @Override
-                            public void userSubscribed(String channelName, User user) {
-
-                            }
-
-                            @Override
-                            public void userUnsubscribed(String channelName, User user) {
-
-                            }
-
-                            @Override
-                            public void onAuthenticationFailure(String message, Exception e) {
-                                updatePollingTimer();
-                            }
-
-                            @Override
-                            public void onSubscriptionSucceeded(String channelName) {
-                                updatePollingTimer();
-                            }
-
-                            @Override
-                            public void onEvent(String channelName, String eventName, String data) {
-                                if (userSession.get() == null)
-                                    return;
-
-                                JSONObject jsonObject = JsonHelper.stringToJson(data);
-
-                                List<KUSModel> chatSessions = userSession.get().getChatSessionsDataSource()
-                                        .objectsFromJSON(JsonHelper.jsonObjectFromKeyPath(jsonObject, "data"));
-
-                                userSession.get().getChatSessionsDataSource().upsertNewSessions(chatSessions);
-
-                                if (chatSessions != null && chatSessions.size() > 0) {
-                                    KUSChatSettings settings = (KUSChatSettings) userSession.get()
-                                            .getChatSettingsDataSource().getObject();
-                                    if (settings != null && settings.getSingleSessionChat()) {
-
-                                        for (KUSModel model : userSession.get().getChatSessionsDataSource().getList()) {
-                                            KUSChatSession session = (KUSChatSession) model;
-                                            KUSChatMessagesDataSource messagesDataSource = userSession.get()
-                                                    .chatMessageDataSourceForSessionId(session.getId());
-
-                                            if (messagesDataSource != null)
-                                                messagesDataSource.fetchLatest();
-                                        }
-                                    } else {
-
-                                        KUSChatSession chatSession = (KUSChatSession) chatSessions.get(0);
-                                        KUSChatMessagesDataSource messagesDataSource = userSession.get()
-                                                .chatMessageDataSourceForSessionId(chatSession.getId());
-
-                                        if (messagesDataSource != null)
-                                            messagesDataSource.fetchLatest();
-                                    }
-                                }
-                            }
-                        });
+                pusherChannel.bind(KUSConstants.PusherEventNames.SEND_MESSAGE_EVENT, eventListener);
+                pusherChannel.bind(KUSConstants.PusherEventNames.END_SESSION_EVENT, eventListener);
             } catch (IllegalArgumentException ignore) {
             }
         }
-
         updatePollingTimer();
     }
 
@@ -469,6 +346,68 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
             previousChatSessions.put(chatSession.getId(), chatSession);
         }
     }
+
+    private void onPusherChatMessageSend(String data){
+        JSONObject jsonObject = JsonHelper.stringToJson(data);
+        final List<KUSModel> chatMessages = JsonHelper.kusChatModelsFromJSON(
+                Kustomer.getContext(),
+                JsonHelper.jsonObjectFromKeyPath(jsonObject, "data"));
+        if (chatMessages == null || chatMessages.isEmpty())
+            return;
+
+        final KUSChatMessage chatMessage = (KUSChatMessage) chatMessages.get(0);
+        final KUSChatMessagesDataSource messagesDataSource = userSession.get()
+                .chatMessageDataSourceForSessionId(chatMessage.getSessionId());
+
+        final boolean doesNotAlreadyContainMessage = messagesDataSource == null ||
+                messagesDataSource.findById(chatMessage.getId()) == null;
+
+        if (messagesDataSource != null)
+            messagesDataSource.upsertNewMessages(chatMessages);
+
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (doesNotAlreadyContainMessage)
+                    notifyForUpdatedChatSession(chatMessage.getSessionId());
+            }
+        });
+    }
+
+    private void onPusherChatSessionEnd(String data) {
+        JSONObject jsonObject = JsonHelper.stringToJson(data);
+
+        List<KUSModel> chatSessions = userSession.get().getChatSessionsDataSource()
+                .objectsFromJSON(JsonHelper.jsonObjectFromKeyPath(jsonObject, "data"));
+
+        userSession.get().getChatSessionsDataSource().upsertNewSessions(chatSessions);
+
+        if (chatSessions != null && chatSessions.size() > 0) {
+            KUSChatSettings settings = (KUSChatSettings) userSession.get()
+                    .getChatSettingsDataSource().getObject();
+            if (settings != null && settings.getSingleSessionChat()) {
+
+                for (KUSModel model : userSession.get().getChatSessionsDataSource().getList()) {
+                    KUSChatSession session = (KUSChatSession) model;
+                    KUSChatMessagesDataSource messagesDataSource = userSession.get()
+                            .chatMessageDataSourceForSessionId(session.getId());
+
+                    if (messagesDataSource != null)
+                        messagesDataSource.fetchLatest();
+                }
+            } else {
+
+                KUSChatSession chatSession = (KUSChatSession) chatSessions.get(0);
+                KUSChatMessagesDataSource messagesDataSource = userSession.get()
+                        .chatMessageDataSourceForSessionId(chatSession.getId());
+
+                if (messagesDataSource != null)
+                    messagesDataSource.fetchLatest();
+            }
+        }
+    }
+
     //endregion
 
     //region Accessors
@@ -539,7 +478,7 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
     public void onError(KUSPaginatedDataSource dataSource, Error error) {
         if (dataSource instanceof KUSChatMessagesDataSource) {
             KUSChatMessagesDataSource chatMessagesDataSource = (KUSChatMessagesDataSource) dataSource;
-            if (pendingNotificationSessionId != null && chatMessagesDataSource.getSessionId().equals(pendingNotificationSessionId)) {
+            if (chatMessagesDataSource.getSessionId().equals(pendingNotificationSessionId)) {
                 Handler handler = new Handler(Looper.getMainLooper());
                 Runnable runnable = new Runnable() {
                     @Override
@@ -558,18 +497,18 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
         if (userSession.get() == null || dataSource != userSession.get().getChatSessionsDataSource())
             return;
 
-            // Only consider new messages here if we're actively polling
-            if (pollingTimer == null && !didPusherLostPackets) {
-                //But update the state of previousChatSessions
-                updatePreviousChatSessions();
-                return;
-            }
+        // Only consider new messages here if we're actively polling
+        if (pollingTimer == null && !didPusherLostPackets) {
+            //But update the state of previousChatSessions
+            updatePreviousChatSessions();
+            return;
+        }
 
-            didPusherLostPackets = false;
-            String updatedSessionId = null;
-            List<KUSModel> newChatSessions = userSession.get().getChatSessionsDataSource().getList();
-            for (KUSModel model : newChatSessions) {
-                KUSChatSession chatSession = (KUSChatSession) model;
+        didPusherLostPackets = false;
+        String updatedSessionId = null;
+        List<KUSModel> newChatSessions = userSession.get().getChatSessionsDataSource().getList();
+        for (KUSModel model : newChatSessions) {
+            KUSChatSession chatSession = (KUSChatSession) model;
 
             KUSChatSession previousChatSession = null;
 
@@ -619,6 +558,43 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
             pendingNotificationSessionId = updatedSessionId;
         }
     }
+
+    private PresenceChannelEventListener eventListener = new PresenceChannelEventListener() {
+        @Override
+        public void onUsersInformationReceived(String channelName, Set<User> users) {
+        }
+
+        @Override
+        public void userSubscribed(String channelName, User user) {
+        }
+
+        @Override
+        public void userUnsubscribed(String channelName, User user) {
+        }
+
+        @Override
+        public void onAuthenticationFailure(String message, Exception e) {
+            updatePollingTimer();
+        }
+
+        @Override
+        public void onSubscriptionSucceeded(String channelName) {
+            updatePollingTimer();
+        }
+
+        @Override
+        public void onEvent(String channelName, String eventName, String data) {
+            if (eventName != null && eventName.equals(KUSConstants.PusherEventNames.SEND_MESSAGE_EVENT)) {
+                onPusherChatMessageSend(data);
+
+            } else if (eventName != null && eventName.equals(KUSConstants.PusherEventNames.END_SESSION_EVENT)) {
+                if (userSession.get() == null)
+                    return;
+
+                onPusherChatSessionEnd(data);
+            }
+        }
+    };
 
     private ConnectionEventListener pusherConnectionListener = new ConnectionEventListener() {
         @Override

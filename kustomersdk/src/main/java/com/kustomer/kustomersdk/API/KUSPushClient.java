@@ -6,6 +6,7 @@ import android.os.Looper;
 import com.kustomer.kustomersdk.DataSources.KUSChatMessagesDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSObjectDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSPaginatedDataSource;
+import com.kustomer.kustomersdk.Enums.KUSRequestType;
 import com.kustomer.kustomersdk.Helpers.KUSAudio;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
 import com.kustomer.kustomersdk.Interfaces.KUSObjectDataSourceListener;
@@ -31,6 +32,7 @@ import com.pusher.client.connection.ConnectionState;
 import com.pusher.client.connection.ConnectionStateChange;
 import com.pusher.client.util.HttpAuthorizer;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
@@ -347,32 +349,37 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
         }
     }
 
-    private void onPusherChatMessageSend(String data){
+    private void fetchChatMessage(String sessionId, String messageId) {
+        String endPoint = String.format(KUSConstants.URL.SINGLE_MESSAGE_ENDPOINT,
+                sessionId, messageId);
+
+        userSession.get().getRequestManager().performRequestType(
+                KUSRequestType.KUS_REQUEST_TYPE_GET,
+                endPoint,
+                null,
+                true,
+                new KUSRequestCompletionListener() {
+                    @Override
+                    public void onCompletion(final Error error, final JSONObject response) {
+
+                        if (response != null)
+                            upsertMessages(response);
+                    }
+                });
+    }
+
+    private void onPusherChatMessageSend(String data) {
         JSONObject jsonObject = JsonHelper.stringToJson(data);
-        final List<KUSModel> chatMessages = JsonHelper.kusChatModelsFromJSON(
-                Kustomer.getContext(),
-                JsonHelper.jsonObjectFromKeyPath(jsonObject, "data"));
-        if (chatMessages == null || chatMessages.isEmpty())
-            return;
 
-        final KUSChatMessage chatMessage = (KUSChatMessage) chatMessages.get(0);
-        final KUSChatMessagesDataSource messagesDataSource = userSession.get()
-                .chatMessageDataSourceForSessionId(chatMessage.getSessionId());
+        if (jsonObject != null && jsonObject.optBoolean("clipped")) {
+            String sessionId = JsonHelper.stringFromKeyPath(jsonObject,
+                    "data.relationships.session.data.id");
+            String messageId = JsonHelper.stringFromKeyPath(jsonObject, "data.id");
+            fetchChatMessage(sessionId, messageId);
 
-        final boolean doesNotAlreadyContainMessage = messagesDataSource == null ||
-                messagesDataSource.findById(chatMessage.getId()) == null;
-
-        if (messagesDataSource != null)
-            messagesDataSource.upsertNewMessages(chatMessages);
-
-        Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                if (doesNotAlreadyContainMessage)
-                    notifyForUpdatedChatSession(chatMessage.getSessionId());
-            }
-        });
+        } else {
+            upsertMessages(jsonObject);
+        }
     }
 
     private void onPusherChatSessionEnd(String data) {
@@ -406,6 +413,34 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
                     messagesDataSource.fetchLatest();
             }
         }
+    }
+
+    private void upsertMessages(JSONObject jsonObject) {
+        final List<KUSModel> chatMessages = JsonHelper.kusChatModelsFromJSON(
+                Kustomer.getContext(),
+                JsonHelper.jsonObjectFromKeyPath(jsonObject, "data"));
+
+        if (chatMessages == null || chatMessages.isEmpty())
+            return;
+
+        final KUSChatMessage chatMessage = (KUSChatMessage) chatMessages.get(0);
+        final KUSChatMessagesDataSource messagesDataSource = userSession.get()
+                .chatMessageDataSourceForSessionId(chatMessage.getSessionId());
+
+        final boolean doesNotAlreadyContainMessage = messagesDataSource == null ||
+                messagesDataSource.findById(chatMessage.getId()) == null;
+
+        if (messagesDataSource != null)
+            messagesDataSource.upsertNewMessages(chatMessages);
+
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (doesNotAlreadyContainMessage)
+                    notifyForUpdatedChatSession(chatMessage.getSessionId());
+            }
+        });
     }
 
     //endregion

@@ -32,7 +32,6 @@ import com.pusher.client.connection.ConnectionState;
 import com.pusher.client.connection.ConnectionStateChange;
 import com.pusher.client.util.HttpAuthorizer;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
@@ -371,11 +370,20 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
     private void onPusherChatMessageSend(String data) {
         JSONObject jsonObject = JsonHelper.stringToJson(data);
 
-        if (jsonObject != null && jsonObject.optBoolean("clipped")) {
+        boolean isMessageClipped = jsonObject != null && jsonObject.optBoolean("clipped");
+        if (isMessageClipped) {
             String sessionId = JsonHelper.stringFromKeyPath(jsonObject,
                     "data.relationships.session.data.id");
             String messageId = JsonHelper.stringFromKeyPath(jsonObject, "data.id");
-            fetchChatMessage(sessionId, messageId);
+
+            KUSChatMessagesDataSource messagesDataSource = userSession.get()
+                    .chatMessageDataSourceForSessionId(sessionId);
+
+            boolean doesNotAlreadyContainMessage = messagesDataSource == null ||
+                    messagesDataSource.findById(messageId) == null;
+
+            if (doesNotAlreadyContainMessage)
+                fetchChatMessage(sessionId, messageId);
 
         } else {
             upsertMessages(jsonObject);

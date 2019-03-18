@@ -10,6 +10,7 @@ import com.kustomer.kustomersdk.Interfaces.KUSBitmapListener;
 import java.util.ArrayList;
 
 public class KUSBitmap {
+
     //region properties
 
     private String uri;
@@ -23,15 +24,14 @@ public class KUSBitmap {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                bitmap = KUSImage.getBitmapForUri(uri);
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                    @Override
-                    public void run() {
-                        for (KUSBitmapListener listener : bitmapListeners)
-                            listener.onBitmapCreated();
-                        bitmapListeners.clear();
-                    }
-                });
+                try {
+                    bitmap = KUSImage.getBitmapForUri(uri);
+                    notifyBitmapCreated();
+                } catch (SecurityException ignored) {
+
+                } catch (OutOfMemoryError outOfMemoryError) {
+                    notifyOutOfMemoryError(outOfMemoryError);
+                }
             }
         }).start();
     }
@@ -39,6 +39,32 @@ public class KUSBitmap {
     public KUSBitmap(final String imageUri, KUSBitmapListener listener) {
         this(imageUri);
         bitmapListeners.add(listener);
+    }
+
+    //endregion
+
+    //region Private Methods
+
+    private void notifyBitmapCreated() {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                for (KUSBitmapListener listener : bitmapListeners)
+                    listener.onBitmapCreated();
+                bitmapListeners.clear();
+            }
+        });
+    }
+
+    private void notifyOutOfMemoryError(final OutOfMemoryError outOfMemoryError) {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                for (KUSBitmapListener listener : bitmapListeners)
+                    listener.onOutOfMemoryError(outOfMemoryError);
+                bitmapListeners.clear();
+            }
+        });
     }
 
     //endregion
@@ -55,6 +81,10 @@ public class KUSBitmap {
 
     public Bitmap getBitmap() {
         return bitmap;
+    }
+
+    public void setBitmap(Bitmap bitmap) {
+        this.bitmap = bitmap;
     }
 
     //endregion

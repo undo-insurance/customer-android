@@ -56,6 +56,18 @@ public class ImageAttachmentListAdapter extends RecyclerView.Adapter<RecyclerVie
             public void onBitmapCreated() {
                 notifyItemChanged(imageBitmaps.indexOf(kusBitmap));
             }
+
+            @Override
+            public void onOutOfMemoryError(OutOfMemoryError outOfMemoryError) {
+                for (KUSBitmap kusBitmap : imageBitmaps) {
+                    if (kusBitmap.getBitmap() != null) {
+                        kusBitmap.getBitmap().recycle();
+                        kusBitmap.setBitmap(null);
+                    }
+                }
+
+                removeAll();
+            }
         });
 
         notifyItemRangeInserted(imageBitmaps.indexOf(kusBitmap), 1);
@@ -64,6 +76,10 @@ public class ImageAttachmentListAdapter extends RecyclerView.Adapter<RecyclerVie
     public void removeAll() {
         imageBitmaps.clear();
         notifyDataSetChanged();
+    }
+
+    public List<KUSBitmap> getImageBitmaps() {
+        return imageBitmaps;
     }
 
     private List<String> getImageUris() {
@@ -75,8 +91,12 @@ public class ImageAttachmentListAdapter extends RecyclerView.Adapter<RecyclerVie
         return imageUris;
     }
 
-    public List<KUSBitmap> getImageBitmaps() {
-        return imageBitmaps;
+    private void removeItem(KUSBitmap imageBitmap) {
+        int pos = imageBitmaps.indexOf(imageBitmap);
+
+        imageBitmaps.remove(imageBitmap);
+        notifyItemRemoved(pos);
+        mListener.onAttachmentImageRemoved();
     }
 
     //endreigon
@@ -84,11 +104,7 @@ public class ImageAttachmentListAdapter extends RecyclerView.Adapter<RecyclerVie
     //region Callbacks
     @Override
     public void onImageCancelClicked(KUSBitmap imageBitmap) {
-        int pos = imageBitmaps.indexOf(imageBitmap);
-
-        imageBitmaps.remove(imageBitmap);
-        notifyItemRemoved(pos);
-        mListener.onAttachmentImageRemoved();
+        removeItem(imageBitmap);
     }
 
     @Override

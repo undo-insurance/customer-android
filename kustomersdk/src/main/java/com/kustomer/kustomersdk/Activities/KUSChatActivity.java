@@ -666,12 +666,13 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
     }
 
     private void attachImage(String path) {
-        try {
-            kusInputBarView.attachImage(path);
-        } catch (OutOfMemoryError e) {
-            KUSLog.KUSLogError(e.getMessage());
-            showMemoryError();
-        }
+        kusInputBarView.attachImage(path, new KUSInputBarView.OutOfMemoryListener() {
+            @Override
+            public void onOutOfMemoryError(OutOfMemoryError outOfMemoryError) {
+                KUSLog.KUSLogError(outOfMemoryError.getMessage());
+                showMemoryError();
+            }
+        });
     }
 
     private void showMemoryError() {

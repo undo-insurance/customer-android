@@ -142,9 +142,9 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
         }
     }
 
-    private boolean isSendEnabled(){
+    private boolean isSendEnabled() {
         String text = getText();
-        return  ((adapter != null && adapter.getItemCount() > 0) || text.length() > 0)
+        return ((adapter != null && adapter.getItemCount() > 0) || text.length() > 0)
                 && imageProcessingCount == 0;
     }
     //endregion
@@ -185,7 +185,7 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
         updateSendButton();
     }
 
-    public void attachImage(String imageUri) {
+    public void attachImage(String imageUri, final OutOfMemoryListener outOfMemoryListener) {
         imageProcessingCount++;
         updateSendButton();
 
@@ -194,6 +194,13 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
             public void onBitmapCreated() {
                 imageProcessingCount--;
                 updateSendButton();
+            }
+
+            @Override
+            public void onOutOfMemoryError(final OutOfMemoryError outOfMemoryError) {
+                imageProcessingCount--;
+                updateSendButton();
+                outOfMemoryListener.onOutOfMemoryError(outOfMemoryError);
             }
         }));
 
@@ -302,5 +309,13 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
     public void objectDataSourceOnError(KUSObjectDataSource dataSource, Error error) {
 
     }
+    //endregion
+
+    //region Listener
+
+    public interface OutOfMemoryListener {
+        void onOutOfMemoryError(OutOfMemoryError outOfMemoryError);
+    }
+
     //endregion
 }

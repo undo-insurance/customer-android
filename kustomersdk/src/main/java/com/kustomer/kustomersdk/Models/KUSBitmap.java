@@ -29,8 +29,8 @@ public class KUSBitmap {
                     notifyBitmapCreated();
                 } catch (SecurityException ignored) {
 
-                } catch (OutOfMemoryError outOfMemoryError) {
-                    notifyOutOfMemoryError(outOfMemoryError);
+                } catch (OutOfMemoryError memoryError) {
+                    notifyError(memoryError);
                 }
             }
         }).start();
@@ -46,25 +46,15 @@ public class KUSBitmap {
     //region Private Methods
 
     private void notifyBitmapCreated() {
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                for (KUSBitmapListener listener : bitmapListeners)
-                    listener.onBitmapCreated();
-                bitmapListeners.clear();
-            }
-        });
+        for (KUSBitmapListener listener : bitmapListeners)
+            listener.onBitmapCreated();
+        bitmapListeners.clear();
     }
 
-    private void notifyOutOfMemoryError(final OutOfMemoryError outOfMemoryError) {
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                for (KUSBitmapListener listener : bitmapListeners)
-                    listener.onOutOfMemoryError(outOfMemoryError);
-                bitmapListeners.clear();
-            }
-        });
+    private void notifyError(final OutOfMemoryError memoryError) {
+        for (KUSBitmapListener listener : bitmapListeners)
+            listener.onMemoryError(memoryError);
+        bitmapListeners.clear();
     }
 
     //endregion

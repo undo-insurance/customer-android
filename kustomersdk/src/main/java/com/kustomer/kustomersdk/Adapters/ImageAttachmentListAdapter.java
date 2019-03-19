@@ -1,5 +1,7 @@
 package com.kustomer.kustomersdk.Adapters;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -54,19 +56,28 @@ public class ImageAttachmentListAdapter extends RecyclerView.Adapter<RecyclerVie
         kusBitmap.addListener(new KUSBitmapListener() {
             @Override
             public void onBitmapCreated() {
-                notifyItemChanged(imageBitmaps.indexOf(kusBitmap));
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyItemChanged(imageBitmaps.indexOf(kusBitmap));
+                    }
+                });
             }
 
             @Override
-            public void onOutOfMemoryError(OutOfMemoryError outOfMemoryError) {
+            public void onMemoryError(OutOfMemoryError memoryError) {
                 for (KUSBitmap kusBitmap : imageBitmaps) {
                     if (kusBitmap.getBitmap() != null) {
                         kusBitmap.getBitmap().recycle();
                         kusBitmap.setBitmap(null);
                     }
                 }
-
-                removeAll();
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        removeAll();
+                    }
+                });
             }
         });
 
@@ -91,20 +102,16 @@ public class ImageAttachmentListAdapter extends RecyclerView.Adapter<RecyclerVie
         return imageUris;
     }
 
-    private void removeItem(KUSBitmap imageBitmap) {
-        int pos = imageBitmaps.indexOf(imageBitmap);
-
-        imageBitmaps.remove(imageBitmap);
-        notifyItemRemoved(pos);
-        mListener.onAttachmentImageRemoved();
-    }
-
     //endreigon
 
     //region Callbacks
     @Override
     public void onImageCancelClicked(KUSBitmap imageBitmap) {
-        removeItem(imageBitmap);
+        int pos = imageBitmaps.indexOf(imageBitmap);
+
+        imageBitmaps.remove(imageBitmap);
+        notifyItemRemoved(pos);
+        mListener.onAttachmentImageRemoved();
     }
 
     @Override

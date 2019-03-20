@@ -500,6 +500,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
             kusInputBarView.setVisibility(View.GONE);
             kusInputBarView.clearInputFocus();
             kusInputBarView.setText("");
+            kusInputBarView.removeAllAttachments();
             kusOptionPickerView.setVisibility(View.GONE);
             tvClosedChat.setVisibility(View.GONE);
 
@@ -733,6 +734,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         setupAdapter();
         kusInputBarView.setVisibility(View.VISIBLE);
         kusInputBarView.setText("");
+        kusInputBarView.removeAllAttachments();
         tvStartANewConversation.setVisibility(View.GONE);
         kusToolbar.setSessionId(chatSessionId);
 

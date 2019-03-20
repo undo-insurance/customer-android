@@ -147,6 +147,12 @@ public class KUSChatSession extends KUSModel implements Serializable {
             return -1;
         else if (this.lockedAt != null)
             return 1;
+        else if (this.createdAt == null && chatSession.createdAt == null)
+            date = 0;
+        else if (this.createdAt == null)
+            date = 1;
+        else if (chatSession.createdAt == null)
+            date = -1;
         else
             date = chatSession.createdAt.compareTo(this.createdAt);
 

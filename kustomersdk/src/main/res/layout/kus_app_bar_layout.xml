@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <android.support.design.widget.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -20,7 +19,6 @@
         app:contentInsetStart="0dp"
         app:popupTheme="@style/KUSAppTheme.PopupOverlay">
 
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -35,7 +33,7 @@
                 android:gravity="center"
                 android:visibility="invisible">
 
-                <ImageView
+                <android.support.v7.widget.AppCompatImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="?attr/kus_back_image"
@@ -58,7 +56,6 @@
                     android:visibility="invisible" />
 
             </LinearLayout>
-
 
             <LinearLayout
                 android:id="@+id/toolbarInnerLayout"
@@ -113,7 +110,7 @@
 
             </LinearLayout>
 
-            <ImageView
+            <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/ivClose"
                 android:layout_width="?attr/actionBarSize"
                 android:layout_height="?attr/actionBarSize"
@@ -125,7 +122,6 @@
                 tools:ignore="ContentDescription" />
 
         </RelativeLayout>
-
 
     </com.kustomer.kustomersdk.Views.KUSToolbar>
 
@@ -191,14 +187,14 @@
                 android:layout_alignParentEnd="true"
                 android:padding="3dp">
 
-                <ImageView
+                <android.support.v7.widget.AppCompatImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:src="@drawable/kus_shape_circle_white"
                     android:tint="@color/kusEmailInputBorderColor"
                     tools:ignore="ContentDescription" />
 
-                <ImageView
+                <android.support.v7.widget.AppCompatImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:padding="3dp"
@@ -208,8 +204,6 @@
 
         </RelativeLayout>
 
-
     </com.kustomer.kustomersdk.Views.KUSEmailInputView>
-
 
 </android.support.design.widget.AppBarLayout>

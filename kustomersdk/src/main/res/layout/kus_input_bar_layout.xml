@@ -21,7 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageView
+        <android.support.v7.widget.AppCompatImageView
             android:id="@+id/ivAttachment"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
@@ -58,14 +58,14 @@
             android:layout_gravity="bottom"
             android:layout_margin="10dp">
 
-            <ImageView
+            <android.support.v7.widget.AppCompatImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/kus_shape_circle_white"
                 android:tint="@color/kusSendButtonColor"
                 tools:ignore="ContentDescription" />
 
-            <ImageView
+            <android.support.v7.widget.AppCompatImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="5dp"

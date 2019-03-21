@@ -56,7 +56,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class KUSPushClient implements Serializable, KUSObjectDataSourceListener, KUSPaginatedDataSourceListener {
 
     //region Properties
-    private static final long KUS_RETRAY_DELAY = 1000;
+    private static final long KUS_RETRY_DELAY = 1000;
     private static final long KUS_SHOULD_CONNECT_TO_PUSHER_RECENCY_THRESHOLD = 60000;
     private static final long LAZY_POLLING_TIMER_INTERVAL = 30000;
     private static final long ACTIVE_POLLING_TIMER_INTERVAL = 7500;
@@ -365,6 +365,18 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
                     @Override
                     public void onCompletion(final Error error, final JSONObject response) {
 
+                        if (error != null) {
+                            handler = new Handler();
+                            Runnable runnable = new Runnable() {
+                                @Override
+                                public void run() {
+                                    fetchChatMessageForId(sessionId, messageId);
+                                }
+                            };
+                            handler.postDelayed(runnable, KUS_RETRY_DELAY);
+                            return;
+                        }
+
                         if (response == null)
                             return;
 
@@ -373,7 +385,7 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
                 });
     }
 
-    private void fetchSessionForId(final String sessionId) {
+    private void fetchSessionForId(@Nullable final String sessionId) {
         String endPoint = KUSConstants.URL.CHAT_SESSIONS_ENDPOINT;
 
         userSession.get().getRequestManager().performRequestType(
@@ -384,6 +396,18 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
                 new KUSRequestCompletionListener() {
                     @Override
                     public void onCompletion(final Error error, final JSONObject response) {
+
+                        if (error != null) {
+                            handler = new Handler();
+                            Runnable runnable = new Runnable() {
+                                @Override
+                                public void run() {
+                                    fetchSessionForId(sessionId);
+                                }
+                            };
+                            handler.postDelayed(runnable, KUS_RETRY_DELAY);
+                            return;
+                        }
 
                         if (response == null)
                             return;
@@ -430,32 +454,33 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
         });
     }
 
-    @Nullable
-    private void upsertSession(List<KUSModel> chatSessions) {
-        if (chatSessions != null && chatSessions.size() > 0) {
-            userSession.get().getChatSessionsDataSource().upsertNewSessions(chatSessions);
+    private void upsertSession(@Nullable List<KUSModel> chatSessions) {
+        if (chatSessions == null || chatSessions.size() <= 0) {
+            return;
+        }
 
-            KUSChatSettings settings = (KUSChatSettings) userSession.get()
-                    .getChatSettingsDataSource().getObject();
-            if (settings != null && settings.getSingleSessionChat()) {
+        userSession.get().getChatSessionsDataSource().upsertNewSessions(chatSessions);
 
-                for (KUSModel model : userSession.get().getChatSessionsDataSource().getList()) {
-                    KUSChatSession session = (KUSChatSession) model;
-                    KUSChatMessagesDataSource messagesDataSource = userSession.get()
-                            .chatMessageDataSourceForSessionId(session.getId());
+        KUSChatSettings settings = (KUSChatSettings) userSession.get()
+                .getChatSettingsDataSource().getObject();
+        if (settings != null && settings.getSingleSessionChat()) {
 
-                    if (messagesDataSource != null)
-                        messagesDataSource.fetchLatest();
-                }
-            } else {
-
-                KUSChatSession chatSession = (KUSChatSession) chatSessions.get(0);
+            for (KUSModel model : userSession.get().getChatSessionsDataSource().getList()) {
+                KUSChatSession session = (KUSChatSession) model;
                 KUSChatMessagesDataSource messagesDataSource = userSession.get()
-                        .chatMessageDataSourceForSessionId(chatSession.getId());
+                        .chatMessageDataSourceForSessionId(session.getId());
 
                 if (messagesDataSource != null)
                     messagesDataSource.fetchLatest();
             }
+        } else {
+
+            KUSChatSession chatSession = (KUSChatSession) chatSessions.get(0);
+            KUSChatMessagesDataSource messagesDataSource = userSession.get()
+                    .chatMessageDataSourceForSessionId(chatSession.getId());
+
+            if (messagesDataSource != null)
+                messagesDataSource.fetchLatest();
         }
     }
 

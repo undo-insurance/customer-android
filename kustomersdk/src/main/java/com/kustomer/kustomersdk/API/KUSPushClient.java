@@ -2,6 +2,8 @@ package com.kustomer.kustomersdk.API;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.kustomer.kustomersdk.DataSources.KUSChatMessagesDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSObjectDataSource;
@@ -37,6 +39,7 @@ import org.json.JSONObject;
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.net.URL;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -53,6 +56,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class KUSPushClient implements Serializable, KUSObjectDataSourceListener, KUSPaginatedDataSourceListener {
 
     //region Properties
+    private static final long KUS_RETRAY_DELAY = 1000;
     private static final long KUS_SHOULD_CONNECT_TO_PUSHER_RECENCY_THRESHOLD = 60000;
     private static final long LAZY_POLLING_TIMER_INTERVAL = 30000;
     private static final long ACTIVE_POLLING_TIMER_INTERVAL = 7500;
@@ -348,7 +352,7 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
         }
     }
 
-    private void fetchChatMessage(String sessionId, String messageId) {
+    private void fetchChatMessageForId(@Nullable final String sessionId, @Nullable final String messageId) {
         String endPoint = String.format(KUSConstants.URL.SINGLE_MESSAGE_ENDPOINT,
                 sessionId, messageId);
 
@@ -361,44 +365,76 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
                     @Override
                     public void onCompletion(final Error error, final JSONObject response) {
 
-                        if (response != null)
-                            upsertMessages(response);
+                        if (response == null)
+                            return;
+
+                        upsertMessageAndNotify(response);
                     }
                 });
     }
 
-    private void onPusherChatMessageSend(String data) {
-        JSONObject jsonObject = JsonHelper.stringToJson(data);
+    private void fetchSessionForId(final String sessionId) {
+        String endPoint = KUSConstants.URL.CHAT_SESSIONS_ENDPOINT;
 
-        boolean isMessageClipped = jsonObject != null && jsonObject.optBoolean("clipped");
-        if (isMessageClipped) {
-            String sessionId = JsonHelper.stringFromKeyPath(jsonObject,
-                    "data.relationships.session.data.id");
-            String messageId = JsonHelper.stringFromKeyPath(jsonObject, "data.id");
+        userSession.get().getRequestManager().performRequestType(
+                KUSRequestType.KUS_REQUEST_TYPE_GET,
+                endPoint,
+                null,
+                true,
+                new KUSRequestCompletionListener() {
+                    @Override
+                    public void onCompletion(final Error error, final JSONObject response) {
 
-            KUSChatMessagesDataSource messagesDataSource = userSession.get()
-                    .chatMessageDataSourceForSessionId(sessionId);
+                        if (response == null)
+                            return;
 
-            boolean doesNotAlreadyContainMessage = messagesDataSource == null ||
-                    messagesDataSource.findById(messageId) == null;
+                        List<KUSModel> chatSessions = userSession.get().getChatSessionsDataSource()
+                                .objectsFromJSONArray(JsonHelper.arrayFromKeyPath(response, "data"));
 
-            if (doesNotAlreadyContainMessage)
-                fetchChatMessage(sessionId, messageId);
-
-        } else {
-            upsertMessages(jsonObject);
-        }
+                        if (chatSessions != null) {
+                            for (KUSModel model : chatSessions) {
+                                KUSChatSession session = (KUSChatSession) model;
+                                if (session.getId().equals(sessionId)) {
+                                    upsertSession(Collections.singletonList((KUSModel) session));
+                                }
+                            }
+                        }
+                    }
+                });
     }
 
-    private void onPusherChatSessionEnd(String data) {
-        JSONObject jsonObject = JsonHelper.stringToJson(data);
+    private void upsertMessageAndNotify(@NonNull JSONObject jsonObject) {
+        final List<KUSModel> chatMessages = JsonHelper.kusChatModelsFromJSON(Kustomer.getContext(),
+                JsonHelper.jsonObjectFromKeyPath(jsonObject, "data"));
 
-        List<KUSModel> chatSessions = userSession.get().getChatSessionsDataSource()
-                .objectsFromJSON(JsonHelper.jsonObjectFromKeyPath(jsonObject, "data"));
+        if (chatMessages == null || chatMessages.isEmpty())
+            return;
 
-        userSession.get().getChatSessionsDataSource().upsertNewSessions(chatSessions);
+        final KUSChatMessage chatMessage = (KUSChatMessage) chatMessages.get(0);
+        final KUSChatMessagesDataSource messagesDataSource = userSession.get()
+                .chatMessageDataSourceForSessionId(chatMessage.getSessionId());
 
+        final boolean doesNotAlreadyContainMessage = messagesDataSource == null ||
+                messagesDataSource.findById(chatMessage.getId()) == null;
+
+        if (messagesDataSource != null)
+            messagesDataSource.upsertNewMessages(chatMessages);
+
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (doesNotAlreadyContainMessage)
+                    notifyForUpdatedChatSession(chatMessage.getSessionId());
+            }
+        });
+    }
+
+    @Nullable
+    private void upsertSession(List<KUSModel> chatSessions) {
         if (chatSessions != null && chatSessions.size() > 0) {
+            userSession.get().getChatSessionsDataSource().upsertNewSessions(chatSessions);
+
             KUSChatSettings settings = (KUSChatSettings) userSession.get()
                     .getChatSettingsDataSource().getObject();
             if (settings != null && settings.getSingleSessionChat()) {
@@ -423,32 +459,50 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
         }
     }
 
-    private void upsertMessages(JSONObject jsonObject) {
-        final List<KUSModel> chatMessages = JsonHelper.kusChatModelsFromJSON(
-                Kustomer.getContext(),
-                JsonHelper.jsonObjectFromKeyPath(jsonObject, "data"));
+    private void onPusherChatMessageSend(String data) {
+        JSONObject jsonObject = JsonHelper.stringToJson(data);
 
-        if (chatMessages == null || chatMessages.isEmpty())
+        if (jsonObject == null)
             return;
 
-        final KUSChatMessage chatMessage = (KUSChatMessage) chatMessages.get(0);
-        final KUSChatMessagesDataSource messagesDataSource = userSession.get()
-                .chatMessageDataSourceForSessionId(chatMessage.getSessionId());
+        boolean isMessageClipped = jsonObject.optBoolean("clipped");
+        if (isMessageClipped) {
+            String sessionId = JsonHelper.stringFromKeyPath(jsonObject,
+                    "data.relationships.session.data.id");
+            String messageId = JsonHelper.stringFromKeyPath(jsonObject, "data.id");
 
-        final boolean doesNotAlreadyContainMessage = messagesDataSource == null ||
-                messagesDataSource.findById(chatMessage.getId()) == null;
+            KUSChatMessagesDataSource messagesDataSource = userSession.get()
+                    .chatMessageDataSourceForSessionId(sessionId);
 
-        if (messagesDataSource != null)
-            messagesDataSource.upsertNewMessages(chatMessages);
+            boolean doesNotAlreadyContainMessage = messagesDataSource == null ||
+                    messagesDataSource.findById(messageId) == null;
 
-        Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                if (doesNotAlreadyContainMessage)
-                    notifyForUpdatedChatSession(chatMessage.getSessionId());
-            }
-        });
+            if (doesNotAlreadyContainMessage)
+                fetchChatMessageForId(sessionId, messageId);
+
+        } else {
+            upsertMessageAndNotify(jsonObject);
+        }
+    }
+
+    private void onPusherChatSessionEnd(String data) {
+        JSONObject jsonObject = JsonHelper.stringToJson(data);
+
+        if (jsonObject == null)
+            return;
+
+        boolean isMessageClipped = jsonObject.optBoolean("clipped");
+        if (isMessageClipped) {
+            String sessionId = JsonHelper.stringFromKeyPath(jsonObject, "data.id");
+
+            fetchSessionForId(sessionId);
+
+        } else {
+            List<KUSModel> chatSessions = userSession.get().getChatSessionsDataSource()
+                    .objectsFromJSON(JsonHelper.jsonObjectFromKeyPath(jsonObject, "data"));
+
+            upsertSession(chatSessions);
+        }
     }
 
     //endregion

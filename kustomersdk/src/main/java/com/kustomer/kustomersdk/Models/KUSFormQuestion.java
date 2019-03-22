@@ -105,7 +105,7 @@ public class KUSFormQuestion extends KUSModel {
             return KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_CUSTOMER_FOLLOW_UP_CHANNEL;
         } else if (string.endsWith("Tree")) {
             return KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_MLV;
-        } else if (string.endsWith("Str")) {
+        } else if (string.endsWith("Str") || string.endsWith("Num")) {
             return KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_VALUES;
         }
 

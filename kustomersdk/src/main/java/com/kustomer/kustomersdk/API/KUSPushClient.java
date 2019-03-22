@@ -352,7 +352,11 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
         }
     }
 
-    private void fetchChatMessageForId(@Nullable final String sessionId, @Nullable final String messageId) {
+    private void fetchChatMessageForId(@Nullable final String sessionId,
+                                       @Nullable final String messageId) {
+        if (userSession.get() == null)
+            return;
+
         String endPoint = String.format(KUSConstants.URL.SINGLE_MESSAGE_ENDPOINT,
                 sessionId, messageId);
 
@@ -386,6 +390,9 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
     }
 
     private void fetchSessionForId(@Nullable final String sessionId) {
+        if (userSession.get() == null)
+            return;
+
         String endPoint = KUSConstants.URL.CHAT_SESSIONS_ENDPOINT;
 
         userSession.get().getRequestManager().performRequestType(
@@ -428,6 +435,9 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
     }
 
     private void upsertMessageAndNotify(@NonNull JSONObject jsonObject) {
+        if (userSession.get() == null)
+            return;
+
         final List<KUSModel> chatMessages = JsonHelper.kusChatModelsFromJSON(Kustomer.getContext(),
                 JsonHelper.jsonObjectFromKeyPath(jsonObject, "data"));
 
@@ -455,7 +465,7 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
     }
 
     private void upsertSession(@Nullable List<KUSModel> chatSessions) {
-        if (chatSessions == null || chatSessions.size() <= 0) {
+        if (userSession.get() == null || chatSessions == null || chatSessions.isEmpty()) {
             return;
         }
 
@@ -706,13 +716,13 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
 
         @Override
         public void onEvent(String channelName, String eventName, String data) {
+            if (userSession.get() == null)
+                return;
+
             if (eventName != null && eventName.equals(KUSConstants.PusherEventNames.SEND_MESSAGE_EVENT)) {
                 onPusherChatMessageSend(data);
 
             } else if (eventName != null && eventName.equals(KUSConstants.PusherEventNames.END_SESSION_EVENT)) {
-                if (userSession.get() == null)
-                    return;
-
                 onPusherChatSessionEnd(data);
             }
         }

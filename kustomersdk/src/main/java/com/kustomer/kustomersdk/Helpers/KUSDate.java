@@ -1,6 +1,8 @@
 package com.kustomer.kustomersdk.Helpers;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.format.DateUtils;
 
 import com.kustomer.kustomersdk.R;
@@ -31,7 +33,8 @@ public class KUSDate {
     //endregion
 
     //region Static Methods
-    public static String humanReadableTextFromDate(Context context, Date date){
+    @Nullable
+    public static String humanReadableTextFromDate(@NonNull Context context, @Nullable Date date) {
         if (date == null)
             return null;
 
@@ -39,9 +42,42 @@ public class KUSDate {
         if (timeAgo < SECONDS_PER_MINUTE)
             return context.getString(R.string.com_kustomer_just_now);
 
-        return (String) DateUtils.getRelativeTimeSpanString(date.getTime(), Calendar.getInstance().getTimeInMillis(), 0);
+        return localizedHumanReadableTextFromDate(context, timeAgo);
     }
 
+    @NonNull
+    private static String localizedHumanReadableTextFromDate(Context context, long timeAgo) {
+        String unit;
+        int count;
+
+        if (timeAgo >= SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOURS_PER_DAY * DAYS_PER_WEEK) {
+            count = (int) (timeAgo / (SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOURS_PER_DAY * DAYS_PER_WEEK));
+
+            unit = count > 1 ? context.getString(R.string.com_kustomer_weeks) :
+                    context.getString(R.string.com_kustomer_week);
+
+        } else if (timeAgo >= SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOURS_PER_DAY) {
+            count = (int) (timeAgo / (SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOURS_PER_DAY));
+
+            unit = count > 1 ? context.getString(R.string.com_kustomer_days) :
+                    context.getString(R.string.com_kustomer_day);
+
+        } else if (timeAgo >= SECONDS_PER_MINUTE * MINUTES_PER_HOUR) {
+            count = (int) (timeAgo / (SECONDS_PER_MINUTE * MINUTES_PER_HOUR));
+
+            unit = count > 1 ? context.getString(R.string.com_kustomer_hours) :
+                    context.getString(R.string.com_kustomer_hour);
+
+        } else {
+            count = (int) (timeAgo / (SECONDS_PER_MINUTE));
+
+            unit = count > 1 ? context.getString(R.string.com_kustomer_minutes) :
+                    context.getString(R.string.com_kustomer_minute);
+        }
+
+        return String.format(Locale.getDefault(), "%d %s %s", count, unit,
+                context.getString(R.string.com_kustomer_ago));
+    }
 
     public static String humanReadableTextFromSeconds(Context context, int seconds){
         if(seconds < SECONDS_PER_MINUTE){

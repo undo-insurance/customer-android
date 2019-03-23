@@ -1,7 +1,6 @@
 package com.kustomer.kustomersdk.Views;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -16,7 +15,6 @@ import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -25,15 +23,15 @@ import android.widget.TextView;
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Adapters.ImageAttachmentListAdapter;
 import com.kustomer.kustomersdk.DataSources.KUSObjectDataSource;
-import com.kustomer.kustomersdk.Helpers.KUSImage;
 import com.kustomer.kustomersdk.Helpers.KUSPermission;
+import com.kustomer.kustomersdk.Interfaces.KUSBitmapListener;
 import com.kustomer.kustomersdk.Interfaces.KUSInputBarViewListener;
 import com.kustomer.kustomersdk.Interfaces.KUSObjectDataSourceListener;
+import com.kustomer.kustomersdk.Models.KUSBitmap;
 import com.kustomer.kustomersdk.R;
 import com.kustomer.kustomersdk.R2;
 import com.kustomer.kustomersdk.Utils.KUSUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -44,7 +42,8 @@ import butterknife.OnClick;
  * Created by Junaid on 2/27/2018.
  */
 
-public class KUSInputBarView extends LinearLayout implements TextWatcher, TextView.OnEditorActionListener, ImageAttachmentListAdapter.onItemClickListener, KUSObjectDataSourceListener {
+public class KUSInputBarView extends LinearLayout implements TextWatcher, TextView.OnEditorActionListener,
+        ImageAttachmentListAdapter.onItemClickListener, KUSObjectDataSourceListener {
 
     @BindView(R2.id.etTypeMessage)
     EditText etTypeMessage;
@@ -60,6 +59,9 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
     KUSUserSession userSession;
 
     Handler handler;
+
+    private int imageProcessingCount = 0;
+
     //endregion
 
     //region LifeCycle
@@ -110,7 +112,8 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
         adapter = new ImageAttachmentListAdapter(this);
         rvImageAttachment.setAdapter(adapter);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),
+                LinearLayoutManager.HORIZONTAL, false);
         rvImageAttachment.setLayoutManager(layoutManager);
 
         adapter.notifyDataSetChanged();
@@ -137,6 +140,12 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
         } else {
             etTypeMessage.setHint(getResources().getString(R.string.com_kustomer_type_a_message___));
         }
+    }
+
+    private boolean isSendEnabled() {
+        String text = getText();
+        return ((adapter != null && adapter.getItemCount() > 0) || text.length() > 0)
+                && imageProcessingCount == 0;
     }
     //endregion
 
@@ -176,39 +185,44 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
         updateSendButton();
     }
 
-    public void attachImage(String imageUri) {
-        adapter.attachImage(imageUri);
+    public void attachImage(String imageUri, final MemoryListener memoryListener) {
+        imageProcessingCount++;
+        updateSendButton();
+
+        adapter.attachImage(new KUSBitmap(imageUri, new KUSBitmapListener() {
+            @Override
+            public void onBitmapCreated() {
+                imageProcessingCount--;
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        updateSendButton();
+                    }
+                });
+            }
+
+            @Override
+            public void onMemoryError(final OutOfMemoryError memoryError) {
+                imageProcessingCount--;
+                memoryListener.onOutOfMemoryError(memoryError);
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        updateSendButton();
+
+                    }
+                });
+            }
+        }));
 
         if (adapter.getItemCount() == 1)
             rvImageAttachment.setVisibility(VISIBLE);
 
         rvImageAttachment.scrollToPosition(adapter.getItemCount() - 1);
-        updateSendButton();
     }
 
-    public List<Bitmap> getAllImages() {
-
-        List<String> imageURIs = new ArrayList<>(adapter.getImageURIs());
-        if (imageURIs.size() != 0) {
-            List<Bitmap> images = new ArrayList<>();
-            for (String uri : imageURIs) {
-                try {
-
-                    Bitmap bitmap = KUSImage.getBitmapForUri(uri);
-                    if (bitmap != null)
-                        images.add(bitmap);
-
-                } catch (OutOfMemoryError outOfMemoryError) {
-                    // Clearing memory in case memory is low.
-                    for (Bitmap bitmap : images) {
-                        bitmap.recycle();
-                    }
-                    throw outOfMemoryError;
-                }
-            }
-            return images;
-        } else
-            return null;
+    public List<KUSBitmap> getKUSBitmapList() {
+        return adapter.getImageBitmaps();
     }
 
     public void requestInputFocus() {
@@ -234,9 +248,7 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
 
     @OnClick(R2.id.btnSendMessage)
     void sendPressed() {
-        String text = getText();
-        boolean shouldSend = (adapter != null && adapter.getItemCount() > 0) || text.length() > 0;
-        if (!shouldSend)
+        if (!isSendEnabled())
             return;
 
         if (listener != null)
@@ -244,8 +256,7 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
     }
 
     private void updateSendButton() {
-        String text = getText();
-        boolean shouldEnableSend = (adapter != null && adapter.getItemCount() > 0) || text.length() > 0;
+        boolean shouldEnableSend = isSendEnabled();
 
         if (listener != null)
             shouldEnableSend = shouldEnableSend && listener.inputBarShouldEnableSend();
@@ -309,5 +320,13 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
     public void objectDataSourceOnError(KUSObjectDataSource dataSource, Error error) {
 
     }
+    //endregion
+
+    //region Listener
+
+    public interface MemoryListener {
+        void onOutOfMemoryError(OutOfMemoryError error);
+    }
+
     //endregion
 }

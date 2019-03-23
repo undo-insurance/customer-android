@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -46,6 +47,7 @@ import com.kustomer.kustomersdk.Interfaces.KUSInputBarViewListener;
 import com.kustomer.kustomersdk.Interfaces.KUSMLFormValuesPickerViewListener;
 import com.kustomer.kustomersdk.Interfaces.KUSOptionPickerViewListener;
 import com.kustomer.kustomersdk.Kustomer;
+import com.kustomer.kustomersdk.Models.KUSBitmap;
 import com.kustomer.kustomersdk.Models.KUSChatMessage;
 import com.kustomer.kustomersdk.Models.KUSChatSession;
 import com.kustomer.kustomersdk.Models.KUSChatSettings;
@@ -209,7 +211,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
                 if (photoUri != null) {
                     String photoPath = photoUri.toString();
-                    kusInputBarView.attachImage(photoPath);
+                    attachImage(photoPath);
                 }
                 mCurrentPhotoPath = null;
             } else {
@@ -218,7 +220,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         } else if (requestCode == GALLERY_INTENT && resultCode == RESULT_OK) {
             if (data != null) {
                 String photoUri = data.getDataString();
-                kusInputBarView.attachImage(photoUri);
+                attachImage(photoUri);
             }
         }
     }
@@ -498,6 +500,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
             kusInputBarView.setVisibility(View.GONE);
             kusInputBarView.clearInputFocus();
             kusInputBarView.setText("");
+            kusInputBarView.removeAllAttachments();
             kusOptionPickerView.setVisibility(View.GONE);
             tvClosedChat.setVisibility(View.GONE);
 
@@ -663,6 +666,16 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         return (settings != null && settings.getSingleSessionChat() && (openChats - proactiveChats) >= 1);
     }
 
+    private void attachImage(String path) {
+        kusInputBarView.attachImage(path, new KUSInputBarView.MemoryListener() {
+            @Override
+            public void onOutOfMemoryError(OutOfMemoryError error) {
+                KUSLog.KUSLogError(error.getMessage());
+                showMemoryError();
+            }
+        });
+    }
+
     private void showMemoryError() {
         Handler handler = new Handler(Looper.getMainLooper());
         Runnable runnable = new Runnable() {
@@ -721,6 +734,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         setupAdapter();
         kusInputBarView.setVisibility(View.VISIBLE);
         kusInputBarView.setText("");
+        kusInputBarView.removeAllAttachments();
         tvStartANewConversation.setVisibility(View.GONE);
         kusToolbar.setSessionId(chatSessionId);
 
@@ -900,12 +914,18 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
         final String text = kusInputBarView.getText();
 
+        final List<Bitmap> bitmapList = new ArrayList<>();
+        for (KUSBitmap kusBitmap : kusInputBarView.getKUSBitmapList()) {
+            if (kusBitmap.getBitmap() != null)
+                bitmapList.add(kusBitmap.getBitmap());
+        }
+
         //Sending Data in background
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    chatMessagesDataSource.sendMessageWithText(text, kusInputBarView.getAllImages());
+                    chatMessagesDataSource.sendMessageWithText(text, bitmapList);
                 } catch (OutOfMemoryError e) {
                     KUSLog.KUSLogError(e.getMessage());
                     showMemoryError();
@@ -915,7 +935,6 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
         kusInputBarView.setText("");
         kusInputBarView.removeAllAttachments();
-
     }
 
     @Override
@@ -976,8 +995,13 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
     }
 
     @Override
-    public void onChatMessageErrorClicked(KUSChatMessage chatMessage) {
-        chatMessagesDataSource.resendMessage(chatMessage);
+    public void onChatMessageErrorClicked(final KUSChatMessage chatMessage) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                chatMessagesDataSource.resendMessage(chatMessage);
+            }
+        }).start();
     }
 
     @Override

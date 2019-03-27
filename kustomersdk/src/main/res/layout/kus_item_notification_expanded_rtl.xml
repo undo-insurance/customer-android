@@ -15,15 +15,13 @@
         android:padding="15dp"
         android:gravity="center_vertical">
 
-        <ImageView
+        <android.support.v7.widget.AppCompatImageView
             android:id="@+id/avatarImage"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginEnd="10dp"
             android:padding="1dp"
-            tools:ignore="ContentDescription">
-
-        </ImageView>
+            tools:ignore="ContentDescription" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -90,10 +88,9 @@
                 </FrameLayout>
 
             </LinearLayout>
-
         </LinearLayout>
-
     </LinearLayout>
+
     <Button
         android:id="@+id/closeButton"
         android:layout_width="match_parent"

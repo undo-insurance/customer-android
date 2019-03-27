@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <com.kustomer.kustomersdk.Views.KUSOptionsPickerView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -38,6 +37,5 @@
 
         </FrameLayout>
     </ScrollView>
-
 
 </com.kustomer.kustomersdk.Views.KUSOptionsPickerView>

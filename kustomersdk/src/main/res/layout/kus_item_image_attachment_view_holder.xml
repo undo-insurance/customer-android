@@ -4,23 +4,25 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="75dp"
     android:layout_height="75dp"
-    android:orientation="vertical"
-    android:layout_marginTop="5dp"
     android:layout_marginStart="5dp"
-    android:layout_marginEnd="5dp">
+    android:layout_marginTop="5dp"
+    android:layout_marginEnd="5dp"
+    android:orientation="vertical">
 
-    <ImageView
+    <android.support.v7.widget.AppCompatImageView
         android:id="@+id/ivAttachment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:contentDescription="@null"
         android:background="@color/kusInputBarAttachmentItemBackgroundColor"
         android:scaleType="centerCrop" />
 
-    <ImageView
+    <android.support.v7.widget.AppCompatImageView
         android:id="@+id/ivRemoveImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/kus_cross"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:contentDescription="@null"
+        android:src="@drawable/kus_cross" />
 
 </RelativeLayout>

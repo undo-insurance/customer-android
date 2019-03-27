@@ -1,18 +1,11 @@
 package com.kustomer.kustomersdk.ViewHolders;
 
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
+import com.kustomer.kustomersdk.Models.KUSBitmap;
 import com.kustomer.kustomersdk.R2;
-
-import java.io.File;
-import java.io.IOException;
-
-import static android.provider.MediaStore.Images.Media.getBitmap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,10 +28,11 @@ public class ImageAttachmentViewHolder extends RecyclerView.ViewHolder {
         ButterKnife.bind(this, itemView);
     }
 
-    public void onBind(final String imageUri, final ImageAttachmentListener listener) {
-        if (imageUri != null)
-            Glide.with(itemView).load(Uri.parse(imageUri)).into(ivAttachment);
-
+    public void onBind(final KUSBitmap kusBitmap, final ImageAttachmentListener listener) {
+        if (kusBitmap != null)
+            ivAttachment.setImageBitmap(kusBitmap.getBitmap());
+        else
+            ivAttachment.setImageBitmap(null);
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -51,7 +45,7 @@ public class ImageAttachmentViewHolder extends RecyclerView.ViewHolder {
         ivRemoveImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.onImageCancelClicked(imageUri);
+                listener.onImageCancelClicked(kusBitmap);
             }
         });
     }
@@ -59,7 +53,7 @@ public class ImageAttachmentViewHolder extends RecyclerView.ViewHolder {
 
     //region Interface
     public interface ImageAttachmentListener {
-        void onImageCancelClicked(String imageUri);
+        void onImageCancelClicked(KUSBitmap imageBitmap);
 
         void onImageTapped(int index);
     }

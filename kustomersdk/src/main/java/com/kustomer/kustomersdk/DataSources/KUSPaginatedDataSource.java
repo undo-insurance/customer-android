@@ -1,5 +1,7 @@
 package com.kustomer.kustomersdk.DataSources;
 
+import android.support.annotation.Nullable;
+
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Enums.KUSRequestType;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
@@ -8,6 +10,7 @@ import com.kustomer.kustomersdk.Interfaces.KUSRequestCompletionListener;
 import com.kustomer.kustomersdk.Models.KUSModel;
 import com.kustomer.kustomersdk.Models.KUSPaginatedResponse;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -363,6 +366,30 @@ public class KUSPaginatedDataSource {
 
         return arrayList;
     }
+
+    @Nullable
+    public List<KUSModel> objectsFromJSONArray(@Nullable JSONArray jsonArray) {
+        if (jsonArray == null)
+            return null;
+
+        ArrayList<KUSModel> objects = new ArrayList<>();
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            try {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                List<KUSModel> models = objectsFromJSON(jsonObject);
+                if (models != null) {
+                    for (int j = models.size() - 1; j >= 0; j--) {
+                        objects.add(models.get(j));
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return objects;
+    }
+
     //endregion
 
     //region Accessors

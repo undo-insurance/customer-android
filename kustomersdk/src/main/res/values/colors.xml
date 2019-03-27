@@ -38,6 +38,8 @@
     <color name="kusInputBarHighlightedTextColor">#2962FF</color>
     <color name="kusInputBarBackground">#FFFFFF</color>
     <color name="kusInputBarAttachmentIconColor">#000000</color>
+    <color name="kusInputBarAttachmentItemBackgroundColor">#F5F5F5</color>
+
     <color name="kusInputBarSeparatorColor">#BDBDBD</color>
     <color name="kusOptionPickerSeparatorColor">#BDBDBD</color>
     <color name="kusOptionPickerButtonBorderColor">#2962FF</color>

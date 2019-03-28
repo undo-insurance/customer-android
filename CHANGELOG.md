@@ -1,5 +1,14 @@
 # Changelog for Kustomer Android SDK
 
+## 0.1.31
+Release Date: 03/28/2019
+* Protect data to ensure HIPAA compliance
+* Added numbers option support in option list
+* Fixed send button issue for android 5.0 and below
+* Updated chat setting test cases
+* Fixed time format issue for non-supported languages like Twi
+* Removed delay when sending messages with attachment
+
 ## 0.1.30
 Release Date: 03/08/2019 
 * Fixed null pointer exceptions

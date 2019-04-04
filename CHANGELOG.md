@@ -1,5 +1,9 @@
 # Changelog for Kustomer Android SDK
 
+## 0.1.32
+Release Date: 04/04/2019
+* Fixed crash in notification due to AppCompatImageView
+
 ## 0.1.31
 Release Date: 03/28/2019
 * Protect data to ensure HIPAA compliance

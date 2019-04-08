@@ -63,5 +63,7 @@
     <string name="com_kustomer_unable_to_share_file">Unable to share file.</string>
     <string name="com_kustomer_unable_to_open_camera">Unable to open camera.</string>
     <string name="com_kustomer_low_memory_error">Low Memory. Could not upload images.</string>
+    <string name="com_kustomer_something_went_wrong">Something went wrong</string>
+    <string name="com_kustomer_unable_to_parse_response">Unable to parse response</string>
 
 </resources>

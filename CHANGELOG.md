@@ -1,5 +1,9 @@
 # Changelog for Kustomer Android SDK
 
+## 0.1.33
+Release Date: 04/09/2019
+* Fixed identify callback issue
+
 ## 0.1.32
 Release Date: 04/04/2019
 * Fixed crash in notification due to AppCompatImageView

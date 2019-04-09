@@ -5,6 +5,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.os.LocaleListCompat;
 
 import com.kustomer.kustomersdk.BuildConfig;
@@ -13,6 +14,7 @@ import com.kustomer.kustomersdk.Enums.KUSRequestType;
 import com.kustomer.kustomersdk.Interfaces.KUSObjectDataSourceListener;
 import com.kustomer.kustomersdk.Interfaces.KUSRequestCompletionListener;
 import com.kustomer.kustomersdk.Kustomer;
+import com.kustomer.kustomersdk.R;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
 
 import org.json.JSONException;
@@ -205,19 +207,18 @@ public class KUSRequestManager implements Serializable, KUSObjectDataSourceListe
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                if (response.body() != null) {
-                    boolean twoHundred = response.code() >= 200 && response.code() < 300;
 
-                    if (!twoHundred) {
-                        if (completionListener != null)
-                            safeComplete(completionListener, new Error("Something went wrong"), null);
-                        return;
-                    }
-
+                if(response.isSuccessful()){
                     if (completionListener != null) {
                         safeComplete(completionListener, null, null);
                     }
+                }else {
+                    if (completionListener != null)
+                        safeComplete(completionListener, new Error("Something went wrong"), null);
                 }
+
+                if(response.body() != null)
+                    response.body().close();
 
             }
         });
@@ -337,20 +338,26 @@ public class KUSRequestManager implements Serializable, KUSObjectDataSourceListe
 
                 @Override
                 public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                    if (response.body() != null) {
-                        String body = response.body().string();
 
-                        if (response.code() >= 400) {
-                            safeComplete(completionListener, new Error(body), null);
-                            return;
+                    if(response.isSuccessful()){
+                        if (response.body() != null) {
+                            String body = response.body().string();
+                            try {
+                                JSONObject jsonObject = new JSONObject(body);
+                                safeComplete(completionListener, null, jsonObject);
+                            } catch (JSONException ignore) {
+                                String errorMessage = Kustomer.getContext()
+                                        .getString(R.string.com_kustomer_unable_to_parse_response);
+                                safeComplete(completionListener, new Error(errorMessage),
+                                        null);
+                            }
+                        }else {
+                            safeComplete(completionListener, null, null);
                         }
-
-                        try {
-                            JSONObject jsonObject = new JSONObject(body);
-                            safeComplete(completionListener, null, jsonObject);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                    }else {
+                        String errorMessage = response.body() != null ? response.body().string()
+                                : Kustomer.getContext().getString(R.string.com_kustomer_something_went_wrong);
+                        safeComplete(completionListener, new Error(errorMessage), null);
                     }
                 }
             });

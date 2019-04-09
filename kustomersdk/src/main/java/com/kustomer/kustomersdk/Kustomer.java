@@ -244,8 +244,12 @@ public class Kustomer {
             throw new AssertionError("Kustomer expects externalToken to be non-null");
         }
 
-        if (externalToken.length() <= 0)
+        if(externalToken.isEmpty()){
+            if(listener != null)
+                listener.onComplete(false);
+
             return;
+        }
 
         HashMap<String, Object> params = new HashMap<String, Object>() {{
             put("externalToken", externalToken);

@@ -126,7 +126,12 @@ Kustomer.resetTracking();
 
 ```java
 // Securely identify a customer. Requires a valid JSON Web Token.
-Kustomer.identify("SECURE_ID_HASH");
+Kustomer.identify("SECURE_ID_HASH", new KUSIdentifyListener() {
+  @Override
+  public void onComplete(final boolean success) {
+      // Note: This will be called on background thread
+  }
+});
 
 /*
  Identifying users is the best way to ensure your users have a great chat experience because
@@ -224,6 +229,8 @@ Check chat management status asynchronously to enable support chat.
 Kustomer.isChatAvailable(new KUSChatAvailableListener(){
     @Override
     public void onSuccess(boolean enabled){
+        // Note: This will be called on background thread
+        
         // This is called when API call is successful.
         // enabled represent chat management settings.
 
@@ -231,6 +238,8 @@ Kustomer.isChatAvailable(new KUSChatAvailableListener(){
     
     @Override
     public void onFailure(){
+        // Note: This will be called on background thread
+        
         // This is called when API call fails.
     }
 });

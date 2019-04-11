@@ -3,8 +3,6 @@ package com.kustomer.kustomersdk;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.text.emoji.EmojiCompat;
@@ -20,8 +18,8 @@ import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Activities.KUSKnowledgeBaseActivity;
 import com.kustomer.kustomersdk.Activities.KUSSessionsActivity;
 import com.kustomer.kustomersdk.Enums.KUSRequestType;
-import com.kustomer.kustomersdk.Interfaces.KUSChatAvailableListener;
 import com.kustomer.kustomersdk.Helpers.KUSLocalization;
+import com.kustomer.kustomersdk.Interfaces.KUSChatAvailableListener;
 import com.kustomer.kustomersdk.Interfaces.KUSIdentifyListener;
 import com.kustomer.kustomersdk.Interfaces.KUSKustomerListener;
 import com.kustomer.kustomersdk.Interfaces.KUSLogOptions;
@@ -74,6 +72,7 @@ public class Kustomer {
     //endregion
 
     //region Class Methods
+
     public static void init(Context context, String apiKey) throws AssertionError {
         mContext = context.getApplicationContext();
 
@@ -112,6 +111,12 @@ public class Kustomer {
         getSharedInstance().mDescribeCustomer(customerDescription);
     }
 
+    /**
+     * Returns the identification status in listener on background thread.
+     *
+     * @param externalToken A valid JWT web token to identify user
+     * @param listener The callback which will receive identification status.
+     */
     public static void identify(@NonNull String externalToken, @Nullable KUSIdentifyListener listener) {
         getSharedInstance().mIdentify(externalToken, listener);
     }
@@ -128,6 +133,11 @@ public class Kustomer {
         return getSharedInstance().mGetUnreadMessageCount();
     }
 
+    /**
+     * Returns the chat status in listener on background thread.
+     *
+     * @param listener The callback which will receive chat status.
+     */
     public static void isChatAvailable(KUSChatAvailableListener listener) {
         getSharedInstance().mIsChatAvailable(listener);
     }

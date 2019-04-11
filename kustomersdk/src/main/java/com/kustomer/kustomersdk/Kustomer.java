@@ -266,12 +266,7 @@ public class Kustomer {
                     public void onCompletion(final Error error, JSONObject response) {
                         instance.get().getTrackingTokenDataSource().fetch();
                         if (listener != null) {
-                            new Handler(Looper.getMainLooper()).post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    listener.onComplete(error == null);
-                                }
-                            });
+                            listener.onComplete(error == null);
                         }
                     }
                 }

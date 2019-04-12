@@ -68,20 +68,10 @@ public class KUSChatSettingsDataSource extends KUSObjectDataSource implements Se
                     e.printStackTrace();
                 }
 
-                Handler handler = new Handler(Looper.getMainLooper());
-                final KUSChatSettings finalSettings = settings;
-
-                Runnable runnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        if(error == null && finalSettings !=null)
-                            listener.onSuccess(finalSettings.getEnabled());
-                        else
-                            listener.onFailure();
-                    }
-                };
-
-                handler.post(runnable);
+                if(error == null && settings !=null)
+                    listener.onSuccess(settings.getEnabled());
+                else
+                    listener.onFailure();
             }
         });
 

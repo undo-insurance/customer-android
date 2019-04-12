@@ -10,7 +10,7 @@
 
 
 ### Updates:
-No need to declare File Provider in manifest for camera access in SDK v0.1.25 & onwards. See [changelog](CHANGELOG.md)
+v0.2.0+: `identify()` & `isChatAvailable()` methods will always return callback on background thread. See [changelog](CHANGELOG.md)
 
 
 
@@ -31,7 +31,7 @@ The Kustomer Android SDK requires a valid API Key with role `org.tracking`. See 
 Include the library in your `app.gradle`:
 
 ```gradle
-implementation 'com.kustomer.kustomersdk:kustomersdk:0.1.33'
+implementation 'com.kustomer.kustomersdk:kustomersdk:0.2.0'
 ```
 
 #### Or through Maven
@@ -40,7 +40,7 @@ implementation 'com.kustomer.kustomersdk:kustomersdk:0.1.33'
 <dependency>
   <groupId>com.kustomer.kustomersdk</groupId>
   <artifactId>kustomersdk</artifactId>
-  <version>0.1.33</version>
+  <version>0.2.0</version>
   <type>pom</type>
 </dependency>
 ```

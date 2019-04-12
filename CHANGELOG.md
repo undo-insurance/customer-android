@@ -1,5 +1,9 @@
 # Changelog for Kustomer Android SDK
 
+## 0.2.0
+Release Date: 04/12/2019
+* `identify()` & `isChatAvailable()` methods will always return callback on background thread.
+
 ## 0.1.33
 Release Date: 04/09/2019
 * Fixed identify callback issue

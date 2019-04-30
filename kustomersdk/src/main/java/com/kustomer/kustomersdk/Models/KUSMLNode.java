@@ -1,5 +1,7 @@
 package com.kustomer.kustomersdk.Models;
 
+import android.support.annotation.Nullable;
+
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
 import com.kustomer.kustomersdk.Utils.JsonHelper;
 
@@ -14,6 +16,7 @@ public class KUSMLNode extends KUSModel {
     //region Properties
     private String displayName;
     private String nodeId;
+    private Boolean deleted;
     private ArrayList<KUSMLNode> childNodes;
     //endregion
 
@@ -22,25 +25,40 @@ public class KUSMLNode extends KUSModel {
     public KUSMLNode(JSONObject json) throws KUSInvalidJsonException {
         super(json);
 
-        displayName = JsonHelper.stringFromKeyPath(json,"displayName");
-        nodeId = JsonHelper.stringFromKeyPath(json,"id");
-        childNodes = KUSMLNode.objectsFromJSONs(JsonHelper.arrayFromKeyPath(json,"children"));
+        displayName = JsonHelper.stringFromKeyPath(json, "displayName");
+        nodeId = JsonHelper.stringFromKeyPath(json, "id");
+        deleted = JsonHelper.boolFromKeyPath(json, "deleted");
+
+        //Filter deleted nodes
+        ArrayList<KUSMLNode> nodes = KUSMLNode.objectsFromJSONs(JsonHelper.arrayFromKeyPath(json,
+                "children"));
+        ArrayList<KUSMLNode> filteredNodes = new ArrayList<>();
+
+        if (nodes != null) {
+            for (int i = 0; i < nodes.size(); i++) {
+                if (!nodes.get(i).isDeleted())
+                    filteredNodes.add(nodes.get(i));
+            }
+        }
+
+        childNodes = filteredNodes;
     }
     //endregion
 
 
     //region Class methods
 
-    public String modelType(){
+    public String modelType() {
         return null;
     }
 
-    public boolean enforcesModelType(){
+    public boolean enforcesModelType() {
         return false;
     }
 
-    public static ArrayList<KUSMLNode> objectsFromJSONs(JSONArray jsonArray){
-        if(jsonArray == null)
+    @Nullable
+    public static ArrayList<KUSMLNode> objectsFromJSONs(@Nullable JSONArray jsonArray) {
+        if (jsonArray == null)
             return null;
 
         ArrayList<KUSMLNode> arrayList = new ArrayList<>();
@@ -50,7 +68,8 @@ public class KUSMLNode extends KUSModel {
                 JSONObject json = (JSONObject) jsonArray.get(i);
                 KUSMLNode node = new KUSMLNode(json);
                 arrayList.add(node);
-            } catch (JSONException | KUSInvalidJsonException ignore) { }
+            } catch (JSONException | KUSInvalidJsonException ignore) {
+            }
         }
 
         return arrayList;
@@ -69,6 +88,10 @@ public class KUSMLNode extends KUSModel {
 
     public ArrayList<KUSMLNode> getChildNodes() {
         return childNodes;
+    }
+
+    public boolean isDeleted() {
+        return deleted != null ? deleted : false;
     }
 
     //endregion

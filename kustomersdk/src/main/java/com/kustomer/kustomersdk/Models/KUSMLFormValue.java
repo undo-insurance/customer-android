@@ -21,7 +21,19 @@ public class KUSMLFormValue extends KUSModel {
 
         displayName = JsonHelper.stringFromKeyPath(json,"displayName");
         lastNodeRequired = JsonHelper.boolFromKeyPath(json,"lastNodeRequired");
-        mlNodes = KUSMLNode.objectsFromJSONs(JsonHelper.arrayFromKeyPath(json,"tree.children"));
+
+        ArrayList<KUSMLNode> nodes = KUSMLNode.objectsFromJSONs(JsonHelper.arrayFromKeyPath(json,
+                "tree.children"));
+        ArrayList<KUSMLNode> filteredNodes = new ArrayList<>();
+
+        if (nodes != null) {
+            for (int i = 0; i < nodes.size(); i++) {
+                if (!nodes.get(i).isDeleted())
+                    filteredNodes.add(nodes.get(i));
+            }
+        }
+
+        mlNodes = filteredNodes;
     }
     //endregion
 

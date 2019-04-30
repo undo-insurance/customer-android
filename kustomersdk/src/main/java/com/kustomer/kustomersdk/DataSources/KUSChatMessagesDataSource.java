@@ -13,7 +13,6 @@ import com.kustomer.kustomersdk.Enums.KUSVolumeControlMode;
 import com.kustomer.kustomersdk.Helpers.KUSAudio;
 import com.kustomer.kustomersdk.Helpers.KUSCache;
 import com.kustomer.kustomersdk.Helpers.KUSDate;
-import com.kustomer.kustomersdk.Helpers.KUSImage;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
 import com.kustomer.kustomersdk.Helpers.KUSLog;
 import com.kustomer.kustomersdk.Helpers.KUSUpload;
@@ -25,7 +24,9 @@ import com.kustomer.kustomersdk.Interfaces.KUSObjectDataSourceListener;
 import com.kustomer.kustomersdk.Interfaces.KUSPaginatedDataSourceListener;
 import com.kustomer.kustomersdk.Interfaces.KUSRequestCompletionListener;
 import com.kustomer.kustomersdk.Interfaces.KUSSessionQueuePollingListener;
+import com.kustomer.kustomersdk.Interfaces.KUSVolumeControlTimerListener;
 import com.kustomer.kustomersdk.Kustomer;
+import com.kustomer.kustomersdk.Managers.KUSVolumeControlTimerManager;
 import com.kustomer.kustomersdk.Models.KUSChatAttachment;
 import com.kustomer.kustomersdk.Models.KUSChatMessage;
 import com.kustomer.kustomersdk.Models.KUSChatSession;
@@ -69,7 +70,6 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
 
     //region Properties
     private static final int KUS_CHAT_AUTO_REPLY_DELAY = 2 * 1000;
-    private static final int MAX_PIXEL_COUNT_FOR_CACHED_IMAGES = 400000;
 
     private String sessionId;
     private boolean createdLocally;
@@ -691,8 +691,8 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
                     put("attachments", attachmentIds);
                 }};
 
-                if(!TextUtils.isEmpty(text))
-                    params.put("body",text);
+                if (!TextUtils.isEmpty(text))
+                    params.put("body", text);
 
                 getUserSession().getRequestManager().performRequestType(
                         KUSRequestType.KUS_REQUEST_TYPE_POST,
@@ -944,19 +944,18 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     private void startVolumeControlFormTrackingAfterDelay(long delay) {
         final WeakReference<KUSChatMessagesDataSource> weakReference = new WeakReference<>(this);
 
-        Handler delayHandler = new Handler(Looper.getMainLooper());
-        Runnable delayRunnable = new Runnable() {
-            @Override
-            public void run() {
-                KUSChatMessagesDataSource strongReference = weakReference.get();
-                if (strongReference == null) {
-                    return;
-                }
-                strongReference.vcTrackingDelayCompleted = true;
-                strongReference.insertVolumeControlFormMessageIfNecessary();
-            }
-        };
-        delayHandler.postDelayed(delayRunnable, delay);
+        KUSVolumeControlTimerManager.getSharedInstance().createVolumeControlTimer(sessionId, delay,
+                new KUSVolumeControlTimerListener() {
+                    @Override
+                    public void onDelayComplete() {
+                        KUSChatMessagesDataSource strongReference = weakReference.get();
+                        if (strongReference == null) {
+                            return;
+                        }
+                        strongReference.vcTrackingDelayCompleted = true;
+                        strongReference.insertVolumeControlFormMessageIfNecessary();
+                    }
+                });
     }
 
     private void endVolumeControlFormAfterDelayIfNecessary(long delay) {
@@ -1334,6 +1333,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     private void endVolumeControlTracking() {
         vcFormEnd = true;
         vcFormActive = false;
+        KUSVolumeControlTimerManager.getSharedInstance().removeVcTimer(sessionId);
     }
 
     private KUSFormQuestion getNextVCFormQuestion(int index, String previousChannel) {
@@ -1457,7 +1457,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
 
         //Store the local image data in our cache for the remote image urls
         KUSChatMessage firstMessage = (KUSChatMessage) finalMessages.get(0);
-        String messageId= firstMessage.getId().split("_")[0];
+        String messageId = firstMessage.getId().split("_")[0];
 
         for (int i = 0; i < (firstMessage.getAttachmentIds() != null ? firstMessage.getAttachmentIds().size() : 0); i++) {
             Bitmap attachment = attachments.get(i);

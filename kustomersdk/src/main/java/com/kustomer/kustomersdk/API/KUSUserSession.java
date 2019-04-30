@@ -1,5 +1,7 @@
 package com.kustomer.kustomersdk.API;
 
+import android.support.annotation.NonNull;
+
 import com.kustomer.kustomersdk.DataSources.KUSChatMessagesDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSChatSessionsDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSChatSettingsDataSource;
@@ -15,8 +17,8 @@ import com.kustomer.kustomersdk.Helpers.KUSSharedPreferences;
 import com.kustomer.kustomersdk.Interfaces.KUSPaginatedDataSourceListener;
 import com.kustomer.kustomersdk.Interfaces.KUSRequestCompletionListener;
 import com.kustomer.kustomersdk.Kustomer;
+import com.kustomer.kustomersdk.Managers.KUSStatsManager;
 import com.kustomer.kustomersdk.Models.KUSChatSession;
-import com.kustomer.kustomersdk.Models.KUSClientActivity;
 import com.kustomer.kustomersdk.Models.KUSCustomerDescription;
 import com.kustomer.kustomersdk.Models.KUSModel;
 import com.kustomer.kustomersdk.Models.KUSTrackingToken;
@@ -53,6 +55,7 @@ public class KUSUserSession implements Serializable, KUSPaginatedDataSourceListe
     private KUSPushClient pushClient;
     private KUSDelegateProxy delegateProxy;
     private KUSClientActivityManager activityManager;
+    private KUSStatsManager statsManager;
 
     private KUSSharedPreferences sharedPreferences;
 
@@ -270,6 +273,14 @@ public class KUSUserSession implements Serializable, KUSPaginatedDataSourceListe
             scheduleDataSource = new KUSScheduleDataSource(this);
 
         return scheduleDataSource;
+    }
+
+    @NonNull
+    public KUSStatsManager getStatsManager() {
+        if(statsManager == null)
+            statsManager = new KUSStatsManager(this);
+
+        return statsManager;
     }
     //endregion
 

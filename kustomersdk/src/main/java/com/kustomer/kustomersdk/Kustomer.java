@@ -24,6 +24,8 @@ import com.kustomer.kustomersdk.Interfaces.KUSIdentifyListener;
 import com.kustomer.kustomersdk.Interfaces.KUSKustomerListener;
 import com.kustomer.kustomersdk.Interfaces.KUSLogOptions;
 import com.kustomer.kustomersdk.Interfaces.KUSRequestCompletionListener;
+import com.kustomer.kustomersdk.Managers.KUSNetworkStateManager;
+import com.kustomer.kustomersdk.Managers.KUSVolumeControlTimerManager;
 import com.kustomer.kustomersdk.Models.KUSCustomerDescription;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
 
@@ -80,7 +82,7 @@ public class Kustomer {
         EmojiCompat.init(emojiConfig);
 
         KUSLocalization.getSharedInstance().updateKustomerLocaleWithFallback(mContext);
-
+        KUSNetworkStateManager.getSharedInstance().startObservingNetworkState();
         getSharedInstance().setApiKey(apiKey);
 
         try {
@@ -289,6 +291,7 @@ public class Kustomer {
         // Create a new userSession and release the previous one
         if (userSession != null) {
             userSession.removeAllListeners();
+            KUSVolumeControlTimerManager.getSharedInstance().removeVcTimers();
         }
 
         userSession = new KUSUserSession(orgName, orgId, true);

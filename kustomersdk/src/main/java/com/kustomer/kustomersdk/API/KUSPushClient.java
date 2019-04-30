@@ -11,9 +11,9 @@ import com.kustomer.kustomersdk.DataSources.KUSPaginatedDataSource;
 import com.kustomer.kustomersdk.Enums.KUSRequestType;
 import com.kustomer.kustomersdk.Helpers.KUSAudio;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
+import com.kustomer.kustomersdk.Interfaces.KUSCustomerStatsListener;
 import com.kustomer.kustomersdk.Interfaces.KUSObjectDataSourceListener;
 import com.kustomer.kustomersdk.Interfaces.KUSPaginatedDataSourceListener;
-import com.kustomer.kustomersdk.Interfaces.KUSPusherShouldConnectListener;
 import com.kustomer.kustomersdk.Interfaces.KUSRequestCompletionListener;
 import com.kustomer.kustomersdk.Kustomer;
 import com.kustomer.kustomersdk.Models.KUSChatMessage;
@@ -73,9 +73,7 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
     private Handler handler;
 
     private boolean isPusherTrackingStarted;
-    private boolean sessionUpdated;
     private boolean didPusherLostPackets;
-    private Date lastActivity;
     //endregion
 
     //region LifeCycle
@@ -175,11 +173,12 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
                         return;
 
                     isPusherTrackingStarted = false;
-
-                    updateStats(new KUSPusherShouldConnectListener() {
+                    userSession.get().getStatsManager().updateStats(new KUSCustomerStatsListener() {
                         @Override
-                        public void onCompletion() {
-                            // Get latest session on update to avoid packet loss during socket connection
+                        public void onCompletion(boolean sessionUpdated) {
+                            if (userSession.get() == null)
+                                return;
+
                             if (sessionUpdated) {
                                 didPusherLostPackets = true;
                                 userSession.get().getChatSessionsDataSource().fetchLatest();
@@ -262,9 +261,11 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
     }
 
     private void onPollTick() {
-        updateStats(new KUSPusherShouldConnectListener() {
+        if (userSession.get() == null)
+            return;
+        userSession.get().getStatsManager().updateStats(new KUSCustomerStatsListener() {
             @Override
-            public void onCompletion() {
+            public void onCompletion(boolean sessionUpdated) {
                 if (userSession.get() != null && sessionUpdated)
                     userSession.get().getChatSessionsDataSource().fetchLatest();
             }
@@ -301,44 +302,6 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
                 KUSNotificationWindow.getSharedInstance().showNotification(chatSession, Kustomer.getContext(), shouldAutoDismiss);
             }
         }
-    }
-
-    private void updateStats(final KUSPusherShouldConnectListener listener) {
-        if (userSession.get() == null)
-            return;
-
-        // Fetch last activity time of the client
-        userSession.get().getRequestManager().getEndpoint(KUSConstants.URL.CUSTOMER_STATS_ENDPOINT,
-                true,
-                new KUSRequestCompletionListener() {
-                    @Override
-                    public void onCompletion(Error error, final JSONObject response) {
-                        if (userSession.get() == null)
-                            return;
-
-                        JSONObject jsonObject = JsonHelper.jsonObjectFromKeyPath(response,
-                                "data");
-                        Date lastActivity = JsonHelper.dateFromKeyPath(jsonObject,
-                                "attributes.lastActivity");
-
-
-                        boolean sessionUpdated = (KUSPushClient.this.lastActivity == null && lastActivity != null)
-                                || (KUSPushClient.this.lastActivity != null
-                                && !KUSPushClient.this.lastActivity.equals(lastActivity));
-
-                        KUSPushClient.this.sessionUpdated = sessionUpdated;
-                        KUSPushClient.this.lastActivity = lastActivity;
-
-                        Handler handler = new Handler(Looper.getMainLooper());
-                        Runnable runnable = new Runnable() {
-                            @Override
-                            public void run() {
-                                listener.onCompletion();
-                            }
-                        };
-                        handler.post(runnable);
-                    }
-                });
     }
 
     private void updatePreviousChatSessions() {
@@ -621,6 +584,13 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
                 };
                 handler.post(runnable);
             }
+        } else if (userSession.get() != null && dataSource == userSession.get().getChatSessionsDataSource()) {
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    userSession.get().getChatSessionsDataSource().fetchLatest();
+                }
+            }, KUS_RETRY_DELAY);
         }
     }
 
@@ -656,11 +626,21 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
                     if (messagesDataSource.getList().size() > 0)
                         latestChatMessage = (KUSChatMessage) messagesDataSource.getList().get(0);
 
-                    boolean isUpdatedSession = chatSession.getLastMessageAt().after(previousChatSession.getLastMessageAt());
-                    Date sessionLastSeenAt = userSession.get().getChatSessionsDataSource().lastSeenAtForSessionId(chatSession.getId());
-                    boolean lastSeenBeforeMessage = sessionLastSeenAt == null || chatSession.getLastMessageAt().after(sessionLastSeenAt);
+                    Date sessionLastSeenAt = userSession.get().getChatSessionsDataSource()
+                            .lastSeenAtForSessionId(chatSession.getId());
+
+                    boolean isUpdatedSession = previousChatSession.getLastMessageAt() == null
+                            || (chatSession.getLastMessageAt() != null
+                            && chatSession.getLastMessageAt().after(previousChatSession.getLastMessageAt()));
+
+                    boolean lastSeenBeforeMessage = sessionLastSeenAt == null
+                            || (chatSession.getLastMessageAt() != null
+                            && chatSession.getLastMessageAt().after(sessionLastSeenAt));
+
                     boolean lastMessageAtNewerThanLocalLastMessage = latestChatMessage == null
-                            || chatSession.getLastMessageAt().after(latestChatMessage.getCreatedAt());
+                            || latestChatMessage.getCreatedAt() == null
+                            || (chatSession.getLastMessageAt() != null
+                            && chatSession.getLastMessageAt().after(latestChatMessage.getCreatedAt()));
 
                     boolean chatSessionSetToLock = chatSession.getLockedAt() != null
                             && !chatSession.getLockedAt().equals(previousChatSession.getLockedAt());

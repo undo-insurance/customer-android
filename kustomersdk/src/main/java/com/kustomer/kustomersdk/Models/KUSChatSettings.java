@@ -10,7 +10,6 @@ import org.json.JSONObject;
 import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by Junaid on 1/20/2018.
@@ -44,6 +43,7 @@ public class KUSChatSettings extends KUSModel implements Serializable {
 
     private KUSVolumeControlMode volumeControlMode;
     private Integer upfrontWaitThreshold;
+    private Boolean showKustomerBranding;
     //endregion
 
     //region Initializer
@@ -77,6 +77,7 @@ public class KUSChatSettings extends KUSModel implements Serializable {
 
         volumeControlMode = KUSVolumeControlModeFromString(JsonHelper.stringFromKeyPath(json,"attributes.volumeControl.mode"));
         upfrontWaitThreshold = JsonHelper.integerFromKeyPath(json,"attributes.volumeControl.upfrontWaitThreshold");
+        showKustomerBranding = JsonHelper.boolFromKeyPath(json, "attributes.showBrandingIdentifier");
     }
 
     @Override
@@ -230,6 +231,10 @@ public class KUSChatSettings extends KUSModel implements Serializable {
 
     public int getUpfrontWaitThreshold() {
         return upfrontWaitThreshold;
+    }
+
+    public boolean shouldShowKustomerBranding() {
+        return showKustomerBranding != null ? showKustomerBranding : false;
     }
 
     //endregion

@@ -80,9 +80,11 @@
     </RelativeLayout>
 
     <LinearLayout
+        android:id="@+id/footerLayout"
         android:layout_width="match_parent"
         android:layout_height="16dp"
         android:orientation="vertical"
+        android:visibility="gone"
         android:background="@color/kusColorLightGrey">
         <View
             android:layout_width="match_parent"

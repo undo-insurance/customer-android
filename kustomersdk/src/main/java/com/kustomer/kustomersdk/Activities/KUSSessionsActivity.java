@@ -12,13 +12,16 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Adapters.SessionListAdapter;
 import com.kustomer.kustomersdk.BaseClasses.BaseActivity;
 import com.kustomer.kustomersdk.DataSources.KUSChatSessionsDataSource;
+import com.kustomer.kustomersdk.DataSources.KUSObjectDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSPaginatedDataSource;
 import com.kustomer.kustomersdk.Helpers.KUSLocalization;
+import com.kustomer.kustomersdk.Interfaces.KUSObjectDataSourceListener;
 import com.kustomer.kustomersdk.Interfaces.KUSPaginatedDataSourceListener;
 import com.kustomer.kustomersdk.Kustomer;
 import com.kustomer.kustomersdk.Models.KUSChatSession;
@@ -32,13 +35,15 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import butterknife.Optional;
 
-public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDataSourceListener, SessionListAdapter.onItemClickListener, KUSToolbar.OnToolbarItemClickListener {
+public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDataSourceListener, SessionListAdapter.onItemClickListener, KUSToolbar.OnToolbarItemClickListener, KUSObjectDataSourceListener {
 
     //region Properties
     @BindView(R2.id.rvSessions)
     RecyclerView rvSessions;
     @BindView(R2.id.btnNewConversation)
     Button btnNewConversation;
+    @BindView(R2.id.footerLayout)
+    LinearLayout footerLayout;
 
     private KUSUserSession userSession;
     private KUSChatSessionsDataSource chatSessionsDataSource;
@@ -84,6 +89,8 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
             btnNewConversation.setVisibility(View.INVISIBLE);
             showProgressBar();
         }
+
+        showKustomerBrandingFooterIfNeeded();
     }
 
     @Override
@@ -112,6 +119,18 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
     //endregion
 
     //region Initializer
+
+    private void showKustomerBrandingFooterIfNeeded() {
+        if (userSession.getChatSettingsDataSource().isFetched()) {
+            KUSChatSettings chatSettings = (KUSChatSettings) userSession.getChatSettingsDataSource().getObject();
+            footerLayout.setVisibility(chatSettings != null && chatSettings.shouldShowKustomerBranding() ?
+                    View.VISIBLE : View.GONE);
+        } else {
+            userSession.getChatSettingsDataSource().addListener(this);
+            userSession.getChatSettingsDataSource().fetch();
+        }
+    }
+
     private void setupToolbar() {
         KUSToolbar kusToolbar = (KUSToolbar) toolbar;
         kusToolbar.initWithUserSession(userSession);
@@ -289,5 +308,31 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
     public void onToolbarClosePressed() {
         clearAllLibraryActivities();
     }
+
+    @Override
+    public void objectDataSourceOnLoad(KUSObjectDataSource dataSource) {
+        if (dataSource != userSession.getChatSettingsDataSource())
+            return;
+
+        userSession.getChatSettingsDataSource().removeListener(this);
+
+        Handler handler = new Handler(Looper.getMainLooper());
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                KUSChatSettings chatSettings = (KUSChatSettings) userSession
+                        .getChatSettingsDataSource().getObject();
+                footerLayout.setVisibility(chatSettings != null && chatSettings.shouldShowKustomerBranding() ?
+                        View.VISIBLE : View.GONE);
+            }
+        };
+        handler.post(runnable);
+    }
+
+    @Override
+    public void objectDataSourceOnError(KUSObjectDataSource dataSource, Error error) {
+
+    }
+
     //endregion
 }

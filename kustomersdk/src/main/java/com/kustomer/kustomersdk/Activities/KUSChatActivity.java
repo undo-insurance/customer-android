@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +34,7 @@ import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Adapters.MessageListAdapter;
 import com.kustomer.kustomersdk.BaseClasses.BaseActivity;
 import com.kustomer.kustomersdk.DataSources.KUSChatMessagesDataSource;
+import com.kustomer.kustomersdk.DataSources.KUSObjectDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSPaginatedDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSTeamsDataSource;
 import com.kustomer.kustomersdk.Enums.KUSChatMessageType;
@@ -45,6 +47,7 @@ import com.kustomer.kustomersdk.Interfaces.KUSChatMessagesDataSourceListener;
 import com.kustomer.kustomersdk.Interfaces.KUSEmailInputViewListener;
 import com.kustomer.kustomersdk.Interfaces.KUSInputBarViewListener;
 import com.kustomer.kustomersdk.Interfaces.KUSMLFormValuesPickerViewListener;
+import com.kustomer.kustomersdk.Interfaces.KUSObjectDataSourceListener;
 import com.kustomer.kustomersdk.Interfaces.KUSOptionPickerViewListener;
 import com.kustomer.kustomersdk.Kustomer;
 import com.kustomer.kustomersdk.Models.KUSBitmap;
@@ -77,7 +80,7 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class KUSChatActivity extends BaseActivity implements KUSChatMessagesDataSourceListener, KUSToolbar.OnToolbarItemClickListener, KUSEmailInputViewListener, KUSInputBarViewListener, KUSOptionPickerViewListener, MessageListAdapter.ChatMessageItemListener, KUSMLFormValuesPickerViewListener {
+public class KUSChatActivity extends BaseActivity implements KUSChatMessagesDataSourceListener, KUSToolbar.OnToolbarItemClickListener, KUSEmailInputViewListener, KUSInputBarViewListener, KUSOptionPickerViewListener, MessageListAdapter.ChatMessageItemListener, KUSMLFormValuesPickerViewListener, KUSObjectDataSourceListener {
 
     //region Properties
     private static final int REQUEST_IMAGE_CAPTURE = 1122;
@@ -105,6 +108,8 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
     ImageView ivNonBusinessHours;
     @BindView(R2.id.mlFormValuesPicker)
     KUSMLFormValuesPickerView mlFormValuesPickerView;
+    @BindView(R2.id.footerLayout)
+    LinearLayout footerLayout;
 
     KUSChatSession kusChatSession;
     KUSUserSession userSession;
@@ -295,6 +300,18 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         setupToolbar();
         checkShouldShowInputView();
         showNonBusinessHoursImageIfNeeded();
+        showKustomerBrandingFooterIfNeeded();
+    }
+
+    private void showKustomerBrandingFooterIfNeeded() {
+        if (userSession.getChatSettingsDataSource().isFetched()) {
+            KUSChatSettings chatSettings = (KUSChatSettings) userSession.getChatSettingsDataSource().getObject();
+            footerLayout.setVisibility(chatSettings != null && chatSettings.shouldShowKustomerBranding() ?
+                    View.VISIBLE : View.GONE);
+        } else {
+            userSession.getChatSettingsDataSource().addListener(this);
+            userSession.getChatSettingsDataSource().fetch();
+        }
     }
 
     private void updateOptionPickerHeight() {
@@ -1010,5 +1027,31 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         kusInputBarView.setText("");
         kusInputBarView.removeAllAttachments();
     }
+
+    @Override
+    public void objectDataSourceOnLoad(KUSObjectDataSource dataSource) {
+        if (dataSource != userSession.getChatSettingsDataSource())
+            return;
+
+        userSession.getChatSettingsDataSource().removeListener(this);
+
+        Handler handler = new Handler(Looper.getMainLooper());
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                KUSChatSettings chatSettings = (KUSChatSettings) userSession
+                        .getChatSettingsDataSource().getObject();
+                footerLayout.setVisibility(chatSettings != null && chatSettings.shouldShowKustomerBranding() ?
+                        View.VISIBLE : View.GONE);
+            }
+        };
+        handler.post(runnable);
+    }
+
+    @Override
+    public void objectDataSourceOnError(KUSObjectDataSource dataSource, Error error) {
+
+    }
+
     //endregion
 }

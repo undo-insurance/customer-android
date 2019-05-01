@@ -111,8 +111,10 @@
                 android:visibility="gone" />
 
             <LinearLayout
+                android:id="@+id/footerLayout"
                 android:layout_width="match_parent"
                 android:layout_height="16dp"
+                android:visibility="gone"
                 android:background="@color/kusColorLightGrey"
                 android:orientation="vertical">
 

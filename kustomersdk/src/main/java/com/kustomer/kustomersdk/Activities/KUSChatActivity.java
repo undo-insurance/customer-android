@@ -956,19 +956,20 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
     @Override
     public boolean inputBarShouldEnableSend() {
-        KUSFormQuestion currentVCQuestion = chatMessagesDataSource.volumeControlCurrentQuestion();
-        if (currentVCQuestion != null) {
+        KUSFormQuestion question = chatMessagesDataSource.volumeControlCurrentQuestion();
 
-            if (currentVCQuestion.getProperty() == KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_CUSTOMER_EMAIL) {
+        if (question == null)
+            question = chatMessagesDataSource.currentQuestion();
+
+        if (question != null) {
+
+            if (question.getProperty() == KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_CUSTOMER_EMAIL) {
                 return KUSText.isValidEmail(kusInputBarView.getText());
-            } else if (currentVCQuestion.getProperty() == KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_CUSTOMER_PHONE) {
+
+            } else if (question.getProperty() == KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_CUSTOMER_PHONE) {
                 return KUSText.isValidPhone(kusInputBarView.getText());
             }
         }
-
-        KUSFormQuestion currentQuestion = chatMessagesDataSource.currentQuestion();
-        if (currentQuestion != null && currentQuestion.getProperty() == KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_CUSTOMER_EMAIL)
-            return KUSText.isValidEmail(kusInputBarView.getText());
 
         return true;
     }

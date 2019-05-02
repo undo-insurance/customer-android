@@ -25,6 +25,7 @@ import com.kustomer.kustomersdk.Adapters.ImageAttachmentListAdapter;
 import com.kustomer.kustomersdk.DataSources.KUSObjectDataSource;
 import com.kustomer.kustomersdk.Helpers.KUSPermission;
 import com.kustomer.kustomersdk.Interfaces.KUSBitmapListener;
+import com.kustomer.kustomersdk.Interfaces.KUSInputBarTextChangeListener;
 import com.kustomer.kustomersdk.Interfaces.KUSInputBarViewListener;
 import com.kustomer.kustomersdk.Interfaces.KUSObjectDataSourceListener;
 import com.kustomer.kustomersdk.Models.KUSBitmap;
@@ -53,6 +54,9 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
     ImageView ivAttachment;
     @BindView(R2.id.rvImageAttachment)
     RecyclerView rvImageAttachment;
+
+    @Nullable
+    KUSInputBarTextChangeListener textChangeListener;
 
     KUSInputBarViewListener listener;
     ImageAttachmentListAdapter adapter;
@@ -159,6 +163,10 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
 
     public void setListener(KUSInputBarViewListener listener) {
         this.listener = listener;
+    }
+
+    public void setTextChangeListener(@Nullable KUSInputBarTextChangeListener listener) {
+        textChangeListener = listener;
     }
 
     public void setText(String text) {
@@ -275,6 +283,9 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
     @Override
     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
         updateSendButton();
+
+        if (textChangeListener != null)
+            textChangeListener.inputBarTextChanged();
     }
 
     @Override

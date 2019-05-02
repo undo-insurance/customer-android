@@ -2,6 +2,7 @@ package com.kustomer.kustomersdk.DataSources;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
@@ -18,6 +19,7 @@ import com.kustomer.kustomersdk.Interfaces.KUSRequestCompletionListener;
 import com.kustomer.kustomersdk.Models.KUSChatMessage;
 import com.kustomer.kustomersdk.Models.KUSChatSession;
 import com.kustomer.kustomersdk.Models.KUSModel;
+import com.kustomer.kustomersdk.Models.KUSTypingIndicator;
 import com.kustomer.kustomersdk.Utils.JsonHelper;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
 
@@ -604,6 +606,11 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource
     @Override
     public void onCreateSessionId(KUSChatMessagesDataSource source, String sessionId) {
 
+    }
+
+    @Override
+    public void onReceiveTypingUpdate(@NonNull KUSChatMessagesDataSource source, @Nullable KUSTypingIndicator typingIndicator) {
+        //No need to do anything here
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.kustomer.kustomersdk.Adapters;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -7,10 +8,13 @@ import android.view.ViewGroup;
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.DataSources.KUSChatMessagesDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSPaginatedDataSource;
+import com.kustomer.kustomersdk.Enums.KUSTypingStatus;
 import com.kustomer.kustomersdk.Models.KUSChatMessage;
 import com.kustomer.kustomersdk.Models.KUSChatSession;
+import com.kustomer.kustomersdk.Models.KUSTypingIndicator;
 import com.kustomer.kustomersdk.R;
 import com.kustomer.kustomersdk.ViewHolders.AgentMessageViewHolder;
+import com.kustomer.kustomersdk.ViewHolders.AgentTypingViewHolder;
 import com.kustomer.kustomersdk.ViewHolders.DummyViewHolder;
 import com.kustomer.kustomersdk.ViewHolders.UserMessageViewHolder;
 
@@ -27,11 +31,13 @@ public class MessageListAdapter extends RecyclerView.Adapter {
     private static final int AGENT_VIEW = 0;
     private static final int USER_VIEW = 1;
     private static final int END_VIEW = 2;
+    private static final int TYPING_VIEW = 3;
 
     private KUSPaginatedDataSource mPaginatedDataSource;
     private KUSUserSession mUserSession;
     private KUSChatMessagesDataSource mChatMessagesDataSource;
     private ChatMessageItemListener mListener;
+    private KUSTypingIndicator typingIndicator;
     //endregion
 
     //region LifeCycle
@@ -45,31 +51,47 @@ public class MessageListAdapter extends RecyclerView.Adapter {
         mListener = listener;
     }
 
+    @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         if (viewType == USER_VIEW)
-            return new UserMessageViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.kus_item_user_view_holder, parent, false));
+            return new UserMessageViewHolder(LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.kus_item_user_view_holder, parent, false));
+
         else if (viewType == AGENT_VIEW)
-            return new AgentMessageViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.kus_item_agent_view_holder, parent, false));
+            return new AgentMessageViewHolder(LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.kus_item_agent_view_holder, parent, false));
+
+        else if (viewType == END_VIEW)
+            return new DummyViewHolder(LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.kus_item_closed_chat_layout, parent, false));
+
         else
-            return new DummyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.kus_item_closed_chat_layout, parent, false));
+            return new AgentTypingViewHolder(LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.kus_item_agent_typing_view_holder, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder.getItemViewType() == END_VIEW)
             return;
 
-        if (getItemCount() > mPaginatedDataSource.getSize())
-            position--;
+        if (holder.getItemViewType() == TYPING_VIEW) {
+            ((AgentTypingViewHolder) holder).onBind(typingIndicator, mUserSession);
+            return;
+        }
 
-        KUSChatMessage chatMessage = messageForPosition(position);
-        KUSChatMessage previousChatMessage = previousMessage(position);
-        KUSChatMessage nextChatMessage = nextMessage(position);
+        int mPosition = position;
+        if (getItemCount() > mPaginatedDataSource.getSize())
+            mPosition--;
+
+        KUSChatMessage chatMessage = messageForPosition(mPosition);
+        KUSChatMessage previousChatMessage = previousMessage(mPosition);
+        KUSChatMessage nextChatMessage = nextMessage(mPosition);
 
         if (!mChatMessagesDataSource.isFetchedAll() &&
-                position >= mChatMessagesDataSource.getSize() - 1 - K_PREFETCH_PADDING)
+                mPosition >= mChatMessagesDataSource.getSize() - 1 - K_PREFETCH_PADDING)
             mChatMessagesDataSource.fetchNext();
 
         boolean nextMessageOlderThan5Min = nextChatMessage == null ||
@@ -87,9 +109,16 @@ public class MessageListAdapter extends RecyclerView.Adapter {
     @Override
     public int getItemViewType(int position) {
         if (getItemCount() > mPaginatedDataSource.getSize()) {
-            if (position == 0)
-                return END_VIEW;
-            else position--;
+            if (position == 0) {
+                KUSChatSession session = (KUSChatSession) mUserSession.getChatSessionsDataSource()
+                        .findById(mChatMessagesDataSource.getSessionId());
+
+                if (session != null && session.getLockedAt() != null)
+                    return END_VIEW;
+                else
+                    return TYPING_VIEW;
+
+            } else position--;
 
         }
         KUSChatMessage chatMessage = messageForPosition(position);
@@ -103,11 +132,28 @@ public class MessageListAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-        KUSChatSession session = (KUSChatSession) mUserSession.getChatSessionsDataSource().findById(mChatMessagesDataSource.getSessionId());
+        KUSChatSession session = (KUSChatSession) mUserSession.getChatSessionsDataSource()
+                .findById(mChatMessagesDataSource.getSessionId());
         if (session != null && session.getLockedAt() != null)
             return mPaginatedDataSource.getSize() + 1;
+
+        if (typingIndicator != null && typingIndicator.getStatus() == KUSTypingStatus.KUS_TYPING)
+            return mPaginatedDataSource.getSize() + 1;
+
         return mPaginatedDataSource.getSize();
     }
+    //endregion
+
+    //region public Methods
+
+    public void setTypingIndicator(KUSTypingIndicator typingIndicator) {
+        this.typingIndicator = typingIndicator;
+    }
+
+    public KUSTypingIndicator getTypingIndicator() {
+        return typingIndicator;
+    }
+
     //endregion
 
     //region Private Methods

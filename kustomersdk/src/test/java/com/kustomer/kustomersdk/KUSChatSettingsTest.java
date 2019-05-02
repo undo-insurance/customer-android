@@ -30,6 +30,8 @@ import static org.junit.Assert.*;
 @Config(sdk = Build.VERSION_CODES.O_MR1)
 public class KUSChatSettingsTest {
 
+    //region public methods
+
     @Test
     public void testKUSBusinessHoursAvailability() {
 
@@ -92,6 +94,60 @@ public class KUSChatSettingsTest {
 
     }
 
+    @Test
+    public void testTypingIndicatorSettingCustomerWeb() {
+
+        //typingIndicatorCustomerWeb should be false
+        KUSChatSettings typingIndicatorCustomerWebNull =
+                getChatSettingForSingleAttrKeyAndValue("showTypingIndicatorCustomerWeb",
+                        null);
+        assertNotNull(typingIndicatorCustomerWebNull);
+        assertFalse(typingIndicatorCustomerWebNull.getShouldShowTypingIndicatorCustomerWeb());
+
+        //typingIndicatorCustomer should be false
+        KUSChatSettings typingIndicatorCustomerWebFalse =
+                getChatSettingForSingleAttrKeyAndValue("showTypingIndicatorCustomerWeb",
+                        false);
+        assertNotNull(typingIndicatorCustomerWebFalse);
+        assertFalse(typingIndicatorCustomerWebFalse.getShouldShowTypingIndicatorCustomerWeb());
+
+        //typingIndicatorCustomer should be true
+        KUSChatSettings typingIndicatorCustomerWebTrue =
+                getChatSettingForSingleAttrKeyAndValue("showTypingIndicatorCustomerWeb",
+                        true);
+        assertNotNull(typingIndicatorCustomerWebTrue);
+        assertTrue(typingIndicatorCustomerWebTrue.getShouldShowTypingIndicatorCustomerWeb());
+    }
+
+    @Test
+    public void testTypingIndicatorSettingWeb() {
+
+        //typingIndicatorWeb should be false
+        KUSChatSettings typingIndicatorWebNull =
+                getChatSettingForSingleAttrKeyAndValue("showTypingIndicatorWeb",
+                        null);
+        assertNotNull(typingIndicatorWebNull);
+        assertFalse(typingIndicatorWebNull.getShouldShowTypingIndicatorWeb());
+
+        //typingIndicatorWeb should be false
+        KUSChatSettings typingIndicatorWebFalse =
+                getChatSettingForSingleAttrKeyAndValue("showTypingIndicatorWeb",
+                        false);
+        assertNotNull(typingIndicatorWebFalse);
+        assertFalse(typingIndicatorWebFalse.getShouldShowTypingIndicatorWeb());
+
+        //typingIndicatorWeb should be true
+        KUSChatSettings typingIndicatorWebTrue =
+                getChatSettingForSingleAttrKeyAndValue("showTypingIndicatorWeb",
+                        true);
+        assertNotNull(typingIndicatorWebTrue);
+        assertTrue(typingIndicatorWebTrue.getShouldShowTypingIndicatorWeb());
+    }
+
+    //endregion
+
+    //region private methods
+
     @Nullable
     private KUSChatSettings getChatSettingForSingleAttrKeyAndValue(String attr, Object value) {
         JSONObject attributesObject = new JSONObject();
@@ -112,5 +168,7 @@ public class KUSChatSettingsTest {
             return null;
         }
     }
+
+    //endregion
 
 }

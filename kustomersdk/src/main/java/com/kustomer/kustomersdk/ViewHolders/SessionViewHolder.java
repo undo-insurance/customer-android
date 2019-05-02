@@ -2,6 +2,8 @@ package com.kustomer.kustomersdk.ViewHolders;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +26,7 @@ import com.kustomer.kustomersdk.Models.KUSChatMessage;
 import com.kustomer.kustomersdk.Models.KUSChatSession;
 import com.kustomer.kustomersdk.Models.KUSChatSettings;
 import com.kustomer.kustomersdk.Models.KUSModel;
+import com.kustomer.kustomersdk.Models.KUSTypingIndicator;
 import com.kustomer.kustomersdk.Models.KUSUser;
 import com.kustomer.kustomersdk.R;
 import com.kustomer.kustomersdk.R2;
@@ -251,6 +254,11 @@ public class SessionViewHolder extends RecyclerView.ViewHolder implements KUSObj
     @Override
     public void onCreateSessionId(KUSChatMessagesDataSource source, String sessionId) {
 
+    }
+
+    @Override
+    public void onReceiveTypingUpdate(@NonNull KUSChatMessagesDataSource source, @Nullable KUSTypingIndicator typingIndicator) {
+        //No need to do anything here
     }
     //endregion
 }

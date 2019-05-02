@@ -12,15 +12,18 @@ import com.kustomer.kustomersdk.Enums.KUSRequestType;
 import com.kustomer.kustomersdk.Helpers.KUSAudio;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
 import com.kustomer.kustomersdk.Interfaces.KUSCustomerStatsListener;
+import com.kustomer.kustomersdk.Helpers.KUSLog;
 import com.kustomer.kustomersdk.Interfaces.KUSObjectDataSourceListener;
 import com.kustomer.kustomersdk.Interfaces.KUSPaginatedDataSourceListener;
 import com.kustomer.kustomersdk.Interfaces.KUSRequestCompletionListener;
+import com.kustomer.kustomersdk.Interfaces.KUSTypingStatusListener;
 import com.kustomer.kustomersdk.Kustomer;
 import com.kustomer.kustomersdk.Models.KUSChatMessage;
 import com.kustomer.kustomersdk.Models.KUSChatSession;
 import com.kustomer.kustomersdk.Models.KUSChatSettings;
 import com.kustomer.kustomersdk.Models.KUSModel;
 import com.kustomer.kustomersdk.Models.KUSTrackingToken;
+import com.kustomer.kustomersdk.Models.KUSTypingIndicator;
 import com.kustomer.kustomersdk.Utils.JsonHelper;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
 import com.kustomer.kustomersdk.Views.KUSNotificationWindow;
@@ -28,6 +31,8 @@ import com.pusher.client.Pusher;
 import com.pusher.client.PusherOptions;
 import com.pusher.client.channel.PresenceChannel;
 import com.pusher.client.channel.PresenceChannelEventListener;
+import com.pusher.client.channel.PrivateChannel;
+import com.pusher.client.channel.PrivateChannelEventListener;
 import com.pusher.client.channel.User;
 import com.pusher.client.connection.ConnectionEventListener;
 import com.pusher.client.connection.ConnectionState;
@@ -64,6 +69,7 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
 
     private Pusher pusherClient;
     private PresenceChannel pusherChannel;
+    private PrivateChannel chatActivityChannel;
     private ConcurrentHashMap<String, KUSChatSession> previousChatSessions;
 
     private WeakReference<KUSUserSession> userSession;
@@ -74,6 +80,10 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
 
     private boolean isPusherTrackingStarted;
     private boolean didPusherLostPackets;
+    private Date lastActivity;
+
+    @Nullable
+    private KUSTypingStatusListener typingStatusListener;
     //endregion
 
     //region LifeCycle
@@ -116,6 +126,53 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
         }
 
     }
+
+    public void setTypingStatusListener(@Nullable KUSTypingStatusListener listener) {
+        typingStatusListener = listener;
+    }
+
+    public void removeTypingStatusListener() {
+        typingStatusListener = null;
+    }
+
+    public void connectToChatActivityChannel(@Nullable String activeChatSessionId) {
+        if (activeChatSessionId == null)
+            return;
+
+        disconnectFromChatActivityChannel();
+
+        try {
+            String activityChannelName = getChatActivityChannelNameForSessionId(activeChatSessionId);
+
+            if (activityChannelName != null) {
+                chatActivityChannel = pusherClient.subscribePrivate(activityChannelName);
+                chatActivityChannel.bind(KUSConstants.PusherEventNames.CHAT_ACTIVITY_TYPING_EVENT,
+                        typingEventListener);
+            }
+        } catch (IllegalArgumentException e) {
+            KUSLog.KUSLogError(e.getMessage());
+        }
+    }
+
+    public void disconnectFromChatActivityChannel() {
+        if (chatActivityChannel != null) {
+            pusherClient.unsubscribe(chatActivityChannel.getName());
+            chatActivityChannel = null;
+        }
+    }
+
+    public void sendChatActivityForSessionId(@NonNull String sessionId, @NonNull String activityData) {
+        String activityChannelName = getChatActivityChannelNameForSessionId(sessionId);
+
+        try {
+            if (chatActivityChannel == null || !chatActivityChannel.getName().equals(activityChannelName))
+                chatActivityChannel = pusherClient.subscribePrivate(activityChannelName);
+
+            chatActivityChannel.trigger(KUSConstants.PusherEventNames.CHAT_ACTIVITY_TYPING_EVENT, activityData);
+        } catch (IllegalStateException ignore) {
+        }
+    }
+
     //endregion
 
     //region Private Methods
@@ -123,6 +180,7 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
         return userSession.get().getRequestManager().urlForEndpoint(KUSConstants.URL.PUSHER_AUTH);
     }
 
+    @Nullable
     private String getPusherChannelName() {
         if (userSession.get() == null)
             return null;
@@ -134,6 +192,15 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
             return String.format("presence-external-%s-tracking-%s", userSession.get().getOrgId(),
                     trackingTokenObj.getTrackingId());
         return null;
+    }
+
+    @Nullable
+    private String getChatActivityChannelNameForSessionId(@NonNull String activeSessionId) {
+        if (userSession.get() == null)
+            return null;
+
+        return String.format("private-external-%s-chat-activity-%s", userSession.get().getOrgId(),
+                activeSessionId);
     }
 
     private void connectToChannelsIfNecessary() {
@@ -696,14 +763,42 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
 
         @Override
         public void onEvent(String channelName, String eventName, String data) {
-            if (userSession.get() == null)
+            if (userSession.get() == null || eventName == null)
                 return;
 
-            if (eventName != null && eventName.equals(KUSConstants.PusherEventNames.SEND_MESSAGE_EVENT)) {
+            if (eventName.equals(KUSConstants.PusherEventNames.SEND_MESSAGE_EVENT)) {
                 onPusherChatMessageSend(data);
 
-            } else if (eventName != null && eventName.equals(KUSConstants.PusherEventNames.END_SESSION_EVENT)) {
+            } else if (eventName.equals(KUSConstants.PusherEventNames.END_SESSION_EVENT)) {
                 onPusherChatSessionEnd(data);
+
+            }
+        }
+    };
+
+    private PrivateChannelEventListener typingEventListener = new PrivateChannelEventListener() {
+
+        @Override
+        public void onAuthenticationFailure(String message, Exception e) {
+
+        }
+
+        @Override
+        public void onSubscriptionSucceeded(String channelName) {
+
+        }
+
+        @Override
+        public void onEvent(String channelName, String eventName, String data) {
+            JSONObject jsonObject = JsonHelper.stringToJson(data);
+            if (jsonObject == null)
+                return;
+
+            try {
+                if (typingStatusListener != null)
+                    typingStatusListener.onTypingStatusChanged(new KUSTypingIndicator(jsonObject));
+            } catch (KUSInvalidJsonException e) {
+                KUSLog.KUSLogError(e.getMessage());
             }
         }
     };

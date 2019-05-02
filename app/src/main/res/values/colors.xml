@@ -51,6 +51,7 @@
     <!--<color name="kusOptionPickerButtonBorderColor">#2962FF</color>-->
     <!--<color name="kusOptionPickerButtonTextColor">#2962FF</color>-->
     <!--<color name="kusOptionPickerButtonBackground">#F5F5F5</color>-->
+    <!--<color name="kusTypingIndicatorColor">#757575</color>-->
 
     <!--<color name="kusSessionClosedViewBackgroundColor">#E0E0E0</color>-->
     <!--<color name="kusSessionClosedViewTextColor">#000000</color>-->

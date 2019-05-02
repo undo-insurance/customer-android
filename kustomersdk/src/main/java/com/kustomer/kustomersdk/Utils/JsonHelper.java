@@ -1,6 +1,7 @@
 package com.kustomer.kustomersdk.Utils;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
@@ -8,6 +9,7 @@ import com.google.gson.reflect.TypeToken;
 import com.kustomer.kustomersdk.Enums.KUSChatMessageType;
 import com.kustomer.kustomersdk.Helpers.KUSDate;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
+import com.kustomer.kustomersdk.Helpers.KUSLog;
 import com.kustomer.kustomersdk.Models.KUSChatMessage;
 import com.kustomer.kustomersdk.Models.KUSModel;
 import com.kustomer.kustomersdk.R;
@@ -32,6 +34,20 @@ import java.util.regex.Pattern;
  */
 
 public class JsonHelper {
+
+    @NonNull
+    public static JSONObject jsonObjectFromHashMap(@NonNull HashMap<String, Object> dataMap) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            for (String key : dataMap.keySet())
+                jsonObject.put(key, dataMap.get(key));
+
+        } catch (JSONException e) {
+            KUSLog.KUSLogError(e.getMessage());
+        }
+
+        return jsonObject;
+    }
 
     public static URL urlFromKeyPath(JSONObject jsonObject, String keyPath) {
         String value = stringFromKeyPath(jsonObject, keyPath);

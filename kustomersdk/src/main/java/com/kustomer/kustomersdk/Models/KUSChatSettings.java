@@ -40,6 +40,8 @@ public class KUSChatSettings extends KUSModel implements Serializable {
     private Boolean closableChat;
     private Boolean singleSessionChat;
     private Boolean noHistory;
+    private Boolean shouldShowTypingIndicatorCustomerWeb;
+    private Boolean shouldShowTypingIndicatorWeb;
 
     private KUSVolumeControlMode volumeControlMode;
     private Integer upfrontWaitThreshold;
@@ -78,6 +80,11 @@ public class KUSChatSettings extends KUSModel implements Serializable {
         volumeControlMode = KUSVolumeControlModeFromString(JsonHelper.stringFromKeyPath(json,"attributes.volumeControl.mode"));
         upfrontWaitThreshold = JsonHelper.integerFromKeyPath(json,"attributes.volumeControl.upfrontWaitThreshold");
         showKustomerBranding = JsonHelper.boolFromKeyPath(json, "attributes.showBrandingIdentifier");
+
+        shouldShowTypingIndicatorCustomerWeb = JsonHelper.boolFromKeyPath(json,
+                "attributes.showTypingIndicatorCustomerWeb");
+        shouldShowTypingIndicatorWeb = JsonHelper.boolFromKeyPath(json,
+                "attributes.showTypingIndicatorWeb");
     }
 
     @Override
@@ -235,6 +242,14 @@ public class KUSChatSettings extends KUSModel implements Serializable {
 
     public boolean shouldShowKustomerBranding() {
         return showKustomerBranding != null ? showKustomerBranding : false;
+    }
+
+    public boolean getShouldShowTypingIndicatorCustomerWeb() {
+        return shouldShowTypingIndicatorCustomerWeb != null ? shouldShowTypingIndicatorCustomerWeb : false;
+    }
+
+    public boolean getShouldShowTypingIndicatorWeb() {
+        return shouldShowTypingIndicatorWeb != null ? shouldShowTypingIndicatorWeb :false;
     }
 
     //endregion

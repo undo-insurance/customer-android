@@ -14,6 +14,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.ActivityCompat;
@@ -39,12 +40,14 @@ import com.kustomer.kustomersdk.DataSources.KUSPaginatedDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSTeamsDataSource;
 import com.kustomer.kustomersdk.Enums.KUSChatMessageType;
 import com.kustomer.kustomersdk.Enums.KUSFormQuestionProperty;
+import com.kustomer.kustomersdk.Enums.KUSTypingStatus;
 import com.kustomer.kustomersdk.Helpers.KUSLocalization;
 import com.kustomer.kustomersdk.Helpers.KUSLog;
 import com.kustomer.kustomersdk.Helpers.KUSPermission;
 import com.kustomer.kustomersdk.Helpers.KUSText;
 import com.kustomer.kustomersdk.Interfaces.KUSChatMessagesDataSourceListener;
 import com.kustomer.kustomersdk.Interfaces.KUSEmailInputViewListener;
+import com.kustomer.kustomersdk.Interfaces.KUSInputBarTextChangeListener;
 import com.kustomer.kustomersdk.Interfaces.KUSInputBarViewListener;
 import com.kustomer.kustomersdk.Interfaces.KUSMLFormValuesPickerViewListener;
 import com.kustomer.kustomersdk.Interfaces.KUSObjectDataSourceListener;
@@ -57,6 +60,7 @@ import com.kustomer.kustomersdk.Models.KUSChatSettings;
 import com.kustomer.kustomersdk.Models.KUSFormQuestion;
 import com.kustomer.kustomersdk.Models.KUSModel;
 import com.kustomer.kustomersdk.Models.KUSTeam;
+import com.kustomer.kustomersdk.Models.KUSTypingIndicator;
 import com.kustomer.kustomersdk.R;
 import com.kustomer.kustomersdk.R2;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
@@ -80,7 +84,15 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class KUSChatActivity extends BaseActivity implements KUSChatMessagesDataSourceListener, KUSToolbar.OnToolbarItemClickListener, KUSEmailInputViewListener, KUSInputBarViewListener, KUSOptionPickerViewListener, MessageListAdapter.ChatMessageItemListener, KUSMLFormValuesPickerViewListener, KUSObjectDataSourceListener {
+public class KUSChatActivity extends BaseActivity implements KUSChatMessagesDataSourceListener,
+        KUSToolbar.OnToolbarItemClickListener,
+        KUSEmailInputViewListener,
+        KUSInputBarViewListener,
+        KUSOptionPickerViewListener,
+        MessageListAdapter.ChatMessageItemListener,
+        KUSMLFormValuesPickerViewListener,
+        KUSObjectDataSourceListener,
+        KUSInputBarTextChangeListener {
 
     //region Properties
     private static final int REQUEST_IMAGE_CAPTURE = 1122;
@@ -140,6 +152,14 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+
+        if (chatMessagesDataSource != null)
+            chatMessagesDataSource.startListeningForTypingUpdate();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         KUSChatSession session = (KUSChatSession) userSession.getChatSessionsDataSource().findById(chatSessionId);
@@ -153,30 +173,40 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
         if (userSession != null && chatSessionId != null)
             userSession.getChatSessionsDataSource().updateLastSeenAtForSessionId(chatSessionId, null);
+
     }
 
     @Override
     protected void onPause() {
-        if (userSession != null && chatSessionId != null)
+        if (userSession != null && chatSessionId != null) {
             userSession.getChatSessionsDataSource().updateLastSeenAtForSessionId(chatSessionId, null);
+        }
 
         super.onPause();
     }
 
     @Override
-    protected void onDestroy() {
+    protected void onStop() {
+        if (chatMessagesDataSource != null)
+            chatMessagesDataSource.stopListeningForTypingUpdate();
 
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
         if (chatMessagesDataSource != null)
             chatMessagesDataSource.removeListener(this);
+
         super.onDestroy();
     }
 
     @Override
     public void onBackPressed() {
-
         if (shouldShowBackButton) {
             backPressed = true;
             super.onBackPressed();
+
         } else {
             clearAllLibraryActivities();
         }
@@ -231,8 +261,8 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_CAMERA_PERMISSION:
                 // If request is cancelled, the result arrays are empty.
@@ -301,6 +331,10 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         checkShouldShowInputView();
         showNonBusinessHoursImageIfNeeded();
         showKustomerBrandingFooterIfNeeded();
+
+        KUSChatSettings settings = (KUSChatSettings) userSession.getChatSettingsDataSource().getObject();
+        if (settings != null && settings.getShouldShowTypingIndicatorWeb())
+            kusInputBarView.setTextChangeListener(this);
     }
 
     private void showKustomerBrandingFooterIfNeeded() {
@@ -704,6 +738,19 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         };
         handler.post(runnable);
     }
+
+    private void setTypingIndicator(KUSTypingIndicator typingIndicator) {
+        adapter.setTypingIndicator(typingIndicator);
+        Handler handler = new Handler(Looper.getMainLooper());
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                adapter.notifyDataSetChanged();
+            }
+        };
+        handler.post(runnable);
+    }
+
     //endregion
 
     //region Listeners
@@ -828,6 +875,13 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
                     checkShouldShowInputView();
                     checkShouldShowCloseChatButtonView();
 
+                    KUSChatSession session = (KUSChatSession) userSession
+                            .getChatSessionsDataSource().findById(getValidChatSessionId());
+
+                    if (session != null && session.getLockedAt() != null) {
+                        chatMessagesDataSource.stopListeningForTypingUpdate();
+                    }
+
                     if (dataSource.getSize() >= 1)
                         setupToolbar();
 
@@ -860,14 +914,23 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
                 shouldShowBackButton = true;
 
                 KUSChatSettings settings = (KUSChatSettings) userSession.getChatSettingsDataSource().getObject();
-                shouldShowBackButton = !settings.getNoHistory();
+                if (settings != null) {
+                    shouldShowBackButton = !settings.getNoHistory();
+                }
 
                 kusToolbar.setShowBackButton(shouldShowBackButton);
                 setupToolbar();
                 checkShouldShowEmailInput();
+                chatMessagesDataSource.startListeningForTypingUpdate();
             }
         };
         handler.post(runnable);
+    }
+
+    @Override
+    public void onReceiveTypingUpdate(@NonNull KUSChatMessagesDataSource source,
+                                      @Nullable KUSTypingIndicator typingIndicator) {
+        setTypingIndicator(typingIndicator);
     }
 
     @Override
@@ -942,6 +1005,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
             @Override
             public void run() {
                 try {
+                    chatMessagesDataSource.sendTypingStatusToPusher(KUSTypingStatus.KUS_TYPING_ENDED);
                     chatMessagesDataSource.sendMessageWithText(text, bitmapList);
                 } catch (OutOfMemoryError e) {
                     KUSLog.KUSLogError(e.getMessage());
@@ -975,6 +1039,12 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
     }
 
     @Override
+    public void inputBarTextChanged() {
+        if (!kusInputBarView.getText().isEmpty())
+            chatMessagesDataSource.sendTypingStatusToPusher(KUSTypingStatus.KUS_TYPING);
+    }
+
+    @Override
     public void optionPickerOnOptionSelected(String option) {
         KUSTeam team = null;
 
@@ -996,7 +1066,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
     @Override
     public void onChatMessageImageClicked(KUSChatMessage chatMessage) {
-        int startingIndex = 0;
+        int startingIndex;
 
         List<String> imageURIs = new ArrayList<>();
 

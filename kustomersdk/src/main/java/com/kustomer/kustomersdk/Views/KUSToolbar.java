@@ -3,6 +3,7 @@ package com.kustomer.kustomersdk.Views;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
@@ -25,6 +26,7 @@ import com.kustomer.kustomersdk.Interfaces.KUSObjectDataSourceListener;
 import com.kustomer.kustomersdk.Interfaces.KUSSessionQueuePollingListener;
 import com.kustomer.kustomersdk.Models.KUSChatSettings;
 import com.kustomer.kustomersdk.Models.KUSSessionQueue;
+import com.kustomer.kustomersdk.Models.KUSTypingIndicator;
 import com.kustomer.kustomersdk.Models.KUSUser;
 import com.kustomer.kustomersdk.R;
 import com.kustomer.kustomersdk.Utils.KUSUtils;
@@ -474,6 +476,11 @@ public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, 
         handler.post(runnable);
 
 
+    }
+
+    @Override
+    public void onReceiveTypingUpdate(@NonNull KUSChatMessagesDataSource source, @Nullable KUSTypingIndicator typingIndicator) {
+        //No need to do anything here
     }
 
     @Override

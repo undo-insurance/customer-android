@@ -45,6 +45,7 @@
     <color name="kusOptionPickerButtonBorderColor">#2962FF</color>
     <color name="kusOptionPickerButtonTextColor">#2962FF</color>
     <color name="kusOptionPickerButtonBackground">#F5F5F5</color>
+    <color name="kusTypingIndicatorColor">#757575</color>
 
     <color name="kusWebBackTintColor">#000000</color>
     <color name="kusWebForwardTintColor">#000000</color>

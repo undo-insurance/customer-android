@@ -55,4 +55,9 @@
     <string name="com_kustomer_volume_control_phone_question">Odlično, v čem je najboljša telefonska številka, na katero ste prišli?</string>
     <string name="com_kustomer_volume_control_thankyou_response">Hvala vam. Kmalu se bomo vrnili k vam.</string>
     <string name="com_kustomer_greater_than_one_day">več kot en dan</string>
+
+    <string name="com_kustomer_submit">predloži</string>
+    <string name="com_kustomer_thank_you_for_your_feedback">Hvala za vaše mnenje!</string>
+    <string name="com_kustomer_edit">Uredi</string>
+
 </resources>

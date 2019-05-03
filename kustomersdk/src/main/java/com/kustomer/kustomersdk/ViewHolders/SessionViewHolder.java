@@ -260,5 +260,11 @@ public class SessionViewHolder extends RecyclerView.ViewHolder implements KUSObj
     public void onReceiveTypingUpdate(@NonNull KUSChatMessagesDataSource source, @Nullable KUSTypingIndicator typingIndicator) {
         //No need to do anything here
     }
+
+    @Override
+    public void onSatisfactionResponseLoaded(@NonNull KUSChatMessagesDataSource dataSource) {
+        //No need to do anything here
+    }
+
     //endregion
 }

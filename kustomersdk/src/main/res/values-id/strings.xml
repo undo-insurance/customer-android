@@ -55,4 +55,9 @@
     <string name="com_kustomer_volume_control_phone_question">Hebat, berapa nomor telepon terbaik untuk dihubungi?</string>
     <string name="com_kustomer_volume_control_thankyou_response">Terima kasih. Kami akan segera menghubungi Anda.</string>
     <string name="com_kustomer_greater_than_one_day">lebih dari satu hari</string>
+
+    <string name="com_kustomer_submit">Menyerahkan</string>
+    <string name="com_kustomer_thank_you_for_your_feedback">Terima kasih atas tanggapan Anda!</string>
+    <string name="com_kustomer_edit">mengedit</string>
+
 </resources>

@@ -55,4 +55,9 @@
     <string name="com_kustomer_volume_control_phone_question">Great, what\'s the best phone number to reach you at?</string>
     <string name="com_kustomer_volume_control_thankyou_response">Thank you. We\'ll get back to you shortly.</string>
     <string name="com_kustomer_greater_than_one_day">greater than one day</string>
+
+    <string name="com_kustomer_submit">Submit</string>
+    <string name="com_kustomer_thank_you_for_your_feedback">Thank you for your feedback!</string>
+    <string name="com_kustomer_edit">Edit</string>
+
 </resources>

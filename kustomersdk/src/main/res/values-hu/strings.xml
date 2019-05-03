@@ -55,4 +55,9 @@
     <string name="com_kustomer_volume_control_phone_question">Nagyszerű, mi a legjobb telefonszám, amivel elérheted?</string>
     <string name="com_kustomer_volume_control_thankyou_response">Köszönöm. Rövidesen visszajutunk hozzánk.</string>
     <string name="com_kustomer_greater_than_one_day">több mint egy nap</string>
+
+    <string name="com_kustomer_submit">beküldése</string>
+    <string name="com_kustomer_thank_you_for_your_feedback">Köszönjük a visszajelzést!</string>
+    <string name="com_kustomer_edit">szerkesztése</string>
+
 </resources>

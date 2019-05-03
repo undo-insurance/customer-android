@@ -8,12 +8,14 @@ import android.view.ViewGroup;
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.DataSources.KUSChatMessagesDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSPaginatedDataSource;
+import com.kustomer.kustomersdk.Models.KUSCSatisfactionResponse;
 import com.kustomer.kustomersdk.Enums.KUSTypingStatus;
 import com.kustomer.kustomersdk.Models.KUSChatMessage;
 import com.kustomer.kustomersdk.Models.KUSChatSession;
 import com.kustomer.kustomersdk.Models.KUSTypingIndicator;
 import com.kustomer.kustomersdk.R;
 import com.kustomer.kustomersdk.ViewHolders.AgentMessageViewHolder;
+import com.kustomer.kustomersdk.ViewHolders.CSatisfactionFormViewHolder;
 import com.kustomer.kustomersdk.ViewHolders.AgentTypingViewHolder;
 import com.kustomer.kustomersdk.ViewHolders.DummyViewHolder;
 import com.kustomer.kustomersdk.ViewHolders.UserMessageViewHolder;
@@ -32,12 +34,15 @@ public class MessageListAdapter extends RecyclerView.Adapter {
     private static final int USER_VIEW = 1;
     private static final int END_VIEW = 2;
     private static final int TYPING_VIEW = 3;
+    private static final int SATISFACTION_FORM_VIEW = 4;
 
     private KUSPaginatedDataSource mPaginatedDataSource;
     private KUSUserSession mUserSession;
     private KUSChatMessagesDataSource mChatMessagesDataSource;
     private ChatMessageItemListener mListener;
     private KUSTypingIndicator typingIndicator;
+
+    private boolean isSatisfactionFormEditing;
     //endregion
 
     //region LifeCycle
@@ -67,9 +72,14 @@ public class MessageListAdapter extends RecyclerView.Adapter {
             return new DummyViewHolder(LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.kus_item_closed_chat_layout, parent, false));
 
-        else
+        else if (viewType == TYPING_VIEW)
             return new AgentTypingViewHolder(LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.kus_item_agent_typing_view_holder, parent, false));
+
+        else
+            return new CSatisfactionFormViewHolder(LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.kus_item_csat_view_holder, parent, false),
+                    mListener);
     }
 
     @Override
@@ -82,9 +92,17 @@ public class MessageListAdapter extends RecyclerView.Adapter {
             return;
         }
 
-        int mPosition = position;
-        if (getItemCount() > mPaginatedDataSource.getSize())
-            mPosition--;
+        if (holder.getItemViewType() == SATISFACTION_FORM_VIEW) {
+            KUSCSatisfactionResponse response = (KUSCSatisfactionResponse) mChatMessagesDataSource
+                    .getSatisfactionResponseDataSource().getObject();
+
+            if (response != null)
+                ((CSatisfactionFormViewHolder) holder)
+                        .onBind(response, mUserSession, isSatisfactionFormEditing);
+            return;
+        }
+
+        int mPosition = position - (getItemCount() - mPaginatedDataSource.getSize());
 
         KUSChatMessage chatMessage = messageForPosition(mPosition);
         KUSChatMessage previousChatMessage = previousMessage(mPosition);
@@ -99,8 +117,10 @@ public class MessageListAdapter extends RecyclerView.Adapter {
 
         if (holder.getItemViewType() == USER_VIEW) {
             ((UserMessageViewHolder) holder).onBind(chatMessage, nextMessageOlderThan5Min, mListener);
+
         } else if (holder.getItemViewType() == AGENT_VIEW) {
-            boolean previousMessageDiffSender = !KUSChatMessage.KUSMessagesSameSender(previousChatMessage, chatMessage);
+            boolean previousMessageDiffSender =
+                    !KUSChatMessage.KUSMessagesSameSender(previousChatMessage, chatMessage);
             ((AgentMessageViewHolder) holder).onBind(chatMessage, mUserSession,
                     previousMessageDiffSender, nextMessageOlderThan5Min, mListener);
         }
@@ -109,19 +129,26 @@ public class MessageListAdapter extends RecyclerView.Adapter {
     @Override
     public int getItemViewType(int position) {
         if (getItemCount() > mPaginatedDataSource.getSize()) {
-            if (position == 0) {
-                KUSChatSession session = (KUSChatSession) mUserSession.getChatSessionsDataSource()
-                        .findById(mChatMessagesDataSource.getSessionId());
+            if (mChatMessagesDataSource.shouldShowSatisfactionForm()) {
+                if (position == 0)
+                    return SATISFACTION_FORM_VIEW;
+                else if (position == 1)
+                    return END_VIEW;
+
+            } else if (position == 0) {
+                KUSChatSession session = (KUSChatSession) mUserSession
+                        .getChatSessionsDataSource().findById(mChatMessagesDataSource.getSessionId());
 
                 if (session != null && session.getLockedAt() != null)
                     return END_VIEW;
                 else
                     return TYPING_VIEW;
-
-            } else position--;
-
+            }
         }
-        KUSChatMessage chatMessage = messageForPosition(position);
+
+        int mPosition = position - (getItemCount() - mPaginatedDataSource.getSize());
+
+        KUSChatMessage chatMessage = messageForPosition(mPosition);
 
         boolean currentUser = KUSChatMessage.KUSChatMessageSentByUser(chatMessage);
         if (currentUser)
@@ -132,16 +159,23 @@ public class MessageListAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-        KUSChatSession session = (KUSChatSession) mUserSession.getChatSessionsDataSource()
-                .findById(mChatMessagesDataSource.getSessionId());
-        if (session != null && session.getLockedAt() != null)
-            return mPaginatedDataSource.getSize() + 1;
+        KUSChatSession session = (KUSChatSession) mUserSession
+                .getChatSessionsDataSource().findById(mChatMessagesDataSource.getSessionId());
+
+        if (session != null && session.getLockedAt() != null) {
+
+            if (mChatMessagesDataSource.shouldShowSatisfactionForm())
+                return mPaginatedDataSource.getSize() + 2;
+            else
+                return mPaginatedDataSource.getSize() + 1;
+        }
 
         if (typingIndicator != null && typingIndicator.getStatus() == KUSTypingStatus.KUS_TYPING)
             return mPaginatedDataSource.getSize() + 1;
 
         return mPaginatedDataSource.getSize();
     }
+
     //endregion
 
     //region public Methods
@@ -176,6 +210,11 @@ public class MessageListAdapter extends RecyclerView.Adapter {
             return null;
         }
     }
+
+    public void isSatisfactionFormEditing(boolean editing) {
+        this.isSatisfactionFormEditing = editing;
+    }
+
     //endregion
 
     //region Interface
@@ -183,6 +222,12 @@ public class MessageListAdapter extends RecyclerView.Adapter {
         void onChatMessageImageClicked(KUSChatMessage chatMessage);
 
         void onChatMessageErrorClicked(KUSChatMessage chatMessage);
+
+        void onSatisfactionFormRated(int rating);
+
+        void onSatisfactionFormCommented(@NonNull String comment);
+
+        void onSatisfactionFormEditPressed();
     }
     //endregion
 }

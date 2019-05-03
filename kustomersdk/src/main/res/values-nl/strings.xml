@@ -55,4 +55,9 @@
     <string name="com_kustomer_volume_control_phone_question">Geweldig, wat is het beste telefoonnummer om je te bereiken?</string>
     <string name="com_kustomer_volume_control_thankyou_response">Dank je. We nemen zo snel mogelijk contact met u op.</string>
     <string name="com_kustomer_greater_than_one_day">meer dan één dag</string>
+
+    <string name="com_kustomer_submit">voorleggen</string>
+    <string name="com_kustomer_thank_you_for_your_feedback">Hartelijk dank voor uw feedback!</string>
+    <string name="com_kustomer_edit">Bewerk</string>
+
 </resources>

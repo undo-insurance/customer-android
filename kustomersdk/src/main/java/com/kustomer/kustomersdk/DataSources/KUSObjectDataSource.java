@@ -10,7 +10,6 @@ import com.kustomer.kustomersdk.Utils.JsonHelper;
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 

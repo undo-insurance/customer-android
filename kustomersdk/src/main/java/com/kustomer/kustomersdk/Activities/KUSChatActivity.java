@@ -178,9 +178,8 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
     @Override
     protected void onPause() {
-        if (userSession != null && chatSessionId != null) {
+        if (userSession != null && chatSessionId != null)
             userSession.getChatSessionsDataSource().updateLastSeenAtForSessionId(chatSessionId, null);
-        }
 
         super.onPause();
     }
@@ -934,6 +933,20 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
     }
 
     @Override
+    public void onSatisfactionResponseLoaded(@NonNull final KUSChatMessagesDataSource dataSource) {
+        Handler handler = new Handler(Looper.getMainLooper());
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                if (dataSource == chatMessagesDataSource) {
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        };
+        handler.post(runnable);
+    }
+
+    @Override
     public void onToolbarBackPressed() {
         onBackPressed();
     }
@@ -1090,6 +1103,35 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
                 chatMessagesDataSource.resendMessage(chatMessage);
             }
         }).start();
+    }
+
+    @Override
+    public void onSatisfactionFormRated(int rating) {
+        if (chatMessagesDataSource == null)
+            return;
+
+        chatMessagesDataSource.getSatisfactionResponseDataSource().submitRating(rating);
+
+        if (!chatMessagesDataSource.getSatisfactionResponseDataSource().cSatFormHaveSecondaryQuestion())
+            adapter.isSatisfactionFormEditing(false);
+
+        adapter.notifyItemChanged(0, false);
+    }
+
+    @Override
+    public void onSatisfactionFormCommented(@NonNull String comment) {
+        if (chatMessagesDataSource == null)
+            return;
+
+        chatMessagesDataSource.getSatisfactionResponseDataSource().submitComment(comment);
+        adapter.isSatisfactionFormEditing(false);
+        adapter.notifyItemChanged(0, false);
+    }
+
+    @Override
+    public void onSatisfactionFormEditPressed() {
+        adapter.isSatisfactionFormEditing(true);
+        adapter.notifyItemChanged(0);
     }
 
     @Override

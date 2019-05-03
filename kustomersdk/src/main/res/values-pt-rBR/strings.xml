@@ -55,4 +55,11 @@
     <string name="com_kustomer_volume_control_phone_question">Ótimo, qual é o melhor número de telefone para chegar até você?</string>
     <string name="com_kustomer_volume_control_thankyou_response">Obrigado. Nós entraremos em contato com você em breve.</string>
     <string name="com_kustomer_greater_than_one_day">maior que um dia</string>
+
+    <string name="com_kustomer_submit">Enviar</string>
+    <string name="com_kustomer_thank_you_for_your_feedback">Obrigado pelo seu feedback!</string>
+    <string name="com_kustomer_edit">Editar</string>
+
+
+
 </resources>

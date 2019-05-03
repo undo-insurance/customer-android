@@ -55,4 +55,9 @@
     <string name="com_kustomer_volume_control_email_question">Groot, wat is die beste e-pos om jou te bereik?</string>
     <string name="com_kustomer_volume_control_phone_question">Groot, wat is die beste telefoonnommer om jou te bereik?</string>
     <string name="com_kustomer_volume_control_thankyou_response">Dankie. Ons sal binnekort terugkom.</string>
+
+    <string name="com_kustomer_submit">Indien</string>
+    <string name="com_kustomer_thank_you_for_your_feedback">Dankie vir jou terugvoering!</string>
+    <string name="com_kustomer_edit">wysig</string>
+
 </resources>

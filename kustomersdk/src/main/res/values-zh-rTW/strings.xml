@@ -55,4 +55,9 @@
     <string name="com_kustomer_volume_control_thankyou_response">謝謝。我們很快就會回复你。</string>
     <string name="com_kustomer_greater_than_one_day">超過一天</string>
     <string name="com_kustomer_volume_control_alternative_method_question">對不起，在我們預期的時間裡似乎沒有人可用。請選擇其他聯繫方式，以便我們跟進...</string>
+
+    <string name="com_kustomer_submit">提交</string>
+    <string name="com_kustomer_thank_you_for_your_feedback">感謝您的反饋意見！</string>
+    <string name="com_kustomer_edit">編輯</string>
+
 </resources>

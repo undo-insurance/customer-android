@@ -55,4 +55,9 @@
     <string name="com_kustomer_volume_control_phone_question">Mahusay, ano ang pinakamahusay na numero ng telepono upang maabot ka sa?</string>
     <string name="com_kustomer_volume_control_thankyou_response">Salamat. Kami ay babalik sa iyo sa ilang sandali.</string>
     <string name="com_kustomer_greater_than_one_day">mas malaki kaysa sa isang araw</string>
+
+    <string name="com_kustomer_submit">Ipasa</string>
+    <string name="com_kustomer_thank_you_for_your_feedback">Salamat sa iyo para sa iyong feedback!</string>
+    <string name="com_kustomer_edit">I-edit</string>
+
 </resources>

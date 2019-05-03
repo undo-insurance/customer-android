@@ -26,6 +26,19 @@
     <style name="KUSChatMessageTimeStampTextAppearance" parent="@style/TextAppearance.AppCompat"/>
     <style name="KUSChatMessageTextAppearance" parent="@style/TextAppearance.AppCompat"/>
 
+    <style name="KUSCSatRatingPromptTextAppearance" parent="@style/TextAppearance.AppCompat">
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="KUSCSatQuestionsTextAppearance" parent="@style/TextAppearance.AppCompat">
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="KUSCSatRatingLabelsTextAppearance" parent="@style/TextAppearance.AppCompat"/>
+    <style name="KUSCSatFeedbackTextAppearance" parent="@style/TextAppearance.AppCompat">
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="KUSCSatEditTextAppearance" parent="@style/TextAppearance.AppCompat"/>
+    <style name="kusCSatCommentInputTextAppearance" parent="@style/TextAppearance.AppCompat"/>
+
     <style name="KUSChatSessionTitleTextAppearance" parent="@style/TextAppearance.AppCompat"/>
     <style name="KUSChatSessionSubtitleTextAppearance" parent="@style/TextAppearance.AppCompat"/>
     <style name="KUSChatSessionDateTextAppearance" parent="@style/TextAppearance.AppCompat"/>
@@ -36,6 +49,8 @@
     <style name="KUSToolbarUnreadTextAppearance" parent="@style/TextAppearance.AppCompat"/>
 
     <style name="KUSNewSessionButtonAppearance" parent="@style/TextAppearance.AppCompat.Button"/>
+
+    <style name="KUSCSatSubmitButtonAppearance" parent="@style/TextAppearance.AppCompat.Button"/>
 
     <style name="KUSEmailInputPromptTextAppearance" parent="@style/TextAppearance.AppCompat"/>
     <style name="KUSEmailInputTextAppearance" parent="@style/TextAppearance.AppCompat"/>

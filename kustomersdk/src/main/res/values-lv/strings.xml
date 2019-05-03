@@ -55,4 +55,11 @@
     <string name="com_kustomer_volume_control_phone_question">Lieliski, kāds ir labākais tālruņa numurs, lai jūs varētu sazināties?</string>
     <string name="com_kustomer_volume_control_thankyou_response">Paldies. Mēs tuvākajā laikā atgriezīsimies pie jums.</string>
     <string name="com_kustomer_greater_than_one_day">vairāk par vienu dienu</string>
+
+    <string name="com_kustomer_submit">Iesniegt</string>
+    <string name="com_kustomer_thank_you_for_your_feedback">Paldies par jūsu atsauksmēm!</string>
+    <string name="com_kustomer_edit">rediģēt</string>
+
+
+
 </resources>

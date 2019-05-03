@@ -55,4 +55,9 @@
     <string name="com_kustomer_volume_control_phone_question">बढ़िया, आप तक पहुंचने के लिए सबसे अच्छा फोन नंबर क्या है?</string>
     <string name="com_kustomer_volume_control_thankyou_response">धन्यवाद। हम जल्द ही आपसे संपर्क करेंगे।</string>
     <string name="com_kustomer_greater_than_one_day">एक दिन से अधिक</string>
+
+    <string name="com_kustomer_submit">जमा करें</string>
+    <string name="com_kustomer_thank_you_for_your_feedback">आपकी प्रतिक्रिया के लिए आपका धन्यवाद!</string>
+    <string name="com_kustomer_edit">संपादित करें</string>
+
 </resources>

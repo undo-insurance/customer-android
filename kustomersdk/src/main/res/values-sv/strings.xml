@@ -55,4 +55,9 @@
     <string name="com_kustomer_volume_control_phone_question">Bra, vad är det bästa telefonnumret för att nå dig?</string>
     <string name="com_kustomer_volume_control_thankyou_response">Tack. Vi kommer snart tillbaka till dig.</string>
     <string name="com_kustomer_greater_than_one_day">mer än en dag</string>
+
+    <string name="com_kustomer_submit">Lämna</string>
+    <string name="com_kustomer_thank_you_for_your_feedback">Tack för din feedback!</string>
+    <string name="com_kustomer_edit">Redigera</string>
+
 </resources>

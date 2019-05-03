@@ -66,4 +66,8 @@
     <string name="com_kustomer_something_went_wrong">Something went wrong</string>
     <string name="com_kustomer_unable_to_parse_response">Unable to parse response</string>
 
+    <string name="com_kustomer_submit">Submit</string>
+    <string name="com_kustomer_thank_you_for_your_feedback">Thank you for your feedback!</string>
+    <string name="com_kustomer_edit">Edit</string>
+
 </resources>

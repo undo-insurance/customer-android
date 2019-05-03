@@ -55,4 +55,9 @@
     <string name="com_kustomer_volume_control_email_question">E madhe, cila është e-mailja më e mirë për të arritur tek ju?</string>
     <string name="com_kustomer_volume_control_phone_question">E madhe, cili është numri më i mirë i telefonit për të arritur tek ju?</string>
     <string name="com_kustomer_volume_control_thankyou_response">Faleminderit. Ne do të kthehemi tek ju së shpejti.</string>
+
+    <string name="com_kustomer_submit">paraqes</string>
+    <string name="com_kustomer_thank_you_for_your_feedback">Faleminderit për komentin tuaj!</string>
+    <string name="com_kustomer_edit">redaktoj</string>
+
 </resources>

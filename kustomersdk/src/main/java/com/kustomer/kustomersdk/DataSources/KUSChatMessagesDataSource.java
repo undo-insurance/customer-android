@@ -31,6 +31,7 @@ import com.kustomer.kustomersdk.Interfaces.KUSVolumeControlTimerListener;
 import com.kustomer.kustomersdk.Interfaces.KUSTypingStatusListener;
 import com.kustomer.kustomersdk.Kustomer;
 import com.kustomer.kustomersdk.Managers.KUSVolumeControlTimerManager;
+import com.kustomer.kustomersdk.Models.KUSCSatisfactionResponse;
 import com.kustomer.kustomersdk.Models.KUSChatAttachment;
 import com.kustomer.kustomersdk.Models.KUSChatMessage;
 import com.kustomer.kustomersdk.Models.KUSChatSession;
@@ -66,14 +67,19 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
 
+import static com.kustomer.kustomersdk.Enums.KUSCSatisfactionFormResponseStatus.KUS_C_SATISFACTION_RESPONSE_STATUS_COMMENTED;
+import static com.kustomer.kustomersdk.Enums.KUSCSatisfactionFormResponseStatus.KUS_C_SATISFACTION_RESPONSE_STATUS_RATED;
 import static com.kustomer.kustomersdk.Models.KUSChatMessage.KUSChatMessageSentByUser;
 
 /**
  * Created by Junaid on 1/20/2018.
  */
 
-public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements KUSChatMessagesDataSourceListener,
-        KUSObjectDataSourceListener, KUSSessionQueuePollingListener, KUSTypingStatusListener {
+public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
+        implements KUSChatMessagesDataSourceListener,
+        KUSObjectDataSourceListener,
+        KUSSessionQueuePollingListener,
+        KUSTypingStatusListener {
 
     //region Properties
     private static final int KUS_CHAT_AUTO_REPLY_DELAY = 2 * 1000;
@@ -103,6 +109,9 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
 
     private ArrayList<onCreateSessionListener> onCreateSessionListeners;
     private HashMap<String, KUSRetry> messageRetryHashMap;
+
+    @Nullable
+    private KUSSatisfactionResponseDataSource satisfactionResponseDataSource;
 
     private long lastTypingStatusSentAt;
     @Nullable
@@ -183,6 +192,34 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
             return getUserSession().getRequestManager().urlForEndpoint(endPoint);
         }
         return null;
+    }
+
+    @NonNull
+    public KUSSatisfactionResponseDataSource getSatisfactionResponseDataSource() {
+        if (satisfactionResponseDataSource == null) {
+            satisfactionResponseDataSource = new KUSSatisfactionResponseDataSource(getUserSession(),
+                    sessionId);
+            satisfactionResponseDataSource.addListener(this);
+        }
+
+        return satisfactionResponseDataSource;
+    }
+
+    public boolean shouldShowSatisfactionForm() {
+        if (getUserSession() == null)
+            return false;
+
+        if (!isActualSession()) {
+            return false;
+        }
+
+        KUSChatSession session = (KUSChatSession) getUserSession().getChatSessionsDataSource()
+                .findById(getSessionId());
+
+        boolean isSessionLocked =session!=null && session.getLockedAt() != null;
+        boolean isSatisfactionResponseFetched = getSatisfactionResponseDataSource().isFetched();
+
+        return isSessionLocked && isSatisfactionResponseFetched;
     }
 
     public void sendMessageWithText(String text, List<Bitmap> attachments) {
@@ -775,6 +812,27 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
         }, KUS_TYPING_ENDED_DELAY);
     }
 
+    private void fetchSatisfactionResponseIfNecessary() {
+        if (getUserSession() == null)
+            return;
+
+        KUSChatSession chatSession = (KUSChatSession) getUserSession().getChatSessionsDataSource()
+                .findById(sessionId);
+
+        if (chatSession == null)
+            return;
+
+        boolean isChatClosed = chatSession.getLockedAt() != null;
+        boolean isSatisfactionResponseFetched = getSatisfactionResponseDataSource().isFetched();
+        boolean hasAgentMessage = getOtherUserIds().size() > 0;
+
+        boolean needSatisfactionForm = isChatClosed && hasAgentMessage;
+        boolean shouldFetchSatisfactionForm = !isSatisfactionResponseFetched && needSatisfactionForm;
+
+        if (shouldFetchSatisfactionForm)
+            getSatisfactionResponseDataSource().fetch();
+    }
+
     private void fullySendMessage(final List<KUSModel> temporaryMessages, final List<Bitmap> attachments,
                                   final String text, final List<String> cachedImageKeys) {
         insertMessagesWithState(KUSChatMessageState.KUS_CHAT_MESSAGE_STATE_SENDING, temporaryMessages);
@@ -871,7 +929,6 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
 
         // Make sure we submit the form if we just inserted a non-response question
         if (!submittingForm && !KUSFormQuestion.KUSFormQuestionRequiresResponse(formQuestion)
-                && form.getQuestions() != null
                 && questionIndex == form.getQuestions().size() - 1 && delayedChatMessageIds.size() == 0)
             submitFormResponses();
 
@@ -1721,6 +1778,15 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     //region Listener
     @Override
     public void objectDataSourceOnLoad(KUSObjectDataSource dataSource) {
+        if (dataSource == satisfactionResponseDataSource) {
+            for (KUSPaginatedDataSourceListener listener : listeners) {
+                if (listener instanceof KUSChatMessagesDataSourceListener) {
+                    ((KUSChatMessagesDataSourceListener) listener)
+                            .onSatisfactionResponseLoaded(KUSChatMessagesDataSource.this);
+                }
+            }
+            return;
+        }
 
         if (form == null && dataSource.getClass().equals(KUSFormDataSource.class))
             form = (KUSForm) dataSource.getObject();
@@ -1753,6 +1819,11 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     }
 
     @Override
+    public void onSatisfactionResponseLoaded(@NonNull KUSChatMessagesDataSource dataSource) {
+        //No need to do anything here
+    }
+
+    @Override
     public void onLoad(KUSPaginatedDataSource dataSource) {
 
     }
@@ -1765,6 +1836,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource implements
     public void onContentChange(KUSPaginatedDataSource dataSource) {
         insertFormMessageIfNecessary();
         insertVolumeControlFormMessageIfNecessary();
+        fetchSatisfactionResponseIfNecessary();
     }
 
     @Override

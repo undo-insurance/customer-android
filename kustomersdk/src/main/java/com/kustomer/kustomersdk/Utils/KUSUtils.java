@@ -2,6 +2,7 @@ package com.kustomer.kustomersdk.Utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
@@ -29,8 +30,15 @@ public class KUSUtils {
     public static final double MIN_TABLET_SIZE_IN_INCH = 6.5;
     private static final String AUTHORITY_SUFFIX = ".kustomersdk";
 
-    public static void showShortToast(@NonNull Context context, @Nullable String message){
-        if(message != null)
+    @Nullable
+    public static Drawable getDrawableForKey(@NonNull Context mContext, @NonNull String key) {
+        String packageName = mContext.getPackageName();
+        int resId = mContext.getResources().getIdentifier(key, "drawable", packageName);
+        return resId == 0 ? null : mContext.getResources().getDrawable(resId);
+    }
+
+    public static void showShortToast(@NonNull Context context, @Nullable String message) {
+        if (message != null)
             Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
 

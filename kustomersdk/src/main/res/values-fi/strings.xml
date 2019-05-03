@@ -55,4 +55,9 @@
     <string name="com_kustomer_volume_control_phone_question">Hyvä, mikä on paras puhelinnumero tavoittaa sinut?</string>
     <string name="com_kustomer_volume_control_thankyou_response">Kiitos. Palataan takaisin sinulle pian.</string>
     <string name="com_kustomer_greater_than_one_day">enemmän kuin yksi päivä</string>
+
+    <string name="com_kustomer_submit">Lähetä</string>
+    <string name="com_kustomer_thank_you_for_your_feedback">Kiitos palautteesta!</string>
+    <string name="com_kustomer_edit">Muokata</string>
+
 </resources>

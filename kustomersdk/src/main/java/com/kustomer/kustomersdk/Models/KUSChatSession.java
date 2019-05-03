@@ -1,14 +1,13 @@
 package com.kustomer.kustomersdk.Models;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
-import com.google.gson.annotations.SerializedName;
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.DataSources.KUSChatMessagesDataSource;
 import com.kustomer.kustomersdk.Helpers.KUSDate;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
 import com.kustomer.kustomersdk.Kustomer;
-import com.kustomer.kustomersdk.Utils.JsonHelper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,7 +15,6 @@ import org.json.JSONObject;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 
 import static com.kustomer.kustomersdk.Utils.JsonHelper.dateFromKeyPath;
 import static com.kustomer.kustomersdk.Utils.JsonHelper.stringFromKeyPath;
@@ -35,6 +33,13 @@ public class KUSChatSession extends KUSModel implements Serializable {
     private Date lastSeenAt;
     private Date lastMessageAt;
     private Date lockedAt;
+
+    @Nullable
+    private String satisfactionFormId;
+    @Nullable
+    private String satisfactionStatus;
+    @Nullable
+    private Date satisfactionLockedAt;
     //endregion
 
     //region Initializer
@@ -51,6 +56,10 @@ public class KUSChatSession extends KUSModel implements Serializable {
         lastSeenAt = dateFromKeyPath(json, "attributes.lastSeenAt");
         lastMessageAt = dateFromKeyPath(json, "attributes.lastMessageAt");
         lockedAt = dateFromKeyPath(json, "attributes.lockedAt");
+
+        satisfactionFormId = stringFromKeyPath(json, "attributes.satisfaction.id");
+        satisfactionStatus = stringFromKeyPath(json, "attributes.satisfaction.status");
+        satisfactionLockedAt = dateFromKeyPath(json, "attributes.satisfaction.lockedAt");
     }
     //endregion
 
@@ -128,8 +137,7 @@ public class KUSChatSession extends KUSModel implements Serializable {
             if (lastMessageAt != null)
                 laterLastMessageAt = chatMessage.getCreatedAt().after(lastMessageAt) ?
                         chatMessage.getCreatedAt() : lastMessageAt;
-            else
-                lastMessageAt = null;
+
         } else
             laterLastMessageAt = lastMessageAt;
 
@@ -213,6 +221,21 @@ public class KUSChatSession extends KUSModel implements Serializable {
 
     public Date getLockedAt() {
         return lockedAt;
+    }
+
+    @Nullable
+    public String getSatisfactionFormId() {
+        return satisfactionFormId;
+    }
+
+    @Nullable
+    public String getSatisfactionStatus() {
+        return satisfactionStatus;
+    }
+
+    @Nullable
+    public Date getSatisfactionLockedAt() {
+        return satisfactionLockedAt;
     }
     //endregion
 }

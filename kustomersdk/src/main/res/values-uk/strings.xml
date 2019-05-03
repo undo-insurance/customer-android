@@ -55,4 +55,9 @@
     <string name="com_kustomer_volume_control_phone_question">Чудово, який найкращий номер телефону для вас?</string>
     <string name="com_kustomer_volume_control_thankyou_response">Дякую. Ми скоро повернемося до вас.</string>
     <string name="com_kustomer_greater_than_one_day">більше одного дня</string>
+
+    <string name="com_kustomer_submit">уявити</string>
+    <string name="com_kustomer_thank_you_for_your_feedback">Спасибі за ваш відгук!</string>
+    <string name="com_kustomer_edit">редагувати</string>
+
 </resources>

@@ -13,5 +13,8 @@ import com.kustomer.kustomersdk.Models.KUSTypingIndicator;
 public interface KUSChatMessagesDataSourceListener extends KUSPaginatedDataSourceListener {
     void onCreateSessionId(KUSChatMessagesDataSource source, String sessionId);
 
-    void onReceiveTypingUpdate(@NonNull KUSChatMessagesDataSource source, @Nullable KUSTypingIndicator typingIndicator);
+    void onSatisfactionResponseLoaded(@NonNull KUSChatMessagesDataSource dataSource);
+
+    void onReceiveTypingUpdate(@NonNull KUSChatMessagesDataSource source,
+                               @Nullable KUSTypingIndicator typingIndicator);
 }

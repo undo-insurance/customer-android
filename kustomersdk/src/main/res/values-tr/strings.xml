@@ -55,4 +55,9 @@
     <string name="com_kustomer_volume_control_phone_question">Harika, size ulaşacak en iyi telefon numarası nedir?</string>
     <string name="com_kustomer_volume_control_thankyou_response">Teşekkür ederim. Kısa bir süre sonra size geri döneceğiz.</string>
     <string name="com_kustomer_greater_than_one_day">bir günden fazla</string>
+
+    <string name="com_kustomer_submit">Gönder</string>
+    <string name="com_kustomer_thank_you_for_your_feedback">Geribildiriminiz için teşekkür ederiz!</string>
+    <string name="com_kustomer_edit">Düzenle</string>
+
 </resources>

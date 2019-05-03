@@ -55,4 +55,9 @@
     <string name="com_kustomer_volume_control_phone_question">הדר, מהו מספר הטלפון הטוב ביותר להגיע אליך?</string>
     <string name="com_kustomer_volume_control_thankyou_response">ודה. אנו נחזור אליך בהקדם.</string>
     <string name="com_kustomer_greater_than_one_day">ותר מיום אחד</string>
+
+    <string name="com_kustomer_submit">שלח</string>
+    <string name="com_kustomer_thank_you_for_your_feedback">תודה על המשוב שלך!</string>
+    <string name="com_kustomer_edit">עריכה</string>
+
 </resources>

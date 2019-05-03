@@ -55,4 +55,9 @@
     <string name="com_kustomer_volume_control_phone_question">あなたに連絡するのに最適な電話番号は何ですか？</string>
     <string name="com_kustomer_volume_control_thankyou_response">ありがとうございました。私たちはまもなくあなたに連絡します。</string>
     <string name="com_kustomer_greater_than_one_day">1日以上</string>
+
+    <string name="com_kustomer_submit">提出します</string>
+    <string name="com_kustomer_thank_you_for_your_feedback">ご意見ありがとうございます！</string>
+    <string name="com_kustomer_edit">編集します</string>
+
 </resources>

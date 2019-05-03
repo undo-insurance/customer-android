@@ -55,4 +55,9 @@
     <string name="com_kustomer_volume_control_phone_question">Suur, mis on parim telefoninumber, et jõuda teid?</string>
     <string name="com_kustomer_volume_control_thankyou_response">Aitäh. Me lähme peatselt teie juurde.</string>
     <string name="com_kustomer_greater_than_one_day">suurem kui üks päev</string>
+
+    <string name="com_kustomer_submit">Esita</string>
+    <string name="com_kustomer_thank_you_for_your_feedback">Aitäh tagasiside eest!</string>
+    <string name="com_kustomer_edit">Edit</string>
+
 </resources>

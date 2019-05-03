@@ -55,4 +55,9 @@
     <string name="com_kustomer_volume_control_phone_question">Izvrsno, koji je najbolji telefonski broj koji će vas stići?</string>
     <string name="com_kustomer_volume_control_thankyou_response">Hvala vam. Vratit ćemo vam se uskoro.</string>
     <string name="com_kustomer_greater_than_one_day">veći od jednog dana</string>
+
+    <string name="com_kustomer_submit">podnijeti</string>
+    <string name="com_kustomer_thank_you_for_your_feedback">Hvala vam na povratnim informacijama!</string>
+    <string name="com_kustomer_edit">Uredi</string>
+
 </resources>

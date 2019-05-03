@@ -1,0 +1,8 @@
+package com.kustomer.kustomersdk.Enums;
+
+public enum  KUSCSatisfactionScaleType {
+    KUS_C_SATISFACTION_SCALE_TYPE_NUMBER,
+    KUS_C_SATISFACTION_SCALE_TYPE_EMOJI,
+    KUS_C_SATISFACTION_SCALE_TYPE_THUMB,
+    KUS_C_SATISFACTION_SCALE_TYPE_UNKNOWN
+}

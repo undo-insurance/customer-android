@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    android:paddingTop="16dp"
+    android:background="@color/kusChatItemBackground">
+
+    <FrameLayout
+        android:id="@+id/flAvatar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="bottom"
+        android:layout_marginEnd="10dp"
+        android:padding="1dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/satisfactionFormLayout"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/satisfactionFormLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/kus_shape_agent_message_background"
+        android:orientation="vertical"
+        android:padding="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/feedbackLayout"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toEndOf="@id/flAvatar"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_max="300dp">
+
+        <android.support.text.emoji.widget.EmojiAppCompatTextView
+            android:id="@+id/tvCSatRatingPrompt"
+            style="@style/KUSCSatRatingPromptTextAppearance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:autoLink="web|email"
+            android:padding="8dp"
+            android:textColor="@color/kusCSatRatingPromptTextColor"
+            android:textColorLink="@color/kusCSatRatingPromptTextColor" />
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/ratingConstraintLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+            <LinearLayout
+                android:id="@+id/ratingLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/ivRating1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="@null"
+                    android:src="@drawable/kus_color_emoji_1" />
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/ivRating2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="@null"
+                    android:src="@drawable/kus_color_emoji_2" />
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/ivRating3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="@null"
+                    android:src="@drawable/kus_color_emoji_3" />
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/ivRating4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="@null"
+                    android:src="@drawable/kus_color_emoji_4" />
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/ivRating5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="@null"
+                    android:src="@drawable/kus_color_emoji_5" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvLowRating"
+                style="@style/KUSCSatRatingLabelsTextAppearance"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:padding="8dp"
+                android:textColor="@color/kusCSatRatingLabelsTextColor"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/guideline"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ratingLayout"
+                app:layout_constraintWidth_default="wrap" />
+
+            <android.support.constraint.Guideline
+                android:id="@+id/guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.5"
+                app:layout_constraintTop_toBottomOf="@id/ratingLayout" />
+
+            <TextView
+                android:id="@+id/tvHighRating"
+                style="@style/KUSCSatRatingLabelsTextAppearance"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:padding="8dp"
+                android:textColor="@color/kusCSatRatingLabelsTextColor"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toEndOf="@id/guideline"
+                app:layout_constraintTop_toBottomOf="@id/ratingLayout"
+                app:layout_constraintWidth_default="wrap" />
+
+        </android.support.constraint.ConstraintLayout>
+
+        <android.support.text.emoji.widget.EmojiAppCompatTextView
+            android:id="@+id/tvCSatCommentQuestion"
+            style="@style/KUSCSatQuestionsTextAppearance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:autoLink="web|email"
+            android:padding="8dp"
+            android:textColor="@color/kusCSatQuestionsTextColor"
+            android:textColorLink="@color/kusCSatQuestionsTextColor" />
+
+        <android.support.text.emoji.widget.EmojiAppCompatEditText
+            android:id="@+id/etCSatComment"
+            style="@style/kusCSatCommentInputTextAppearance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="8dp"
+            android:background="@drawable/kus_shape_csat_comment_background"
+            android:gravity="start|top"
+            android:inputType="textMultiLine"
+            android:lines="5"
+            android:overScrollMode="always"
+            android:padding="8dp"
+            android:scrollbarStyle="insideInset"
+            android:scrollbars="vertical"
+            android:textColor="@color/kusCSatCommentInputTextColor"
+            android:textCursorDrawable="@drawable/kus_input_bar_cursor"
+            android:textSize="16sp" />
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/btnCSatSubmit"
+            style="@style/KUSCSatSubmitButtonAppearance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="@string/com_kustomer_submit"
+            android:textAllCaps="false"
+            android:textColor="@color/kusCSatSubmitTextColor"
+            app:backgroundTint="@color/kusCSatSubmitButtonColor" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/feedbackLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/kus_shape_agent_message_background"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="12dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toEndOf="@id/satisfactionFormLayout"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_max="300dp">
+
+        <android.support.v7.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="4dp"
+            android:contentDescription="@null"
+            android:src="@drawable/kus_feed_back_tick" />
+
+        <TextView
+            style="@style/KUSCSatFeedbackTextAppearance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:gravity="center"
+            android:text="@string/com_kustomer_thank_you_for_your_feedback"
+            android:textColor="@color/kusCSatFeedbackTextColor"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tvCSatEdit"
+            style="@style/KUSCSatEditTextAppearance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:text="@string/com_kustomer_edit"
+            android:textColor="@color/kusCSatEditTextColor" />
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

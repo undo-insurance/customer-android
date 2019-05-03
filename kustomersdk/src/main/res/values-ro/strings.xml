@@ -55,4 +55,9 @@
     <string name="com_kustomer_volume_control_phone_question">Grozav, care este cel mai bun număr de telefon la care te afli?</string>
     <string name="com_kustomer_volume_control_thankyou_response">Mulțumesc. Ne vom întoarce în curând.</string>
     <string name="com_kustomer_greater_than_one_day">mai mult de o zi</string>
+
+    <string name="com_kustomer_submit">A depune</string>
+    <string name="com_kustomer_thank_you_for_your_feedback">Multumim pentru feedback-ul dvs!</string>
+    <string name="com_kustomer_edit">Editați | ×</string>
+
 </resources>

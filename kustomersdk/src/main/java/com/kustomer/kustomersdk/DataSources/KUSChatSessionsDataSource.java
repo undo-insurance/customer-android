@@ -614,6 +614,11 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource
     }
 
     @Override
+    public void onSatisfactionResponseLoaded(@NonNull KUSChatMessagesDataSource dataSource) {
+        //No need to do anything here
+    }
+
+    @Override
     public void objectDataSourceOnLoad(KUSObjectDataSource dataSource) {
         fetchLatest();
     }

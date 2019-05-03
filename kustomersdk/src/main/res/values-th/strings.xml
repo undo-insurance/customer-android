@@ -55,4 +55,9 @@
     <string name="com_kustomer_volume_control_phone_question">หมายเลขโทรศัพท์ที่ดีที่สุดในการติดต่อคุณคืออะไร?</string>
     <string name="com_kustomer_volume_control_thankyou_response">ขอบคุณ. เราจะติดต่อกลับโดยเร็วที่สุด</string>
     <string name="com_kustomer_greater_than_one_day">มากกว่าหนึ่งวัน</string>
+
+    <string name="com_kustomer_submit">เสนอ</string>
+    <string name="com_kustomer_thank_you_for_your_feedback">ขอบคุณสำหรับความคิดเห็นของคุณ!</string>
+    <string name="com_kustomer_edit">แก้ไข</string>
+
 </resources>

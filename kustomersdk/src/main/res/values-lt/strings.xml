@@ -55,4 +55,9 @@
     <string name="com_kustomer_volume_control_phone_question">Puikus, koks geriausias telefono numeris jums pasiekti?</string>
     <string name="com_kustomer_volume_control_thankyou_response">Ačiū. Mes netrukus susisieksime su jumis.</string>
     <string name="com_kustomer_greater_than_one_day">daugiau nei viena diena</string>
+
+    <string name="com_kustomer_submit">Pateikti</string>
+    <string name="com_kustomer_thank_you_for_your_feedback">Dėkojame už jūsų atsiliepimus!</string>
+    <string name="com_kustomer_edit">Redaguoti</string>
+
 </resources>

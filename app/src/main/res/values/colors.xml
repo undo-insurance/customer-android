@@ -53,6 +53,16 @@
     <!--<color name="kusOptionPickerButtonBackground">#F5F5F5</color>-->
     <!--<color name="kusTypingIndicatorColor">#757575</color>-->
 
+    <!--<color name="kusCSatRatingPromptTextColor">#FFFFFF</color>-->
+    <!--<color name="kusCSatQuestionsTextColor">#FFFFFF</color>-->
+    <!--<color name="kusCSatRatingLabelsTextColor">#FFFFFF</color>-->
+    <!--<color name="kusCSatFeedbackTextColor">#FFFFFF</color>-->
+    <!--<color name="kusCSatEditTextColor">#DD2C00</color>-->
+    <!--<color name="kusCSatCommentBorderColor">#FFFFFF</color>-->
+    <!--<color name="kusCSatCommentInputTextColor">#FFFFFF</color>-->
+    <!--<color name="kusCSatSubmitButtonColor">#DD2C00</color>-->
+    <!--<color name="kusCSatSubmitTextColor">#000000</color>-->
+
     <!--<color name="kusSessionClosedViewBackgroundColor">#E0E0E0</color>-->
     <!--<color name="kusSessionClosedViewTextColor">#000000</color>-->
     <!--<color name="kusChatHasEndedTextColor">#000000</color>-->

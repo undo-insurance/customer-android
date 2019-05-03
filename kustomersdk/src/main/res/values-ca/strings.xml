@@ -55,4 +55,9 @@
     <string name="com_kustomer_volume_control_phone_question">Molt bé, quin és el millor número de telèfon per arribar-hi?</string>
     <string name="com_kustomer_volume_control_thankyou_response">Gràcies. Us tornarem a contactar en breu.</string>
     <string name="com_kustomer_greater_than_one_day">més d\'un dia</string>
+
+    <string name="com_kustomer_submit">Presentar</string>
+    <string name="com_kustomer_thank_you_for_your_feedback">Gràcies pels seus comentaris!</string>
+    <string name="com_kustomer_edit">editar</string>
+
 </resources>

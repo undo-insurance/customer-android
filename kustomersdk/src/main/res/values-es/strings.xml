@@ -55,4 +55,9 @@
     <string name="com_kustomer_volume_control_phone_question">Genial, ¿cuál es el mejor número de teléfono para contactarte?</string>
     <string name="com_kustomer_volume_control_thankyou_response">Gracias. Nos pondremos en contacto con usted en breve.</string>
     <string name="com_kustomer_greater_than_one_day">más de un día</string>
+
+    <string name="com_kustomer_submit">Enviar</string>
+    <string name="com_kustomer_thank_you_for_your_feedback">¡Gracias por tus comentarios!</string>
+    <string name="com_kustomer_edit">Editar</string>
+
 </resources>

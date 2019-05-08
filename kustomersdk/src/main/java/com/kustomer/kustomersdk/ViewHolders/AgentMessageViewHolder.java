@@ -14,7 +14,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Adapters.MessageListAdapter;
@@ -111,8 +110,8 @@ public class AgentMessageViewHolder extends RecyclerView.ViewHolder {
         progressBarImage.setVisibility(View.VISIBLE);
 
         Glide.with(itemView)
-                .setDefaultRequestOptions(RequestOptions.errorOf(R.drawable.kus_ic_error_outline_red_33dp))
                 .load(chatMessage.getImageUrl().toString())
+                .error(R.drawable.kus_ic_error_outline_red_33dp)
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {

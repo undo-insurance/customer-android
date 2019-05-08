@@ -30,7 +30,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Adapters.MessageListAdapter;
 import com.kustomer.kustomersdk.BaseClasses.BaseActivity;
@@ -370,7 +369,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
                 && !chatSettings.getOffHoursImageUrl().isEmpty()) {
             Glide.with(this)
                     .load(chatSettings.getOffHoursImageUrl())
-                    .apply(RequestOptions.noAnimation())
+                    .dontAnimate()
                     .into(ivNonBusinessHours);
         } else {
             ivNonBusinessHours.setImageDrawable(getResources().getDrawable(R.drawable.kus_away_image));

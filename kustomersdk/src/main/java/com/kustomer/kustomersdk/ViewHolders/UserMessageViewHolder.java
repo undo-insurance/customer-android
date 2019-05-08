@@ -16,7 +16,6 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.LazyHeaders;
 import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.kustomer.kustomersdk.Adapters.MessageListAdapter;
 import com.kustomer.kustomersdk.Enums.KUSChatMessageState;
@@ -127,8 +126,8 @@ public class UserMessageViewHolder extends RecyclerView.ViewHolder {
                     .build());
 
             Glide.with(itemView)
-                    .setDefaultRequestOptions(RequestOptions.errorOf(R.drawable.kus_ic_error_outline_red_33dp))
                     .load(glideUrl)
+                    .error(R.drawable.kus_ic_error_outline_red_33dp)
                     .listener(new RequestListener<Drawable>() {
                         @Override
                         public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {

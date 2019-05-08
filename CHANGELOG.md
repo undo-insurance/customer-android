@@ -1,5 +1,10 @@
 # Changelog for Kustomer Android SDK
 
+## 0.2.2
+Release Date: 05/8/2019
+* Updated glide & other dependencies to the latest versions
+* Fixed satisfaction form issue when VC forms are enabled
+
 ## 0.2.1
 Release Date: 05/3/2019
 * Implemented typing indicator feature

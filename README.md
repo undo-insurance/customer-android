@@ -9,11 +9,6 @@
 </p>
 
 
-### Updates:
-v0.2.0+: `identify()` & `isChatAvailable()` methods will always return callback on background thread. See [changelog](CHANGELOG.md)
-
-
-
 ## Requirements
 
 - A [Kustomer.com](https://www.kustomer.com/) API Key
@@ -31,7 +26,7 @@ The Kustomer Android SDK requires a valid API Key with role `org.tracking`. See 
 Include the library in your `app.gradle`:
 
 ```gradle
-implementation 'com.kustomer.kustomersdk:kustomersdk:0.2.1'
+implementation 'com.kustomer.kustomersdk:kustomersdk:0.2.2'
 ```
 
 #### Or through Maven
@@ -40,7 +35,7 @@ implementation 'com.kustomer.kustomersdk:kustomersdk:0.2.1'
 <dependency>
   <groupId>com.kustomer.kustomersdk</groupId>
   <artifactId>kustomersdk</artifactId>
-  <version>0.2.1</version>
+  <version>0.2.2</version>
   <type>pom</type>
 </dependency>
 ```

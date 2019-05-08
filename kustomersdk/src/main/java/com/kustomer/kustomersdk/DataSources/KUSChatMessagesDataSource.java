@@ -194,9 +194,9 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
         return null;
     }
 
-    @NonNull
+    @Nullable
     public KUSSatisfactionResponseDataSource getSatisfactionResponseDataSource() {
-        if (satisfactionResponseDataSource == null) {
+        if (satisfactionResponseDataSource == null && isActualSession()) {
             satisfactionResponseDataSource = new KUSSatisfactionResponseDataSource(getUserSession(),
                     sessionId);
             satisfactionResponseDataSource.addListener(this);
@@ -209,7 +209,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
         if (getUserSession() == null)
             return false;
 
-        if (!isActualSession()) {
+        if (!isActualSession() || getSatisfactionResponseDataSource() == null) {
             return false;
         }
 
@@ -814,6 +814,9 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
 
     private void fetchSatisfactionResponseIfNecessary() {
         if (getUserSession() == null)
+            return;
+
+        if(getSatisfactionResponseDataSource() == null)
             return;
 
         KUSChatSession chatSession = (KUSChatSession) getUserSession().getChatSessionsDataSource()

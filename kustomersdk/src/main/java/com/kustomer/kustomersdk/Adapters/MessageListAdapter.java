@@ -93,8 +93,11 @@ public class MessageListAdapter extends RecyclerView.Adapter {
         }
 
         if (holder.getItemViewType() == SATISFACTION_FORM_VIEW) {
-            KUSCSatisfactionResponse response = (KUSCSatisfactionResponse) mChatMessagesDataSource
-                    .getSatisfactionResponseDataSource().getObject();
+            KUSCSatisfactionResponse response = null;
+
+            if( mChatMessagesDataSource.getSatisfactionResponseDataSource() != null)
+                response = (KUSCSatisfactionResponse) mChatMessagesDataSource
+                        .getSatisfactionResponseDataSource().getObject();
 
             if (response != null)
                 ((CSatisfactionFormViewHolder) holder)

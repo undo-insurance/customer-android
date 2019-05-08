@@ -1106,7 +1106,8 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
     @Override
     public void onSatisfactionFormRated(int rating) {
-        if (chatMessagesDataSource == null)
+        if (chatMessagesDataSource == null
+                || chatMessagesDataSource.getSatisfactionResponseDataSource() == null)
             return;
 
         chatMessagesDataSource.getSatisfactionResponseDataSource().submitRating(rating);
@@ -1119,7 +1120,8 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
     @Override
     public void onSatisfactionFormCommented(@NonNull String comment) {
-        if (chatMessagesDataSource == null)
+        if (chatMessagesDataSource == null
+                || chatMessagesDataSource.getSatisfactionResponseDataSource() == null)
             return;
 
         chatMessagesDataSource.getSatisfactionResponseDataSource().submitComment(comment);

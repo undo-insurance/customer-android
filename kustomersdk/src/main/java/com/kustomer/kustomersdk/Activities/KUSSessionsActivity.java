@@ -185,8 +185,13 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
     }
 
     private void handleFirstLoadIfNecessary() {
-        if (didHandleFirstLoad)
+        if (didHandleFirstLoad || !userSession.getChatSettingsDataSource().isFetched())
             return;
+
+        if(!chatSessionsDataSource.isFetched() &&
+                chatSessionsDataSource.getMessageToCreateNewChatSession() == null)
+            return;
+
         didHandleFirstLoad = true;
 
         Intent intent = new Intent(this, KUSChatActivity.class);
@@ -320,6 +325,9 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
+                setCreateSessionBackToChatButton();
+                handleFirstLoadIfNecessary();
+
                 KUSChatSettings chatSettings = (KUSChatSettings) userSession
                         .getChatSettingsDataSource().getObject();
                 footerLayout.setVisibility(chatSettings != null && chatSettings.shouldShowKustomerBranding() ?

@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.PersistableBundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -83,6 +84,8 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+import static com.kustomer.kustomersdk.Utils.KUSConstants.BundleName.CHAT_SCREEN_RESTARTED_KEY;
+
 public class KUSChatActivity extends BaseActivity implements KUSChatMessagesDataSourceListener,
         KUSToolbar.OnToolbarItemClickListener,
         KUSEmailInputViewListener,
@@ -131,6 +134,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
     KUSToolbar kusToolbar;
     boolean shouldShowBackButton = true;
     boolean backPressed = false;
+    boolean closePressed = false;
     boolean shouldShowNonBusinessHoursImage = false;
 
     String message;
@@ -145,9 +149,18 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         super.onCreate(savedInstanceState);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
+        if(savedInstanceState != null && savedInstanceState.getBoolean(CHAT_SCREEN_RESTARTED_KEY))
+            finish();
+
         initData();
         initViews();
         setupAdapter();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putBoolean(CHAT_SCREEN_RESTARTED_KEY, true);
+        super.onSaveInstanceState(savedInstanceState);
     }
 
     @Override
@@ -219,8 +232,10 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
                 overridePendingTransition(R.anim.kus_stay, R.anim.kus_slide_right);
             else
                 overridePendingTransition(R.anim.kus_stay, R.anim.kus_slide_right_rtl);
-        } else
+        } else if (closePressed)
             overridePendingTransition(R.anim.kus_stay, R.anim.kus_slide_down);
+        else
+            overridePendingTransition(0, 0);
     }
 
     @Override
@@ -403,7 +418,9 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
             KUSChatSession session = (KUSChatSession) userSession
                     .getChatSessionsDataSource().findById(getValidChatSessionId());
 
-            if (session.getLockedAt() == null && chatMessagesDataSource.isAnyMessageByCurrentUser()) {
+            if (session != null
+                    && session.getLockedAt() == null
+                    && chatMessagesDataSource.isAnyMessageByCurrentUser()) {
                 if (btnEndChat.getVisibility() != View.VISIBLE) {
                     Handler handler = new Handler(Looper.getMainLooper());
                     Runnable runnable = new Runnable() {
@@ -952,6 +969,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
     @Override
     public void onToolbarClosePressed() {
+        closePressed = true;
         clearAllLibraryActivities();
     }
 

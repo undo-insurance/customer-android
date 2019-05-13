@@ -9,12 +9,10 @@ import com.kustomer.kustomersdk.DataSources.KUSPaginatedDataSource;
 import com.kustomer.kustomersdk.Interfaces.KUSCustomerStatsListener;
 import com.kustomer.kustomersdk.Interfaces.KUSPaginatedDataSourceListener;
 import com.kustomer.kustomersdk.Kustomer;
-import com.kustomer.kustomersdk.Models.KUSChatMessage;
 import com.kustomer.kustomersdk.Models.KUSChatSession;
 import com.kustomer.kustomersdk.Models.KUSModel;
 import com.kustomer.kustomersdk.Receivers.NetworkStateReceiver;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -172,34 +170,17 @@ public class KUSNetworkStateManager implements NetworkStateReceiver.NetworkState
                     .chatMessageDataSourceForSessionId(chatSession.getId());
             if (prevChatSession != null) {
 
-                KUSChatMessage latestChatMessage = null;
-
-                if (messagesDataSource != null && !messagesDataSource.getList().isEmpty())
-                    latestChatMessage = (KUSChatMessage) messagesDataSource.getList().get(0);
-
-                Date sessionLastSeenAt = userSession.getChatSessionsDataSource()
-                        .lastSeenAtForSessionId(chatSession.getId());
-
                 boolean isUpdatedSession = prevChatSession.getLastMessageAt() == null
                         || (chatSession.getLastMessageAt() != null
                         && chatSession.getLastMessageAt().after(prevChatSession.getLastMessageAt()));
-
-                boolean lastSeenBeforeMessage = sessionLastSeenAt == null
-                        || (chatSession.getLastMessageAt() != null
-                        && chatSession.getLastMessageAt().after(sessionLastSeenAt));
-
-                boolean lastMessageAtNewerThanLocalLastMessage = latestChatMessage == null
-                        || latestChatMessage.getCreatedAt() == null
-                        || (chatSession.getLastMessageAt() != null
-                        && chatSession.getLastMessageAt().after(latestChatMessage.getCreatedAt()));
 
                 boolean chatSessionSetToLock = chatSession.getLockedAt() != null
                         && !chatSession.getLockedAt().equals(prevChatSession.getLockedAt());
 
                 // Check that new message arrived or not
-                if (isUpdatedSession && lastSeenBeforeMessage && lastMessageAtNewerThanLocalLastMessage) {
-                    if (messagesDataSource != null)
-                        messagesDataSource.fetchLatest();
+                if (isUpdatedSession && messagesDataSource!=null
+                        && messagesDataSource.isLatestMessageAfterLastSeen()) {
+                    messagesDataSource.fetchLatest();
 
                 } else if (chatSessionSetToLock) { // Check that session lock state changed
                     if (messagesDataSource != null)

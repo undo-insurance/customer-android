@@ -774,6 +774,30 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
         }
     }
 
+    public boolean isLatestMessageAfterLastSeen(){
+        KUSChatSession chatSession= (KUSChatSession) getUserSession().getChatSessionsDataSource()
+                .findById(sessionId);
+
+        Date sessionLastSeenAt = getUserSession().getChatSessionsDataSource()
+                .lastSeenAtForSessionId(chatSession.getId());
+
+        KUSChatMessage latestChatMessage = null;
+
+        if (getList().size() > 0)
+            latestChatMessage = (KUSChatMessage) getList().get(0);
+
+        boolean lastSeenBeforeMessage = sessionLastSeenAt == null
+                || (chatSession.getLastMessageAt() != null
+                && chatSession.getLastMessageAt().after(sessionLastSeenAt));
+
+        boolean lastMessageAtNewerThanLocalLastMessage = latestChatMessage == null
+                || latestChatMessage.getCreatedAt() == null
+                || (chatSession.getLastMessageAt() != null
+                && chatSession.getLastMessageAt().after(latestChatMessage.getCreatedAt()));
+
+        return lastSeenBeforeMessage && lastMessageAtNewerThanLocalLastMessage;
+    }
+
     //endregion
 
     //region Private Methods

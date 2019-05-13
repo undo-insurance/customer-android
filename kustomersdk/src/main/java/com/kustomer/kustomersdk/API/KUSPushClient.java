@@ -45,7 +45,6 @@ import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -80,7 +79,6 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
 
     private boolean isPusherTrackingStarted;
     private boolean didPusherLostPackets;
-    private Date lastActivity;
 
     @Nullable
     private KUSTypingStatusListener typingStatusListener;
@@ -170,6 +168,7 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
 
             chatActivityChannel.trigger(KUSConstants.PusherEventNames.CHAT_ACTIVITY_TYPING_EVENT, activityData);
         } catch (IllegalStateException ignore) {
+        } catch (IllegalArgumentException ignore) {
         }
     }
 
@@ -688,32 +687,15 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
             if (previousChatSession != null) {
 
                 try {
-                    KUSChatMessage latestChatMessage = null;
-
-                    if (messagesDataSource.getList().size() > 0)
-                        latestChatMessage = (KUSChatMessage) messagesDataSource.getList().get(0);
-
-                    Date sessionLastSeenAt = userSession.get().getChatSessionsDataSource()
-                            .lastSeenAtForSessionId(chatSession.getId());
-
                     boolean isUpdatedSession = previousChatSession.getLastMessageAt() == null
                             || (chatSession.getLastMessageAt() != null
                             && chatSession.getLastMessageAt().after(previousChatSession.getLastMessageAt()));
-
-                    boolean lastSeenBeforeMessage = sessionLastSeenAt == null
-                            || (chatSession.getLastMessageAt() != null
-                            && chatSession.getLastMessageAt().after(sessionLastSeenAt));
-
-                    boolean lastMessageAtNewerThanLocalLastMessage = latestChatMessage == null
-                            || latestChatMessage.getCreatedAt() == null
-                            || (chatSession.getLastMessageAt() != null
-                            && chatSession.getLastMessageAt().after(latestChatMessage.getCreatedAt()));
 
                     boolean chatSessionSetToLock = chatSession.getLockedAt() != null
                             && !chatSession.getLockedAt().equals(previousChatSession.getLockedAt());
 
                     // Check that new message arrived or not
-                    if (isUpdatedSession && lastSeenBeforeMessage && lastMessageAtNewerThanLocalLastMessage) {
+                    if (isUpdatedSession && messagesDataSource.isLatestMessageAfterLastSeen()) {
                         updatedSessionId = chatSession.getId();
                         messagesDataSource.addListener(KUSPushClient.this);
                         messagesDataSource.fetchLatest();
@@ -725,7 +707,9 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
                 }
 
             } else if (previousChatSessions != null) {
-                updatedSessionId = chatSession.getId();
+                if (messagesDataSource.isLatestMessageAfterLastSeen())
+                    updatedSessionId = chatSession.getId();
+
                 messagesDataSource.addListener(KUSPushClient.this);
                 messagesDataSource.fetchLatest();
             }

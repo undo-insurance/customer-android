@@ -1,5 +1,7 @@
 package com.kustomer.kustomersdk.DataSources;
 
+import android.support.annotation.NonNull;
+
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
 import com.kustomer.kustomersdk.Interfaces.KUSObjectDataSourceListener;
@@ -120,7 +122,7 @@ public class KUSObjectDataSource {
         return new KUSModel(jsonObject);
     }
 
-    void performRequest(KUSRequestCompletionListener completionListener){}
+    void performRequest(@NonNull KUSRequestCompletionListener completionListener){}
     //endregion
 
     //region Accessors

@@ -31,7 +31,6 @@ import com.kustomer.kustomersdk.Interfaces.KUSVolumeControlTimerListener;
 import com.kustomer.kustomersdk.Interfaces.KUSTypingStatusListener;
 import com.kustomer.kustomersdk.Kustomer;
 import com.kustomer.kustomersdk.Managers.KUSVolumeControlTimerManager;
-import com.kustomer.kustomersdk.Models.KUSCSatisfactionResponse;
 import com.kustomer.kustomersdk.Models.KUSChatAttachment;
 import com.kustomer.kustomersdk.Models.KUSChatMessage;
 import com.kustomer.kustomersdk.Models.KUSChatSession;
@@ -67,8 +66,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
 
-import static com.kustomer.kustomersdk.Enums.KUSCSatisfactionFormResponseStatus.KUS_C_SATISFACTION_RESPONSE_STATUS_COMMENTED;
-import static com.kustomer.kustomersdk.Enums.KUSCSatisfactionFormResponseStatus.KUS_C_SATISFACTION_RESPONSE_STATUS_RATED;
 import static com.kustomer.kustomersdk.Models.KUSChatMessage.KUSChatMessageSentByUser;
 
 /**
@@ -372,8 +369,11 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
                 if (listener != null)
                     onCreateSessionListeners.add(listener);
             } else {
-                if (getUserSession() == null)
+                if (getUserSession() == null) {
+                    if(listener != null)
+                        listener.onComplete(false, new Error());
                     return;
+                }
                 onCreateSessionListeners = new ArrayList<onCreateSessionListener>() {{
                     add(listener);
                 }};
@@ -401,7 +401,9 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
                         sessionQueuePollingManager = new KUSSessionQueuePollingManager(getUserSession(), sessionId);
 
                         //Insert the current messages data source into the userSession's lookup table
-                        getUserSession().getChatMessagesDataSources().put(session.getId(), KUSChatMessagesDataSource.this);
+                        if(getUserSession() != null)
+                            getUserSession().getChatMessagesDataSources().put(session.getId(),
+                                    KUSChatMessagesDataSource.this);
 
                         //Notify Listeners
                         for (KUSPaginatedDataSourceListener listener : listeners) {
@@ -512,8 +514,11 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
     }
 
     public void endChat(final String reason, final OnEndChatListener onEndChatListener) {
-        if (getUserSession() == null)
+        if (getUserSession() == null) {
+            if(onEndChatListener != null)
+                onEndChatListener.onComplete(false);
             return;
+        }
 
         getUserSession().getRequestManager().performRequestType(
                 KUSRequestType.KUS_REQUEST_TYPE_PUT,
@@ -526,8 +531,11 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
                 new KUSRequestCompletionListener() {
                     @Override
                     public void onCompletion(Error error, JSONObject response) {
-                        if (getUserSession() == null)
+                        if (getUserSession() == null) {
+                            if (onEndChatListener != null)
+                                onEndChatListener.onComplete(false);
                             return;
+                        }
 
                         if (error != null) {
                             if (onEndChatListener != null)
@@ -827,10 +835,12 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
 
         boolean isChatClosed = chatSession.getLockedAt() != null;
         boolean isSatisfactionResponseFetched = getSatisfactionResponseDataSource().isFetched();
+        boolean isSatisfactionFormEnabled = getSatisfactionResponseDataSource().isSatisfactionEnabled();
         boolean hasAgentMessage = getOtherUserIds().size() > 0;
 
         boolean needSatisfactionForm = isChatClosed && hasAgentMessage;
-        boolean shouldFetchSatisfactionForm = !isSatisfactionResponseFetched && needSatisfactionForm;
+        boolean shouldFetchSatisfactionForm = !isSatisfactionResponseFetched && isSatisfactionFormEnabled
+                && needSatisfactionForm;
 
         if (shouldFetchSatisfactionForm)
             getSatisfactionResponseDataSource().fetch();
@@ -1799,6 +1809,9 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
 
     @Override
     public void objectDataSourceOnError(final KUSObjectDataSource dataSource, Error error) {
+        if(dataSource instanceof KUSSatisfactionResponseDataSource)
+            return;
+
         Handler mainHandler = new Handler(Looper.getMainLooper());
         Runnable myRunnable = new Runnable() {
             @Override

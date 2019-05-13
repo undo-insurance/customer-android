@@ -394,6 +394,7 @@ public class KUSPaginatedDataSource {
 
     //region Accessors
 
+    @Nullable
     public KUSUserSession getUserSession() {
         return userSession.get();
     }

@@ -1,5 +1,7 @@
 package com.kustomer.kustomersdk.DataSources;
 
+import android.support.annotation.NonNull;
+
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
 import com.kustomer.kustomersdk.Interfaces.KUSRequestCompletionListener;
@@ -25,7 +27,12 @@ public class KUSSessionQueueDataSource extends KUSObjectDataSource {
 
     //region subclass methods
     @Override
-    void performRequest(KUSRequestCompletionListener completionListener){
+    void performRequest(@NonNull KUSRequestCompletionListener completionListener){
+        if(getUserSession() == null) {
+            completionListener.onCompletion(new Error(), null);
+            return;
+        }
+
         String endpoint = String.format(KUSConstants.URL.SESSION_QUEUE_ENDPOINT,sessionId);
         getUserSession().getRequestManager().getEndpoint(
                 endpoint,

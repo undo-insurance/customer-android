@@ -1,12 +1,13 @@
 package com.kustomer.kustomersdk.DataSources;
 
+import android.support.annotation.NonNull;
+
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Enums.KUSRequestType;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
 import com.kustomer.kustomersdk.Interfaces.KUSRequestCompletionListener;
 import com.kustomer.kustomersdk.Models.KUSClientActivity;
 import com.kustomer.kustomersdk.Models.KUSModel;
-import com.kustomer.kustomersdk.Models.KUSUser;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
 
 import org.json.JSONObject;
@@ -54,7 +55,12 @@ public class KUSClientActivityDataSource extends KUSObjectDataSource {
 
     //region SubClass Method
     @Override
-    public void performRequest(KUSRequestCompletionListener completionListener){
+    public void performRequest(@NonNull KUSRequestCompletionListener completionListener){
+        if(getUserSession() == null) {
+            completionListener.onCompletion(new Error(), null);
+            return;
+        }
+
         HashMap<String,Object> params = new HashMap<>();
 
         if(previousPageName != null){
@@ -64,14 +70,13 @@ public class KUSClientActivityDataSource extends KUSObjectDataSource {
         params.put("currentPage",currentPageName);
         params.put("currentPageSeconds",currentPageSeconds);
 
-        if(getUserSession() != null)
-            getUserSession().getRequestManager().performRequestType(
-                    KUSRequestType.KUS_REQUEST_TYPE_POST,
-                    KUSConstants.URL.CLIENT_ACTIVITY_ENDPOINT,
-                    params,
-                    true,
-                    completionListener
-            );
+        getUserSession().getRequestManager().performRequestType(
+                KUSRequestType.KUS_REQUEST_TYPE_POST,
+                KUSConstants.URL.CLIENT_ACTIVITY_ENDPOINT,
+                params,
+                true,
+                completionListener
+        );
     }
 
     @Override

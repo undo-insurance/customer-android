@@ -5,7 +5,6 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.os.LocaleListCompat;
 
 import com.kustomer.kustomersdk.BuildConfig;

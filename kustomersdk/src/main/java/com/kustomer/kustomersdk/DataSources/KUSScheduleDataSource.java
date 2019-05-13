@@ -1,5 +1,7 @@
 package com.kustomer.kustomersdk.DataSources;
 
+import android.support.annotation.NonNull;
+
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Enums.KUSBusinessHoursAvailability;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
@@ -8,7 +10,6 @@ import com.kustomer.kustomersdk.Models.KUSChatSettings;
 import com.kustomer.kustomersdk.Models.KUSHoliday;
 import com.kustomer.kustomersdk.Models.KUSModel;
 import com.kustomer.kustomersdk.Models.KUSSchedule;
-import com.kustomer.kustomersdk.Models.KUSTrackingToken;
 import com.kustomer.kustomersdk.Utils.JsonHelper;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
 
@@ -38,7 +39,12 @@ public class KUSScheduleDataSource extends KUSObjectDataSource {
     }
 
     @Override
-    void performRequest(KUSRequestCompletionListener completionListener){
+    void performRequest(@NonNull KUSRequestCompletionListener completionListener){
+        if(getUserSession() == null){
+            completionListener.onCompletion(new Error(), null);
+            return;
+        }
+
         getUserSession().getRequestManager().getEndpoint(
                 KUSConstants.URL.BUSINESS_SCHEDULE_ENDPOINT,
                 true,
@@ -47,8 +53,13 @@ public class KUSScheduleDataSource extends KUSObjectDataSource {
     }
 
     public boolean isActiveBusinessHours(){
-        KUSChatSettings chatSettings = (KUSChatSettings) getUserSession().getChatSettingsDataSource().getObject();
-        if(chatSettings == null || chatSettings.getAvailability() == KUSBusinessHoursAvailability.KUS_BUSINESS_HOURS_AVAILABILITY_ONLINE){
+        KUSChatSettings chatSettings = null;
+
+        if(getUserSession() != null)
+            chatSettings = (KUSChatSettings) getUserSession().getChatSettingsDataSource().getObject();
+
+        if(chatSettings == null || chatSettings.getAvailability() ==
+                KUSBusinessHoursAvailability.KUS_BUSINESS_HOURS_AVAILABILITY_ONLINE){
             return true;
         }
 

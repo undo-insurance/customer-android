@@ -92,6 +92,9 @@ public class KUSNetworkStateManager implements NetworkStateReceiver.NetworkState
         try {
             final KUSUserSession userSession = Kustomer.getSharedInstance().getUserSession();
 
+            if(userSession == null)
+                return;
+
             userSession.getStatsManager().updateStats(new KUSCustomerStatsListener() {
                 @Override
                 public void onCompletion(boolean sessionUpdated) {
@@ -117,6 +120,9 @@ public class KUSNetworkStateManager implements NetworkStateReceiver.NetworkState
     @Override
     public void onLoad(KUSPaginatedDataSource dataSource) {
         KUSUserSession userSession = Kustomer.getSharedInstance().getUserSession();
+        if (userSession == null)
+            return;
+
         if (dataSource != userSession.getChatSessionsDataSource())
             return;
 
@@ -127,6 +133,10 @@ public class KUSNetworkStateManager implements NetworkStateReceiver.NetworkState
     @Override
     public void onError(final KUSPaginatedDataSource dataSource, Error error) {
         final KUSUserSession userSession = Kustomer.getSharedInstance().getUserSession();
+
+        if (userSession == null)
+            return;
+
         if (dataSource != userSession.getChatSessionsDataSource())
             return;
         userSession.getChatSessionsDataSource().removeListener(KUSNetworkStateManager.this);
@@ -143,6 +153,10 @@ public class KUSNetworkStateManager implements NetworkStateReceiver.NetworkState
     @Override
     public void onContentChange(KUSPaginatedDataSource dataSource) {
         KUSUserSession userSession = Kustomer.getSharedInstance().getUserSession();
+
+        if (userSession == null)
+            return;
+
         if (dataSource != userSession.getChatSessionsDataSource())
             return;
 

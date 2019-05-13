@@ -57,7 +57,9 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource
 
         localLastSeenAtBySessionId = new HashMap<>();
         addListener(this);
-        getUserSession().getChatSettingsDataSource().addListener(this);
+
+        if(getUserSession() != null)
+            getUserSession().getChatSettingsDataSource().addListener(this);
     }
 
     @Override
@@ -114,8 +116,11 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource
     }
 
     public void createSessionWithTitle(String title, final KUSChatSessionCompletionListener listener) {
-        if (getUserSession() == null)
+        if (getUserSession() == null) {
+            if (listener != null)
+                listener.onComplete(new Error(), null);
             return;
+        }
 
         HashMap<String, Object> params = new HashMap<>();
         params.put("title", title);
@@ -157,8 +162,11 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource
     }
 
     public void updateLastSeenAtForSessionId(String sessionId, final KUSChatSessionCompletionListener listener) {
-        if (getUserSession() == null)
+        if (getUserSession() == null) {
+            if(listener != null)
+                listener.onComplete(new Error(), null);
             return;
+        }
 
         if (sessionId.length() == 0) {
             if (listener != null) {
@@ -235,8 +243,11 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource
     }
 
     public void submitFormMessages(final JSONArray messages, String formId, final KUSFormCompletionListener listener) {
-        if (getUserSession() == null)
+        if (getUserSession() == null) {
+            if(listener != null)
+                listener.onComplete(new Error(), null, null);
             return;
+        }
 
         final WeakReference<KUSChatSessionsDataSource> weakReference = new WeakReference<>(this);
         getUserSession().getRequestManager().performRequestType(

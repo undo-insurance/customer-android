@@ -9,8 +9,10 @@ import com.kustomer.kustomersdk.Helpers.KUSDate;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
 import com.kustomer.kustomersdk.Helpers.KUSLog;
 import com.kustomer.kustomersdk.Interfaces.KUSRequestCompletionListener;
+import com.kustomer.kustomersdk.Kustomer;
 import com.kustomer.kustomersdk.Models.KUSCSatisfactionResponse;
 import com.kustomer.kustomersdk.Models.KUSModel;
+import com.kustomer.kustomersdk.R;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
 
 import org.json.JSONArray;
@@ -31,7 +33,7 @@ public class KUSSatisfactionResponseDataSource extends KUSObjectDataSource {
 
     @NonNull
     private String sessionId;
-
+    private boolean isEnabled;
     //endregion
 
     //region Initializer
@@ -39,6 +41,7 @@ public class KUSSatisfactionResponseDataSource extends KUSObjectDataSource {
     KUSSatisfactionResponseDataSource(@NonNull KUSUserSession userSession, @NonNull String sessionId) {
         super(userSession);
         this.sessionId = sessionId;
+        isEnabled = true;
     }
 
     //endregion
@@ -46,6 +49,9 @@ public class KUSSatisfactionResponseDataSource extends KUSObjectDataSource {
     //region Private Methods
 
     private void submitSatisfactionResponseWithRatingAndComment(int rating, @Nullable String comment) {
+        if(getUserSession() == null)
+            return;
+
         KUSCSatisfactionResponse satisfactionResponse = (KUSCSatisfactionResponse) getObject();
 
         if (satisfactionResponse == null)
@@ -127,13 +133,35 @@ public class KUSSatisfactionResponseDataSource extends KUSObjectDataSource {
         return satisfactionResponse != null && satisfactionResponse.haveSecondaryQuestion();
     }
 
+    public boolean isSatisfactionEnabled() {
+        return isEnabled;
+    }
+
     @Override
-    void performRequest(KUSRequestCompletionListener completionListener) {
+    void performRequest(@NonNull final KUSRequestCompletionListener completionListener) {
+        if(getUserSession() == null) {
+            completionListener.onCompletion(new Error(), null);
+            return;
+        }
+
         getUserSession().getRequestManager().performRequestType(KUSRequestType.KUS_REQUEST_TYPE_POST,
                 String.format(KUSConstants.URL.SATISFACTION_RESPONSE_ENDPOINT, sessionId),
                 null,
                 true,
-                completionListener);
+                new KUSRequestCompletionListener() {
+                    @Override
+                    public void onCompletion(Error error, JSONObject response) {
+
+                        // Check if the response is empty
+                        //TODO: Improve this by sending request code in listener
+                        if (error != null && error.getMessage().equalsIgnoreCase(Kustomer.getContext()
+                                .getString(R.string.com_kustomer_unable_to_parse_response))) {
+                            isEnabled = false;
+                        }
+
+                        completionListener.onCompletion(error, response);
+                    }
+                });
     }
 
     @Override

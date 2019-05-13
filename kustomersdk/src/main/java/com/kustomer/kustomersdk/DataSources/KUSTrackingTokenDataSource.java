@@ -1,12 +1,13 @@
 package com.kustomer.kustomersdk.DataSources;
 
+import android.support.annotation.NonNull;
+
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Enums.KUSRequestType;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
 import com.kustomer.kustomersdk.Helpers.KUSSharedPreferences;
 import com.kustomer.kustomersdk.Interfaces.KUSObjectDataSourceListener;
 import com.kustomer.kustomersdk.Interfaces.KUSRequestCompletionListener;
-import com.kustomer.kustomersdk.Kustomer;
 import com.kustomer.kustomersdk.Models.KUSModel;
 import com.kustomer.kustomersdk.Models.KUSTrackingToken;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
@@ -34,7 +35,12 @@ public class KUSTrackingTokenDataSource extends KUSObjectDataSource implements K
     //endregion
 
     //region Public Methods
-    public void performRequest(KUSRequestCompletionListener listener){
+    public void performRequest(@NonNull KUSRequestCompletionListener listener){
+        if(getUserSession() == null) {
+            listener.onCompletion(new Error(), null);
+            return;
+        }
+
         String endPoint = wantsReset ? KUSConstants.URL.TRACKING_TOKEN_ENDPOINT :
                 KUSConstants.URL.CURRENT_TRACKING_TOKEN_ENDPOINT;
 
@@ -73,8 +79,10 @@ public class KUSTrackingTokenDataSource extends KUSObjectDataSource implements K
             return headers;
         }
         else {
+            KUSSharedPreferences sharedPreferences = null;
 
-            KUSSharedPreferences sharedPreferences = getUserSession().getSharedPreferences();
+            if(getUserSession() != null)
+                sharedPreferences = getUserSession().getSharedPreferences();
 
             if(sharedPreferences != null) {
                 String cachedTrackingToken = sharedPreferences.getTrackingToken();
@@ -108,7 +116,7 @@ public class KUSTrackingTokenDataSource extends KUSObjectDataSource implements K
         wantsReset = false;
 
         String currentTrackingToken = getCurrentTrackingToken();
-        if(currentTrackingToken != null)
+        if(getUserSession() != null && currentTrackingToken != null)
             getUserSession().getSharedPreferences().setTrackingToken(currentTrackingToken);
     }
 

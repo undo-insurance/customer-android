@@ -1,8 +1,7 @@
 package com.kustomer.kustomersdk.DataSources;
 
 
-import android.os.Handler;
-import android.os.Looper;
+import android.support.annotation.NonNull;
 
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Enums.KUSRequestType;
@@ -19,7 +18,6 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Locale;
 
 /**
  * Created by Junaid on 1/20/2018.
@@ -36,7 +34,12 @@ public class KUSChatSettingsDataSource extends KUSObjectDataSource implements Se
 
     //region public Methods
     @Override
-    void performRequest(KUSRequestCompletionListener completionListener) {
+    void performRequest(@NonNull KUSRequestCompletionListener completionListener) {
+        if (getUserSession() == null) {
+            completionListener.onCompletion(new Error(), null);
+            return;
+        }
+
         getUserSession().getRequestManager().performRequestType(KUSRequestType.KUS_REQUEST_TYPE_GET,
                 KUSConstants.URL.SETTINGS_ENDPOINT,
                 new HashMap<String, Object>() {

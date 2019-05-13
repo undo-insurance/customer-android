@@ -499,7 +499,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
     }
 
     public void resendMessage(KUSChatMessage chatMessage) {
-        if (chatMessage != null) {
+        if (chatMessage != null && shouldAllowResending()) {
             KUSRetry retry = messageRetryHashMap.get(chatMessage.getId());
             if (retry instanceof KUSMessageRetry) {
                 KUSMessageRetry messageRetry = (KUSMessageRetry) retry;
@@ -777,6 +777,29 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
     //endregion
 
     //region Private Methods
+
+    private boolean shouldAllowResending() {
+        if (getUserSession() == null)
+            return false;
+
+        KUSChatSession session = (KUSChatSession) getUserSession().getChatSessionsDataSource().findById(sessionId);
+        if (session == null || session.getLockedAt() != null)
+            return false;
+
+        KUSChatSettings chatSettings = (KUSChatSettings) getUserSession().getChatSettingsDataSource().getObject();
+        if (chatSettings != null && !chatSettings.isVolumeControlEnabled()) {
+            return true;
+        }
+
+        if (vcFormActive) {
+            return false;
+        }
+
+        if (!vcChatClosed)
+            return true;
+
+        return getOtherUserIds().size() > 0;
+    }
 
     private void sendTypingEndedStatusAfterDelay() {
         if (typingEndedStatusTimer != null)
@@ -1112,7 +1135,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
 
         JSONObject attributes = new JSONObject();
         try {
-            attributes.put("body", vcFormQuestion.getPrompt());
+            attributes.put("body", vcFormQuestion != null ? vcFormQuestion.getPrompt() : null);
             attributes.put("direction", "out");
             attributes.put("createdAt", KUSDate.stringFromDate(createdAt));
         } catch (JSONException e) {
@@ -1122,7 +1145,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
         JSONObject messageJSON = new JSONObject();
         try {
             messageJSON.put("type", "chat_message");
-            messageJSON.put("id", vcFormQuestion.getId());
+            messageJSON.put("id", vcFormQuestion != null ? vcFormQuestion.getId() : null);
             messageJSON.put("attributes", attributes);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -1540,6 +1563,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
         KUSVolumeControlTimerManager.getSharedInstance().removeVcTimer(sessionId);
     }
 
+    @Nullable
     private KUSFormQuestion getNextVCFormQuestion(int index, String previousChannel) {
         if (getUserSession() == null)
             return null;
@@ -1697,7 +1721,8 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
         getUserSession().getChatSessionsDataSource().updateLocallyLastSeenAtForSessionId(sessionId);
     }
 
-    private JSONArray getAttachmentIds(List<KUSChatAttachment> attachments) {
+    @Nullable
+    private JSONArray getAttachmentIds(@NonNull List<KUSChatAttachment> attachments) {
 
         if (attachments.size() == 0)
             return null;

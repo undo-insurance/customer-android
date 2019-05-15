@@ -2,8 +2,8 @@
 
 ## 0.2.3
 Release Date: 05/14/2019
-* Optimised API calls for satisfaction form
-* Retry send message disabled when vc-form is active or chat has ended
+* Optimized & Improved Performance of API calls that fetch Satisfaction Forms data.
+* Disabled the ability for Customers to manually retry failed messages when vc-form is active or chat has ended
 * Fixed crash & duplicate chat screen issue when app restarted by system
 
 ## 0.2.2

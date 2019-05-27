@@ -6,12 +6,16 @@ Release Date: 05/14/2019
 * Disabled the ability for Customers to manually retry failed messages when vc-form is active or chat has ended
 * Fixed crash & duplicate chat screen issue when app restarted by system
 
-## 0.2.2
+## 0.2.2 
+**DEPRECATED - DO NOT USE**
+
 Release Date: 05/8/2019
 * Updated glide & other dependencies to the latest versions
 * Fixed satisfaction form issue when VC forms are enabled
 
 ## 0.2.1
+**DEPRECATED - DO NOT USE**
+
 Release Date: 05/3/2019
 * Implemented typing indicator feature
 * Implemented customer satisfaction feature

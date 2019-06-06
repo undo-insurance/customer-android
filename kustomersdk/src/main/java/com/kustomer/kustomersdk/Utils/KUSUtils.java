@@ -1,7 +1,9 @@
 package com.kustomer.kustomersdk.Utils;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
@@ -29,6 +31,7 @@ public class KUSUtils {
 
     public static final double MIN_TABLET_SIZE_IN_INCH = 6.5;
     private static final String AUTHORITY_SUFFIX = ".kustomersdk";
+    private static final String HTTP_SCHEMA = "http://";
 
     @Nullable
     public static Drawable getDrawableForKey(@NonNull Context mContext, @NonNull String key) {
@@ -46,6 +49,20 @@ public class KUSUtils {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         return displayMetrics.heightPixels;
+    }
+
+    public static void openUrl(@NonNull Context context, @NonNull String url){
+        try {
+            Uri uri = Uri.parse(url.toLowerCase());
+
+            if (uri.getScheme() == null)
+                uri = Uri.parse(HTTP_SCHEMA + url.toLowerCase());
+
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, uri);
+            context.startActivity(browserIntent);
+        }catch (ActivityNotFoundException exception){
+            KUSLog.KUSLogError(exception.getMessage());
+        }
     }
 
     @Nullable

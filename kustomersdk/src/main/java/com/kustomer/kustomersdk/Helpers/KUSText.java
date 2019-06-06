@@ -1,13 +1,19 @@
 package com.kustomer.kustomersdk.Helpers;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.util.Patterns;
+import android.view.View;
 import android.widget.TextView;
 
-import org.commonmark.parser.Parser;
+import com.kustomer.kustomersdk.Utils.KUSUtils;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ru.noties.markwon.Markwon;
 import ru.noties.markwon.SpannableConfiguration;
+import ru.noties.markwon.spans.LinkSpan;
 import ru.noties.markwon.spans.SpannableTheme;
 
 /**
@@ -19,26 +25,92 @@ public class KUSText {
     //region Properties
     private static final String EMAIL_REGEX = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,5}";
     private static final String PHONE_REGEX = "(\\+\\d{1,2}\\s)?\\(?\\d{3}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{4}";
+    private static final String CUSTOM_URL_REGEX = "(\\[[^\\)\\n\\r]*?\\]\\(\\s*?(mailto:)?"+Patterns.EMAIL_ADDRESS+
+            "\\s*?\\))|("+Patterns.EMAIL_ADDRESS+")|("+Patterns.WEB_URL+")|(\\[[^\\)\\n\\r]*?\\]" +
+            "\\(\\s*?"+Patterns.WEB_URL+"\\s*?\\))";
+    private static final String CUSTOM_EMAIL_REGEX = "("+Patterns.EMAIL_ADDRESS+")|(\\[[^\\)\\n\\r]" +
+            "*?\\]\\(\\s*?(mailto:)?"+Patterns.EMAIL_ADDRESS+"\\s*?\\))|(\\[[^\\)\\n\\r]*?\\]" +
+            "\\(\\s*?"+Patterns.WEB_URL+"\\s*?\\))";
     //endregion
 
     //region Public Methods
-    public static void setMarkDownText(TextView textView, String text) {
+    public static void setMarkDownText(@NonNull TextView textView, @Nullable String text) {
 
-        String msg = formatText(text);
+        if (text == null)
+            return;
+
         SpannableTheme theme = SpannableTheme.builderWithDefaults(textView.getContext())
                 .linkColor(textView.getTextColors().getDefaultColor())
                 .build();
 
         SpannableConfiguration spannableConfiguration = SpannableConfiguration.builder(textView.getContext())
                 .theme(theme)
+                .linkResolver(new LinkSpan.Resolver() {
+                    @Override
+                    public void resolve(View view, @NonNull String link) {
+                        KUSUtils.openUrl(view.getContext(), link);
+                    }
+                })
                 .build();
 
-        text = text.replaceAll("\n", "\n\n");
-        Markwon.setMarkdown(textView, spannableConfiguration, msg);
+        Markwon.setMarkdown(textView, spannableConfiguration, getFormattedText(text));
     }
 
-    private static String formatText(String text) {
-        if (text == null || !text.contains("\n")) {
+    @NonNull
+    private static String getFormattedText(@NonNull String text){
+        String embeddedUrlFormat = "[%s](%s)";
+        String embeddedEmailFormat = "[%s](mailto:%s)";
+
+        String formattedText = text;
+        formattedText = formatTextLineBreaks(formattedText);
+        formattedText = convertEmailsAndUrlsToEmbeddedFormat(formattedText, CUSTOM_URL_REGEX,
+                6, embeddedUrlFormat);
+        formattedText = convertEmailsAndUrlsToEmbeddedFormat(formattedText, CUSTOM_EMAIL_REGEX,
+                1, embeddedEmailFormat);
+
+        return formattedText;
+    }
+
+    @NonNull
+    private static String convertEmailsAndUrlsToEmbeddedFormat(@NonNull String text,
+                                                               @NonNull String regex,
+                                                               int matchingIndex,
+                                                               @NonNull String embeddedFormat){
+        String formattedText = "";
+        int previousIndex = 0;
+
+        Matcher matcher = Pattern.compile(regex).matcher(text);
+
+        while (matcher.find()){
+            String matchedText = matcher.group(matchingIndex);
+
+            boolean isSimpleUrlOrEmail = matchedText != null;
+            int startIndex = matcher.start();
+
+            if(startIndex > 0)
+                formattedText = formattedText.concat(text.substring(previousIndex, startIndex));
+
+            if(isSimpleUrlOrEmail){
+                formattedText = formattedText.concat(
+                        String.format(embeddedFormat,matchedText,matchedText));
+            }else {
+                formattedText = formattedText.concat(matcher.group());
+            }
+
+            previousIndex = matcher.end();
+        }
+
+        if(previousIndex < text.length()){
+            formattedText = formattedText.concat(text.substring(previousIndex));
+        }
+
+        return formattedText;
+    }
+
+
+    @NonNull
+    private static String formatTextLineBreaks(@NonNull String text) {
+        if (!text.contains("\n")) {
             return text;
         }
 

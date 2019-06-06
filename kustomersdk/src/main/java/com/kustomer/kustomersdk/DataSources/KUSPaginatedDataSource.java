@@ -78,8 +78,11 @@ public class KUSPaginatedDataSource {
             return null;
     }
 
-    private int indexOf(KUSModel obj) {
-        return indexOfObjectId(obj.getId());
+    private int indexOf(@Nullable KUSModel obj) {
+        if (obj != null) {
+            return indexOfObjectId(obj.getId());
+        }
+        return -1;
     }
 
     synchronized KUSModel getFirst() {

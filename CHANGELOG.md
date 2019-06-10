@@ -1,5 +1,10 @@
 # Changelog for Kustomer Android SDK
 
+## 0.2.4
+Release Date: 06/10/2019
+* Embedded Link issue fixed
+* Fixed few NPE crashes
+
 ## 0.2.3
 Release Date: 05/14/2019
 * Optimized & Improved Performance of API calls that fetch Satisfaction Forms data.

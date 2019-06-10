@@ -2,8 +2,6 @@ package com.kustomer.kustomersdk.API;
 
 
 import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.os.LocaleListCompat;
 
@@ -30,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
@@ -60,7 +59,8 @@ public class KUSRequestManager implements Serializable, KUSObjectDataSourceListe
     private WeakReference<KUSUserSession> userSession;
 
     HashMap<String, String> genericHTTPHeaderValues = null;
-    private ArrayList<KUSTrackingTokenListener> pendingTrackingTokenListeners = null;
+    private List<KUSTrackingTokenListener> pendingTrackingTokenListeners = null;
+    private final Object pendingTrackingTokenLock = new Object();
     //endregion
 
     //region LifeCycle
@@ -372,33 +372,30 @@ public class KUSRequestManager implements Serializable, KUSObjectDataSourceListe
         completionListener.onCompletion(error, jsonObject);
     }
 
-    private void dispenseTrackingToken(final KUSTrackingTokenListener listener) {
-        String trackingToken = null;
-        if (userSession.get() != null)
-            trackingToken = userSession.get().getTrackingTokenDataSource().getCurrentTrackingToken();
+     private void dispenseTrackingToken(final KUSTrackingTokenListener listener) {
+        if(userSession.get() == null) {
+            listener.onCompletion(new Error(), null);
+            return;
+        }
+
+        String trackingToken = userSession.get().getTrackingTokenDataSource().getCurrentTrackingToken();
         if (trackingToken != null) {
             listener.onCompletion(null, trackingToken);
         } else {
-            getPendingTrackingTokenListeners().add(listener);
+            synchronized (pendingTrackingTokenLock) {
+                getPendingTrackingTokenListeners().add(listener);
+            }
             userSession.get().getTrackingTokenDataSource().fetch();
         }
     }
 
-    private void firePendingTokenCompletionsWithToken(final String token, final Error error) {
-        final ArrayList<KUSTrackingTokenListener> listeners = new ArrayList<>(getPendingTrackingTokenListeners());
-        pendingTrackingTokenListeners = null;
-
-        if (listeners.size() > 0) {
-            Handler handler = new Handler(Looper.getMainLooper());
-            Runnable runnable = new Runnable() {
-                @Override
-                public void run() {
-                    for (KUSTrackingTokenListener trackingTokenListener : listeners) {
-                        trackingTokenListener.onCompletion(error, token);
-                    }
-                }
-            };
-            handler.post(runnable);
+     private void firePendingTokenCompletionsWithToken(final String token, final Error error) {
+        synchronized (pendingTrackingTokenLock) {
+            for (KUSTrackingTokenListener trackingTokenListener : getPendingTrackingTokenListeners()) {
+                if(trackingTokenListener != null)
+                    trackingTokenListener.onCompletion(error, token);
+            }
+            getPendingTrackingTokenListeners().clear();
         }
     }
 
@@ -426,9 +423,9 @@ public class KUSRequestManager implements Serializable, KUSObjectDataSourceListe
                 Build.VERSION.RELEASE);
     }
 
-    private ArrayList<KUSTrackingTokenListener> getPendingTrackingTokenListeners() {
+    synchronized private List<KUSTrackingTokenListener> getPendingTrackingTokenListeners() {
         if (pendingTrackingTokenListeners == null)
-            pendingTrackingTokenListeners = new ArrayList<>();
+            pendingTrackingTokenListeners = new CopyOnWriteArrayList<>();
 
         return pendingTrackingTokenListeners;
     }

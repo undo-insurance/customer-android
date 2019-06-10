@@ -8,12 +8,10 @@ import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.kustomer.kustomer.BaseClasses.BaseActivity;
 import com.kustomer.kustomer.R;
 import com.kustomer.kustomersdk.Interfaces.KUSChatAvailableListener;
-import com.kustomer.kustomersdk.Interfaces.KUSIdentifyListener;
 import com.kustomer.kustomersdk.Kustomer;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {

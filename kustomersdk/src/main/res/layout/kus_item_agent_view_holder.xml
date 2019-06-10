@@ -31,7 +31,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="60dp"
-            android:autoLink="web|email"
             android:background="@drawable/kus_shape_agent_message_background"
             android:padding="10dp"
             android:textColor="@color/kusCompanyTextColor"

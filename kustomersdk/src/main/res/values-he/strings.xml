@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="com_kustomer_week">שָׁבוּעַ</string>
-    <string name="com_kustomer_day">יְוֹם</string>
-    <string name="com_kustomer_hour">שָׁעָה</string>
-    <string name="com_kustomer_minute">דַקָה</string>
-    <string name="com_kustomer_weeks">שבועות</string>
-    <string name="com_kustomer_days">ימים</string>
-    <string name="com_kustomer_hours">שעות</string>
-    <string name="com_kustomer_minutes">דקות</string>
     <string name="com_kustomer_just_now">זֶה עַתָה</string>
     <string name="com_kustomer_attachment">הִתקַשְׁרוּת</string>
     <string name="com_kustomer_camera">מַצלֵמָה</string>
@@ -19,8 +11,7 @@
     <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">אל תחמיצו תגובה! קבל הודעה בדוא\"ל:</string>
     <string name="com_kustomer_email_example">example@domain.com</string>
     <string name="com_kustomer_type_a_message...">הקלד הודעה…</string>
-    <string name="com_kustomer_Loading...">טוען…</string>
-    <string name="com_kustomer_ago">לִפנֵי</string>
+    <string name="com_kustomer_loading...">טוען…</string>
     <string name="com_kustomer_chat_with">לשוחח עם</string>
     <string name="com_kustomer_processing">מעבד…</string>
     <string name="com_kustomer_no_internet_connection">אין חיבור אינטרנט</string>
@@ -45,19 +36,43 @@
     <string name="com_kustomer_home">בית</string>
     <string name="com_kustomer_please_select_an_item">בחר פריט</string>
     <string name="com_kustomer_someone_should_be_with_you_momentarily">ישהו צריך להיות איתך לרגע</string>
-    <string name="com_kustomer_your_expected_wait_time_is">מן ההמתנה הצפוי שלך הוא</string>
-    <string name="com_kustomer_second">שני</string>
-    <string name="com_kustomer_seconds">ניות</string>
     <string name="com_kustomer_our_current_wait_time_is_approximately">מן ההמתנה הנוכחי שלנו הוא כ</string>
     <string name="com_kustomer_upfront_volume_control_alternative_method_question">וכל לבחור להמתין לסוכן הזמין הבא או לבחור חלופה</string>
-    <string name="com_kustomer_volume_control_alternative_method_question">צטערים, נראה שאף אחד לא הפך זמין בזמן שציפינו. בחר שיטת יצירת קשר חלופית עבורנו למעקב איתך ...</string>
+    <string name="com_kustomer_volume_control_alternative_method_question">צטערים, נראה שאף אחד לא הפך זמין בזמן שציפינו. בחר שיטת יצירת קשר חלופית עבורנו למעקב איתך …</string>
     <string name="com_kustomer_volume_control_email_question">נהדר, מהי כתובת הדוא\\\"ל הטובה ביותר להגיע אליך?</string>
     <string name="com_kustomer_volume_control_phone_question">הדר, מהו מספר הטלפון הטוב ביותר להגיע אליך?</string>
     <string name="com_kustomer_volume_control_thankyou_response">ודה. אנו נחזור אליך בהקדם.</string>
-    <string name="com_kustomer_greater_than_one_day">ותר מיום אחד</string>
+    <string name="com_kustomer_unable_to_share_file">לא ניתן לשתף את הקובץ.</string>
+    <string name="com_kustomer_unable_to_open_camera">אין אפשרות לפתוח את המצלמה.</string>
+    <string name="com_kustomer_low_memory_error">זיכרון נמוך. לא ניתן לטעון תמונות.</string>
+
+    <string name="com_kustomer_chat_with_param">צ\'אט עם %1$s</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_second">זמן ההמתנה הצפוי הוא %1$d שנייה</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_seconds">זמן ההמתנה הצפוי הוא %1$d שניות</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_minute">זמן ההמתנה הצפוי הוא 1 דקה</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_minutes">זמן ההמתנה הצפוי הוא %1$d דקות</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_hour">זמן ההמתנה הצפוי הוא שעה %1$d</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_hours">זמן ההמתנה הצפוי הוא %1$d שעות</string>
+    <string name="com_kustomer_your_expected_wait_time_is_greater_than_one_day">זמן ההמתנה הצפוי שלך גדול מיום אחד</string>
+
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_second">זמן ההמתנה הנוכחי שלנו הוא בערך %1$d שנייה</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_seconds">זמן ההמתנה הנוכחי שלנו הוא כ %1$d שניות</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_minute">זמן ההמתנה הנוכחי שלנו הוא כ %1$d דקה</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_minutes">זמן ההמתנה הנוכחי שלנו הוא כ %1$d דקות</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_hour">זמן ההמתנה הנוכחי שלנו הוא כ %1$d שעה</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_hours">זמן ההמתנה הנוכחי שלנו הוא כ %1$d שעות</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_greater_than_one_day">זמן ההמתנה הנוכחי שלנו הוא בערך יותר מיום אחד</string>
+
+    <string name="com_kustomer_param_minute_ago">לפני %1$d דקה</string>
+    <string name="com_kustomer_param_minutes_ago">לפני %1$d דקות</string>
+    <string name="com_kustomer_param_hour_ago">לפני %1$d שעה</string>
+    <string name="com_kustomer_param_hours_ago">לפני %1$d שעות</string>
+    <string name="com_kustomer_param_day_ago">לפני %1$d יום</string>
+    <string name="com_kustomer_param_days_ago">לפני %1$d ימים</string>
+    <string name="com_kustomer_param_week_ago">לפני שבוע %1$d</string>
+    <string name="com_kustomer_param_weeks_ago">לפני %1$d שבועות</string>
 
     <string name="com_kustomer_submit">שלח</string>
     <string name="com_kustomer_thank_you_for_your_feedback">תודה על המשוב שלך!</string>
     <string name="com_kustomer_edit">עריכה</string>
-
 </resources>

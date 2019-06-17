@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="com_kustomer_week">tydzień</string>
-    <string name="com_kustomer_day">dzień</string>
-    <string name="com_kustomer_hour">godzina</string>
-    <string name="com_kustomer_minute">minuta</string>
-    <string name="com_kustomer_weeks">tygodnie</string>
-    <string name="com_kustomer_days">dni</string>
-    <string name="com_kustomer_hours">godziny</string>
-    <string name="com_kustomer_minutes">minuty</string>
     <string name="com_kustomer_just_now">Właśnie</string>
     <string name="com_kustomer_attachment">Załącznik</string>
     <string name="com_kustomer_camera">Aparat fotograficzny</string>
@@ -19,8 +11,7 @@
     <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">Nie przegap odpowiedzi! Otrzymuj powiadomienia e-mailem:</string>
     <string name="com_kustomer_email_example">przykład@domena.com</string>
     <string name="com_kustomer_type_a_message...">Wpisz wiadomość…</string>
-    <string name="com_kustomer_Loading...">Ładuję…</string>
-    <string name="com_kustomer_ago">temu</string>
+    <string name="com_kustomer_loading...">Ładuję…</string>
     <string name="com_kustomer_chat_with">Czatuj z</string>
     <string name="com_kustomer_processing">Przetwarzanie…</string>
     <string name="com_kustomer_no_internet_connection">Brak połączenia z internetem</string>
@@ -45,19 +36,43 @@
     <string name="com_kustomer_home">Dom</string>
     <string name="com_kustomer_please_select_an_item">Wybierz pozycję</string>
     <string name="com_kustomer_someone_should_be_with_you_momentarily">Ktoś powinien być z tobą na chwilę</string>
-    <string name="com_kustomer_your_expected_wait_time_is">Twój oczekiwany czas oczekiwania</string>
-    <string name="com_kustomer_second">druga</string>
-    <string name="com_kustomer_seconds">sekundy</string>
-    <string name="com_kustomer_volume_control_alternative_method_question">Niestety, wygląda na to, że nikt nie stał się dostępny w oczekiwanym czasie. Wybierz alternatywną metodę kontaktu, abyśmy mogli się z Tobą skontaktować ...</string>
+    <string name="com_kustomer_volume_control_alternative_method_question">Niestety, wygląda na to, że nikt nie stał się dostępny w oczekiwanym czasie. Wybierz alternatywną metodę kontaktu, abyśmy mogli się z Tobą skontaktować …</string>
     <string name="com_kustomer_our_current_wait_time_is_approximately">Nasz bieżący czas oczekiwania to około</string>
     <string name="com_kustomer_upfront_volume_control_alternative_method_question">Możesz wybrać oczekiwanie na następnego dostępnego agenta lub wybrać alternatywę\",aktować się z Tobą.</string>
     <string name="com_kustomer_volume_control_email_question">Świetnie, jaki jest najlepszy e-mail, z którym możesz się skontaktować?</string>
     <string name="com_kustomer_volume_control_phone_question">Świetnie, jaki jest najlepszy numer telefonu, z którym można się skontaktować?</string>
     <string name="com_kustomer_volume_control_thankyou_response">Dziękuję Ci. Wkrótce skontaktujemy się z Tobą.</string>
-    <string name="com_kustomer_greater_than_one_day">więcej niż jeden dzień</string>
+    <string name="com_kustomer_unable_to_share_file">Nie można udostępnić pliku.</string>
+    <string name="com_kustomer_unable_to_open_camera">Nie można otworzyć kamery.</string>
+    <string name="com_kustomer_low_memory_error">Słaba pamięć. Nie można przesłać zdjęć.</string>
+
+    <string name="com_kustomer_chat_with_param">Czatuj z %1$s</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_second">Twój oczekiwany czas oczekiwania wynosi %1$d sekundę</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_seconds">Twój oczekiwany czas oczekiwania wynosi %1$d sekundy</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_minute">Twój oczekiwany czas oczekiwania wynosi %1$d minutę</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_minutes">Twój oczekiwany czas oczekiwania wynosi %1$d minuty</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_hour">Twój oczekiwany czas oczekiwania wynosi %1$d godzinę</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_hours">Twój oczekiwany czas oczekiwania wynosi %1$d godziny</string>
+    <string name="com_kustomer_your_expected_wait_time_is_greater_than_one_day">Oczekiwany czas oczekiwania jest dłuższy niż jeden dzień</string>
+
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_second">Nasz obecny czas oczekiwania wynosi około %1$d sekundy</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_seconds">Nasz obecny czas oczekiwania wynosi około %1$d sekundy</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_minute">Nasz obecny czas oczekiwania wynosi około %1$d minuty</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_minutes">Nasz obecny czas oczekiwania wynosi około %1$d minut</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_hour">Nasz obecny czas oczekiwania wynosi około %1$d godziny</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_hours">Nasz obecny czas oczekiwania wynosi około %1$d godzin</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_greater_than_one_day">Nasz obecny czas oczekiwania jest w przybliżeniu dłuższy niż jeden dzień</string>
+
+    <string name="com_kustomer_param_minute_ago">%1$d minuta temu</string>
+    <string name="com_kustomer_param_minutes_ago">%1$d minuty temu</string>
+    <string name="com_kustomer_param_hour_ago">%1$d godzinę temu</string>
+    <string name="com_kustomer_param_hours_ago">%1$d godziny temu</string>
+    <string name="com_kustomer_param_day_ago">%1$d dzień temu</string>
+    <string name="com_kustomer_param_days_ago">%1$d dni temu</string>
+    <string name="com_kustomer_param_week_ago">%1$d tydzień temu</string>
+    <string name="com_kustomer_param_weeks_ago">%1$d tygodnie temu</string>
 
     <string name="com_kustomer_submit">Zatwierdź</string>
     <string name="com_kustomer_thank_you_for_your_feedback">Dziękujemy za twoją opinię!</string>
     <string name="com_kustomer_edit">Edytować</string>
-
 </resources>

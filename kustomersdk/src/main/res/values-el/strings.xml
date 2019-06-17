@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="com_kustomer_week">εβδομάδα</string>
-    <string name="com_kustomer_day">ημέρα</string>
-    <string name="com_kustomer_hour">ώρα</string>
-    <string name="com_kustomer_minute">λεπτό</string>
-    <string name="com_kustomer_weeks">εβδομάδες</string>
-    <string name="com_kustomer_days">ημέρες</string>
-    <string name="com_kustomer_hours">ώρες</string>
-    <string name="com_kustomer_minutes">λεπτά</string>
     <string name="com_kustomer_just_now">Μόλις τώρα</string>
     <string name="com_kustomer_attachment">Συνημμένο</string>
     <string name="com_kustomer_camera">ΦΩΤΟΓΡΑΦΙΚΗ ΜΗΧΑΝΗ</string>
@@ -19,8 +11,7 @@
     <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">Μη χάσετε μια απάντηση! Ενημερώστε μέσω ηλεκτρονικού ταχυδρομείου:</string>
     <string name="com_kustomer_email_example">example@domain.com</string>
     <string name="com_kustomer_type_a_message...">Πληκτρολογήστε ένα μήνυμα …</string>
-    <string name="com_kustomer_Loading...">Φόρτωση…</string>
-    <string name="com_kustomer_ago">πριν</string>
+    <string name="com_kustomer_loading...">Φόρτωση…</string>
     <string name="com_kustomer_chat_with">Συζήτηση με</string>
     <string name="com_kustomer_processing">Επεξεργασία…</string>
     <string name="com_kustomer_no_internet_connection">Δεν υπάρχει σύνδεση στο διαδίκτυο</string>
@@ -45,19 +36,43 @@
     <string name="com_kustomer_home">Σπίτι</string>
     <string name="com_kustomer_please_select_an_item">Επιλέξτε ένα στοιχείο</string>
     <string name="com_kustomer_someone_should_be_with_you_momentarily">Κάποιος πρέπει να είναι μαζί σας για λίγο</string>
-    <string name="com_kustomer_your_expected_wait_time_is">Ο αναμενόμενος χρόνος αναμονής σας είναι</string>
-    <string name="com_kustomer_second">δεύτερος</string>
-    <string name="com_kustomer_seconds">δευτερολέπτων</string>
-    <string name="com_kustomer_volume_control_alternative_method_question">Λυπούμαστε, φαίνεται ότι κανείς δεν είναι διαθέσιμος στο χρόνο που περίμενε. Επιλέξτε μια εναλλακτική μέθοδο επαφής για να ακολουθήσουμε μαζί σας ...</string>
+    <string name="com_kustomer_volume_control_alternative_method_question">Λυπούμαστε, φαίνεται ότι κανείς δεν είναι διαθέσιμος στο χρόνο που περίμενε. Επιλέξτε μια εναλλακτική μέθοδο επαφής για να ακολουθήσουμε μαζί σας …</string>
     <string name="com_kustomer_our_current_wait_time_is_approximately">Ο τρέχων χρόνος αναμονής είναι περίπου</string>
     <string name="com_kustomer_upfront_volume_control_alternative_method_question">Μπορείτε να επιλέξετε να περιμένετε τον επόμενο διαθέσιμο παράγοντα ή να επιλέξετε μια εναλλακτική λύση\",κοινωνήσουμε μαζί σας.</string>
     <string name="com_kustomer_volume_control_email_question">Μεγάλη, ποιο είναι το καλύτερο ηλεκτρονικό μήνυμα για να σας φτάσω;</string>
     <string name="com_kustomer_volume_control_phone_question">Μεγάλη, ποιος είναι ο καλύτερος αριθμός τηλεφώνου για να σας φτάσει;</string>
     <string name="com_kustomer_volume_control_thankyou_response">Ευχαριστώ. Θα σας επιστρέψουμε σύντομα.</string>
-    <string name="com_kustomer_greater_than_one_day">μεγαλύτερη από μία ημέρα</string>
+    <string name="com_kustomer_unable_to_share_file">Δεν είναι δυνατή η κοινή χρήση αρχείου.</string>
+    <string name="com_kustomer_unable_to_open_camera">Δεν είναι δυνατό να ανοίξει η κάμερα.</string>
+    <string name="com_kustomer_low_memory_error">Χαμηλή μνήμη. Δεν ήταν δυνατή η μεταφόρτωση εικόνων.</string>
+
+    <string name="com_kustomer_chat_with_param">Συνομιλήστε με το %1$s</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_second">Ο αναμενόμενος χρόνος αναμονής είναι %1$d δευτερόλεπτο</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_seconds">Ο αναμενόμενος χρόνος αναμονής είναι %1$d δευτερόλεπτα</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_minute">Ο αναμενόμενος χρόνος αναμονής είναι %1$d λεπτό</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_minutes">Ο αναμενόμενος χρόνος αναμονής είναι %1$d λεπτά</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_hour">Ο αναμενόμενος χρόνος αναμονής είναι %1$d ώρα</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_hours">Ο αναμενόμενος χρόνος αναμονής είναι %1$d ώρες</string>
+    <string name="com_kustomer_your_expected_wait_time_is_greater_than_one_day">Ο αναμενόμενος χρόνος αναμονής είναι μεγαλύτερος από μία ημέρα</string>
+
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_second">Ο τρέχων χρόνος αναμονής είναι περίπου %1$d δευτερόλεπτο</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_seconds">Ο τρέχων χρόνος αναμονής είναι περίπου %1$d δευτερόλεπτα</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_minute">Ο τρέχων χρόνος αναμονής είναι περίπου %1$d λεπτό</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_minutes">Ο τρέχων χρόνος αναμονής είναι περίπου %1$d λεπτά</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_hour">Ο τρέχων χρόνος αναμονής είναι περίπου %1$d ώρα</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_hours">Ο τρέχων χρόνος αναμονής είναι περίπου %1$d ώρες</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_greater_than_one_day">Ο τρέχων χρόνος αναμονής είναι περίπου μεγαλύτερος από μία ημέρα</string>
+
+    <string name="com_kustomer_param_minute_ago">Πριν από %1$d λεπτό</string>
+    <string name="com_kustomer_param_minutes_ago">Πριν από %1$d λεπτά</string>
+    <string name="com_kustomer_param_hour_ago">Πριν από %1$d ώρα</string>
+    <string name="com_kustomer_param_hours_ago">πριν %1$d ώρες</string>
+    <string name="com_kustomer_param_day_ago">%1$d ημέρα πριν</string>
+    <string name="com_kustomer_param_days_ago">%1$d μέρες πριν</string>
+    <string name="com_kustomer_param_week_ago">Πριν από %1$d εβδομάδα</string>
+    <string name="com_kustomer_param_weeks_ago">πριν %1$d εβδομάδες</string>
 
     <string name="com_kustomer_submit">υποβάλλουν</string>
     <string name="com_kustomer_thank_you_for_your_feedback">Ευχαριστούμε για την ανταπόκρισή σας!</string>
     <string name="com_kustomer_edit">Επεξεργασία</string>
-
 </resources>

@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="com_kustomer_week">nedēļa</string>
-    <string name="com_kustomer_day">diena</string>
-    <string name="com_kustomer_hour">stunda</string>
-    <string name="com_kustomer_minute">minūti</string>
-    <string name="com_kustomer_weeks">nedēļas</string>
-    <string name="com_kustomer_days">dienas</string>
-    <string name="com_kustomer_hours">stundas</string>
-    <string name="com_kustomer_minutes">minūtes</string>
     <string name="com_kustomer_just_now">Tikko</string>
     <string name="com_kustomer_attachment">Pielikums</string>
     <string name="com_kustomer_camera">Kamera</string>
@@ -19,8 +11,7 @@
     <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">Nepalaidiet garām atbildi! Saņemiet paziņojumu pa e-pastu:</string>
     <string name="com_kustomer_email_example">example@domain.com</string>
     <string name="com_kustomer_type_a_message...">Ierakstiet ziņojumu …</string>
-    <string name="com_kustomer_Loading...">Ielādē …</string>
-    <string name="com_kustomer_ago">pirms</string>
+    <string name="com_kustomer_loading...">Ielādē …</string>
     <string name="com_kustomer_chat_with">Čatot ar</string>
     <string name="com_kustomer_processing">Apstrāde …</string>
     <string name="com_kustomer_no_internet_connection">Nav interneta savienojuma</string>
@@ -45,21 +36,43 @@
     <string name="com_kustomer_home">Mājas</string>
     <string name="com_kustomer_please_select_an_item">Lūdzu, atlasiet vienumu</string>
     <string name="com_kustomer_someone_should_be_with_you_momentarily">Kādam jābūt īslaicīgam ar tevi</string>
-    <string name="com_kustomer_your_expected_wait_time_is">Jūsu paredzamais gaidīšanas laiks ir</string>
-    <string name="com_kustomer_second">otrais</string>
-    <string name="com_kustomer_seconds">sekundes</string>
-    <string name="com_kustomer_volume_control_alternative_method_question">Diemžēl šķiet, ka gaidāmajā brīdī neviens nav kļuvis pieejams. Lūdzu, izvēlieties alternatīvu kontaktu metodi, lai mēs varētu jums sekot ...</string>
+    <string name="com_kustomer_volume_control_alternative_method_question">Diemžēl šķiet, ka gaidāmajā brīdī neviens nav kļuvis pieejams. Lūdzu, izvēlieties alternatīvu kontaktu metodi, lai mēs varētu jums sekot …</string>
     <string name="com_kustomer_our_current_wait_time_is_approximately">Mūsu pašreizējais gaidīšanas laiks ir apmēram</string>
     <string name="com_kustomer_upfront_volume_control_alternative_method_question">Jūs varat izvēlēties gaidīt nākamo pieejamo aģentu vai izvēlēties alternatīvu\",īdzi jums.</string>
     <string name="com_kustomer_volume_control_email_question">Lieliski, kāds ir labākais e-pasts, lai jūs varētu sazināties?</string>
     <string name="com_kustomer_volume_control_phone_question">Lieliski, kāds ir labākais tālruņa numurs, lai jūs varētu sazināties?</string>
     <string name="com_kustomer_volume_control_thankyou_response">Paldies. Mēs tuvākajā laikā atgriezīsimies pie jums.</string>
-    <string name="com_kustomer_greater_than_one_day">vairāk par vienu dienu</string>
+    <string name="com_kustomer_unable_to_share_file">Nevar koplietot failu.</string>
+    <string name="com_kustomer_unable_to_open_camera">Nevar atvērt kameru.</string>
+    <string name="com_kustomer_low_memory_error">Zema atmiņa. Nevarēja augšupielādēt attēlus.</string>
+
+    <string name="com_kustomer_chat_with_param">Tērzējiet ar %1$s</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_second">Jūsu paredzamais gaidīšanas laiks ir %1$d sekunde</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_seconds">Jūsu paredzamais gaidīšanas laiks ir %1$d sekundes</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_minute">Jūsu paredzamais gaidīšanas laiks ir %1$d minūte</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_minutes">Jūsu paredzamais gaidīšanas laiks ir %1$d minūtes</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_hour">Jūsu paredzamais gaidīšanas laiks ir %1$d stunda</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_hours">Jūsu paredzamais gaidīšanas laiks ir %1$d stundas</string>
+    <string name="com_kustomer_your_expected_wait_time_is_greater_than_one_day">Jūsu paredzamais gaidīšanas laiks ir lielāks par vienu dienu</string>
+
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_second">Mūsu pašreizējais gaidīšanas laiks ir aptuveni %1$d sekunde</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_seconds">Mūsu pašreizējais gaidīšanas laiks ir aptuveni %1$d sekundes</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_minute">Mūsu pašreizējais gaidīšanas laiks ir aptuveni %1$d minūte</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_minutes">Mūsu pašreizējais gaidīšanas laiks ir aptuveni %1$d minūtes</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_hour">Mūsu pašreizējais gaidīšanas laiks ir aptuveni %1$d stunda</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_hours">Mūsu pašreizējais gaidīšanas laiks ir aptuveni %1$d stundas</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_greater_than_one_day">Mūsu pašreizējais gaidīšanas laiks ir aptuveni par vienu dienu</string>
+
+    <string name="com_kustomer_param_minute_ago">Pirms %1$d minūtes</string>
+    <string name="com_kustomer_param_minutes_ago">Pirms %1$d minūtēm</string>
+    <string name="com_kustomer_param_hour_ago">Pirms %1$d stundas</string>
+    <string name="com_kustomer_param_hours_ago">Pirms %1$d stundām</string>
+    <string name="com_kustomer_param_day_ago">Pirms %1$d dienas</string>
+    <string name="com_kustomer_param_days_ago">pirms %1$d dienām</string>
+    <string name="com_kustomer_param_week_ago">Pirms %1$d nedēļas</string>
+    <string name="com_kustomer_param_weeks_ago">pirms %1$d nedēļām</string>
 
     <string name="com_kustomer_submit">Iesniegt</string>
     <string name="com_kustomer_thank_you_for_your_feedback">Paldies par jūsu atsauksmēm!</string>
     <string name="com_kustomer_edit">rediģēt</string>
-
-
-
 </resources>

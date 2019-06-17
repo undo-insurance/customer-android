@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="com_kustomer_week">vecka</string>
-    <string name="com_kustomer_day">dag</string>
-    <string name="com_kustomer_hour">timme</string>
-    <string name="com_kustomer_minute">minut</string>
-    <string name="com_kustomer_weeks">veckor</string>
-    <string name="com_kustomer_days">dagar</string>
-    <string name="com_kustomer_hours">timmar</string>
-    <string name="com_kustomer_minutes">minuter</string>
     <string name="com_kustomer_just_now">Precis nu</string>
     <string name="com_kustomer_attachment">Bilaga</string>
     <string name="com_kustomer_camera">Kamera</string>
@@ -19,8 +11,7 @@
     <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">Missa inte ett svar! Få anmälan via e-post:</string>
     <string name="com_kustomer_email_example">example@domain.com</string>
     <string name="com_kustomer_type_a_message...">Skriv ett meddelande…</string>
-    <string name="com_kustomer_Loading...">Läser in…</string>
-    <string name="com_kustomer_ago">sedan</string>
+    <string name="com_kustomer_loading...">Läser in…</string>
     <string name="com_kustomer_chat_with">Chatta med</string>
     <string name="com_kustomer_processing">Bearbetning …</string>
     <string name="com_kustomer_no_internet_connection">Ingen internetanslutning</string>
@@ -45,19 +36,43 @@
     <string name="com_kustomer_home">Hem</string>
     <string name="com_kustomer_please_select_an_item">Var god välj ett objekt</string>
     <string name="com_kustomer_someone_should_be_with_you_momentarily">Någon borde vara med dig tillfälligt</string>
-    <string name="com_kustomer_your_expected_wait_time_is">Din väntade väntetid är</string>
-    <string name="com_kustomer_second">andra</string>
-    <string name="com_kustomer_seconds">sekunder</string>
-    <string name="com_kustomer_volume_control_alternative_method_question">Tyvärr ser det ut att ingen har blivit tillgänglig under den tid vi förväntade oss. Var god välj en alternativ kontaktmetod för att följa upp med dig ...</string>
+    <string name="com_kustomer_volume_control_alternative_method_question">Tyvärr ser det ut att ingen har blivit tillgänglig under den tid vi förväntade oss. Var god välj en alternativ kontaktmetod för att följa upp med dig …</string>
     <string name="com_kustomer_our_current_wait_time_is_approximately">Vår nuvarande väntetid är ungefär</string>
     <string name="com_kustomer_upfront_volume_control_alternative_method_question">Du kan välja att vänta på nästa tillgängliga agent eller välj ett alternativ\",p med dig.</string>
     <string name="com_kustomer_volume_control_email_question">Bra, vad är den bästa e-postadressen för att nå dig på?</string>
     <string name="com_kustomer_volume_control_phone_question">Bra, vad är det bästa telefonnumret för att nå dig?</string>
     <string name="com_kustomer_volume_control_thankyou_response">Tack. Vi kommer snart tillbaka till dig.</string>
-    <string name="com_kustomer_greater_than_one_day">mer än en dag</string>
+    <string name="com_kustomer_unable_to_share_file">Det gick inte att dela filen.</string>
+    <string name="com_kustomer_unable_to_open_camera">Det gick inte att öppna kameran.</string>
+    <string name="com_kustomer_low_memory_error">Lågt minne. Det gick inte att ladda upp bilder.</string>
+
+    <string name="com_kustomer_chat_with_param">Chatta med %1$s</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_second">Din väntade väntetid är %1$d sekund</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_seconds">Din väntade väntetid är %1$d sekunder</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_minute">Din väntade väntetid är %1$d minut</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_minutes">Din väntade väntetid är %1$d minuter</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_hour">Din väntade väntetid är %1$d timme</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_hours">Din väntade väntetid är %1$d timmar</string>
+    <string name="com_kustomer_your_expected_wait_time_is_greater_than_one_day">Din väntade väntetid är större än en dag</string>
+
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_second">Vår nuvarande väntetid är ungefär %1$d sekund</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_seconds">Vår nuvarande väntetid är ungefär %1$d sekunder</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_minute">Vår nuvarande väntetid är cirka %1$d minut</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_minutes">Vår nuvarande väntetid är ca %1$d minuter</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_hour">Vår nuvarande väntetid är ca %1$d timme</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_hours">Vår nuvarande väntetid är ca %1$d timmar</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_greater_than_one_day">Vår nuvarande väntetid är ungefär större än en dag</string>
+
+    <string name="com_kustomer_param_minute_ago">%1$d minut sedan</string>
+    <string name="com_kustomer_param_minutes_ago">för %1$d minuter sedan</string>
+    <string name="com_kustomer_param_hour_ago">%1$d timme sedan</string>
+    <string name="com_kustomer_param_hours_ago">%1$d timmar sedan</string>
+    <string name="com_kustomer_param_day_ago">%1$d dag sedan</string>
+    <string name="com_kustomer_param_days_ago">%1$d dagar sedan</string>
+    <string name="com_kustomer_param_week_ago">%1$d vecka sedan</string>
+    <string name="com_kustomer_param_weeks_ago">%1$d veckor sedan</string>
 
     <string name="com_kustomer_submit">Lämna</string>
     <string name="com_kustomer_thank_you_for_your_feedback">Tack för din feedback!</string>
     <string name="com_kustomer_edit">Redigera</string>
-
 </resources>

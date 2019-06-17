@@ -1,20 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="com_kustomer_week">wiki</string>
-    <string name="com_kustomer_day">siku</string>
-    <string name="com_kustomer_hour">saa</string>
-    <string name="com_kustomer_minute">dakika</string>
-    <string name="com_kustomer_weeks">weeks</string>
-    <string name="com_kustomer_days">wiki</string>
-    <string name="com_kustomer_hours">masaa</string>
-    <string name="com_kustomer_minutes">dakika</string>
     <string name="com_kustomer_just_now">sasa hivi</string>
-    <string name="com_kustomer_ago">iliyopita</string>
 
     <string name="com_kustomer_attachment">kiambatisho</string>
     <string name="com_kustomer_camera">kamera</string>
     <string name="com_kustomer_gallery">Maktaba ya Picha</string>
-    <string name="com_kustomer_Cancel">Futa</string>
+    <string name="com_kustomer_cancel">Futa</string>
 
     <string name="com_kustomer_something_went_wrong_please_try_again">Kitu kilichokosa. Tafadhali jaribu tena.</string>
     <string name="com_kustomer_try_again">Jaribu tena</string>
@@ -22,9 +13,10 @@
     <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">Usikose jibu! Pata taarifa kwa barua pepe:</string>
     <string name="com_kustomer_email_example">mfano@domain.com</string>
     <string name="com_kustomer_type_a_message...">Andika ujumbe…</string>
-    <string name="com_kustomer_Loading...">Inapakia…</string>
+    <string name="com_kustomer_loading...">Inapakia…</string>
 
     <string name="com_kustomer_chat_with">Ongea na</string>
+    <string name="com_kustomer_processing">Usindikaji…</string>
     <string name="com_kustomer_closed">IMEFUNGWA</string>
     <string name="com_kustomer_start_a_new_conversation">Anza Majadiliano Mapya</string>
     <string name="com_kustomer_thank_you_we_will_follow_up_on_your_request">Asante! Tutafuatilia ombi lako.</string>
@@ -46,19 +38,44 @@
     <string name="com_kustomer_please_provide_storage_permission">Tafadhali kutoa ruhusa ya kuhifadhi kwenye programu hii</string>
     <string name="com_kustomer_dismiss">Futa</string>
     <string name="com_kustomer_someone_should_be_with_you_momentarily">Mtu anapaswa kuwa na wewe kwa wakati</string>
-    <string name="com_kustomer_your_expected_wait_time_is">Wakati wako wa kusubiri uliotarajiwa ni</string>
-    <string name="com_kustomer_second">pili</string>
-    <string name="com_kustomer_seconds">sekunde</string>
-    <string name="com_kustomer_volume_control_alternative_method_question">Samahani, inaonekana kama hakuna mtu aliyepatikana wakati tunatarajia. Tafadhali chagua mbinu mbadala ya kuwasiliana na sisi kufuatilia na wewe ...</string>
+    <string name="com_kustomer_volume_control_alternative_method_question">Samahani, inaonekana kama hakuna mtu aliyepatikana wakati tunatarajia. Tafadhali chagua mbinu mbadala ya kuwasiliana na sisi kufuatilia na wewe …</string>
     <string name="com_kustomer_our_current_wait_time_is_approximately">Wakati wetu wa kusubiri sasa ni takribani</string>
     <string name="com_kustomer_upfront_volume_control_alternative_method_question">Unaweza kuchagua kusubiri wakala unaofuata au chagua mbadala</string>
     <string name="com_kustomer_volume_control_email_question">Kubwa, ni barua pepe bora gani kufikia wewe?</string>
     <string name="com_kustomer_volume_control_phone_question">Kubwa, nambari bora ya simu kufikia wewe ni nani?</string>
     <string name="com_kustomer_volume_control_thankyou_response">Asante. Tutakuja tena kwa muda mfupi.</string>
-    <string name="com_kustomer_greater_than_one_day">zaidi ya siku moja</string>
+    <string name="com_kustomer_home">Nyumbani</string>
+    <string name="com_kustomer_unable_to_share_file">Haiwezi kushiriki faili.</string>
+    <string name="com_kustomer_unable_to_open_camera">Haiwezi kufungua kamera.</string>
+    <string name="com_kustomer_low_memory_error">Kumbukumbu ya chini. Haikuweza kupakia picha.</string>
+
+    <string name="com_kustomer_chat_with_param">Ongea na %1$s</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_second">Wakati wako wa kusubiri uliotarajiwa ni %1$s pili</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_seconds">Wakati wako wa kusubiri uliotarajiwa ni sekunde %1$d</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_minute">Wakati wako wa kusubiri uliotarajiwa ni dakika %1$d</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_minutes">Wakati wako wa kusubiri uliotarajiwa ni dakika %1$d</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_hour">Wakati wako wa kusubiri uliotarajiwa ni saa %1$d</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_hours">Wakati wako wa kusubiri uliotarajiwa ni saa %1$d</string>
+    <string name="com_kustomer_your_expected_wait_time_is_greater_than_one_day">Wakati wako wa kusubiri uliotarajiwa ni mkubwa kuliko siku moja</string>
+
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_second">Wakati wetu wa kusubiri sasa ni takribani %1$d pili</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_seconds">Wakati wetu wa kusubiri sasa ni takriban sekunde %1$d</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_minute">Wakati wetu wa kusubiri sasa ni takriban dakika %1$d</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_minutes">Wakati wetu wa kusubiri sasa ni takribani dakika %1$d</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_hour">Wakati wetu wa kusubiri sasa ni takribani saa %1$d</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_hours">Wakati wetu wa kusubiri sasa ni takriban masaa %1$d</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_greater_than_one_day">Wakati wetu wa kusubiri sasa ni karibu zaidi ya siku moja</string>
+
+    <string name="com_kustomer_param_minute_ago">Dakika %1$d iliyopita</string>
+    <string name="com_kustomer_param_minutes_ago">Miezi %1$d iliyopita</string>
+    <string name="com_kustomer_param_hour_ago">Saa %1$d iliyopita</string>
+    <string name="com_kustomer_param_hours_ago">Saa %1$d zilizopita</string>
+    <string name="com_kustomer_param_day_ago">Siku %1$d iliyopita</string>
+    <string name="com_kustomer_param_days_ago">siku %1$d zilizopita</string>
+    <string name="com_kustomer_param_week_ago">Wiki %1$d iliyopita</string>
+    <string name="com_kustomer_param_weeks_ago">Wiki %1$d zilizopita</string>
 
     <string name="com_kustomer_submit">wasilisha</string>
     <string name="com_kustomer_thank_you_for_your_feedback">Asante kwa maoni yako!</string>
     <string name="com_kustomer_edit">Edit</string>
-
 </resources>

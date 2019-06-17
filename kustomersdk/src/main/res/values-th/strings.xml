@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="com_kustomer_week">สัปดาห์</string>
-    <string name="com_kustomer_day">วัน</string>
-    <string name="com_kustomer_hour">ชั่วโมง</string>
-    <string name="com_kustomer_minute">นาที</string>
-    <string name="com_kustomer_weeks">สัปดาห์ที่ผ่านมา</string>
-    <string name="com_kustomer_days">วัน</string>
-    <string name="com_kustomer_hours">ชั่วโมง</string>
-    <string name="com_kustomer_minutes">นาที</string>
     <string name="com_kustomer_just_now">ตอนนี้</string>
     <string name="com_kustomer_attachment">ความผูกพัน</string>
     <string name="com_kustomer_camera">กล้อง</string>
@@ -19,8 +11,7 @@
     <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">อย่าพลาดการตอบสนอง! รับแจ้งทางอีเมลล์:</string>
     <string name="com_kustomer_email_example">example@domain.com</string>
     <string name="com_kustomer_type_a_message...">พิมพ์ข้อความ …</string>
-    <string name="com_kustomer_Loading...">กำลังโหลด …</string>
-    <string name="com_kustomer_ago">มาแล้ว</string>
+    <string name="com_kustomer_loading...">กำลังโหลด …</string>
     <string name="com_kustomer_chat_with">สนทนากับ</string>
     <string name="com_kustomer_processing">กำลังประมวลผล …</string>
     <string name="com_kustomer_no_internet_connection">ไม่มีการเชื่อมต่ออินเทอร์เน็ต</string>
@@ -45,19 +36,43 @@
     <string name="com_kustomer_home">บ้าน</string>
     <string name="com_kustomer_please_select_an_item">โปรดเลือกรายการ</string>
     <string name="com_kustomer_someone_should_be_with_you_momentarily">บางคนควรอยู่กับคุณชั่วขณะ</string>
-    <string name="com_kustomer_your_expected_wait_time_is">เวลารอที่คาดไว้คือ</string>
-    <string name="com_kustomer_second">ที่สอง</string>
-    <string name="com_kustomer_seconds">วินาที</string>
-    <string name="com_kustomer_volume_control_alternative_method_question">ขออภัยดูเหมือนว่าไม่มีใครสามารถใช้งานได้ในเวลาที่เราคาดหวัง โปรดเลือกวิธีการติดต่ออื่นเพื่อให้เราติดตามผลกับคุณ ...</string>
+    <string name="com_kustomer_volume_control_alternative_method_question">ขออภัยดูเหมือนว่าไม่มีใครสามารถใช้งานได้ในเวลาที่เราคาดหวัง โปรดเลือกวิธีการติดต่ออื่นเพื่อให้เราติดตามผลกับคุณ …</string>
     <string name="com_kustomer_our_current_wait_time_is_approximately">เวลารอปัจจุบันของเราอยู่ที่ประมาณ</string>
     <string name="com_kustomer_upfront_volume_control_alternative_method_question">คุณสามารถเลือกที่จะรอตัวแทนที่มีอยู่ถัดไปหรือเลือกทางเลือกอื่น</string>
     <string name="com_kustomer_volume_control_email_question">อะไรดีอีเมลที่ดีที่สุดในการติดต่อคุณคืออะไร</string>
     <string name="com_kustomer_volume_control_phone_question">หมายเลขโทรศัพท์ที่ดีที่สุดในการติดต่อคุณคืออะไร?</string>
     <string name="com_kustomer_volume_control_thankyou_response">ขอบคุณ. เราจะติดต่อกลับโดยเร็วที่สุด</string>
-    <string name="com_kustomer_greater_than_one_day">มากกว่าหนึ่งวัน</string>
+    <string name="com_kustomer_unable_to_share_file">ไม่สามารถแชร์ไฟล์</string>
+    <string name="com_kustomer_unable_to_open_camera">ไม่สามารถเปิดกล้อง</string>
+    <string name="com_kustomer_low_memory_error">หน่วยความจำต่ำ. ไม่สามารถอัพโหลดภาพ</string>
+
+    <string name="com_kustomer_chat_with_param">แชทกับ %1$s</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_second">เวลารอที่คาดหวังของคุณคือ %1$d วินาที</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_seconds">เวลารอที่คาดหวังของคุณคือ %1$d วินาที</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_minute">เวลารอที่คาดหวังของคุณคือ %1$d นาที</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_minutes">เวลารอที่คาดหวังของคุณคือ %1$d นาที</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_hour">เวลารอที่คาดหวังของคุณคือ %1$d ชั่วโมง</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_hours">เวลารอที่คาดหวังของคุณคือ %1$d ชั่วโมง</string>
+    <string name="com_kustomer_your_expected_wait_time_is_greater_than_one_day">เวลารอที่คาดหวังของคุณมากกว่าหนึ่งวัน</string>
+
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_second">เวลารอปัจจุบันของเราประมาณ %1$d วินาที</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_seconds">เวลารอปัจจุบันของเราประมาณ %1$d วินาที</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_minute">เวลารอปัจจุบันของเราประมาณ %1$d นาที</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_minutes">เวลารอปัจจุบันของเราประมาณ %1$d นาที</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_hour">เวลารอปัจจุบันของเราประมาณ %1$d ชั่วโมง</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_hours">เวลารอปัจจุบันของเราประมาณ %1$d ชั่วโมง</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_greater_than_one_day">เวลารอปัจจุบันของเราประมาณมากกว่าหนึ่งวัน</string>
+
+    <string name="com_kustomer_param_minute_ago">%1$d นาทีที่ผ่านมา</string>
+    <string name="com_kustomer_param_minutes_ago">%1$d นาทีที่ผ่านมา</string>
+    <string name="com_kustomer_param_hour_ago">%1$d ชั่วโมงที่แล้ว</string>
+    <string name="com_kustomer_param_hours_ago">%1$d ชั่วโมงที่แล้ว</string>
+    <string name="com_kustomer_param_day_ago">%1$d วันที่แล้ว</string>
+    <string name="com_kustomer_param_days_ago">%1$d วันที่แล้ว</string>
+    <string name="com_kustomer_param_week_ago">%1$d สัปดาห์ที่ผ่านมา</string>
+    <string name="com_kustomer_param_weeks_ago">%1$d สัปดาห์ที่แล้ว</string>
 
     <string name="com_kustomer_submit">เสนอ</string>
     <string name="com_kustomer_thank_you_for_your_feedback">ขอบคุณสำหรับความคิดเห็นของคุณ!</string>
     <string name="com_kustomer_edit">แก้ไข</string>
-
 </resources>

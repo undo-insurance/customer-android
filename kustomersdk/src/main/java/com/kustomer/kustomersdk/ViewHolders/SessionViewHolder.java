@@ -145,8 +145,8 @@ public class SessionViewHolder extends RecyclerView.ViewHolder implements KUSObj
                     chatSettings.getTeamName() : mUserSession.getOrganizationName();
         }
 
-        tvSessionTitle.setText(String.format(itemView.getContext().getString(R.string.com_kustomer_chat_with) + " %s", responderName));
-
+        tvSessionTitle.setText(itemView.getContext().getString(R.string.com_kustomer_chat_with_param,
+                responderName));
 
         //Subtitle text (from last message, or preview text)
         KUSChatMessage latestTextMessage = null;

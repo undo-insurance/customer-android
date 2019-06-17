@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="com_kustomer_week">hafta</string>
-    <string name="com_kustomer_day">gün</string>
-    <string name="com_kustomer_hour">saat</string>
-    <string name="com_kustomer_minute">dakika</string>
-    <string name="com_kustomer_weeks">haftalar</string>
-    <string name="com_kustomer_days">günler</string>
-    <string name="com_kustomer_hours">saatler</string>
-    <string name="com_kustomer_minutes">dakika</string>
     <string name="com_kustomer_just_now">Şu anda</string>
     <string name="com_kustomer_attachment">Ek dosya</string>
     <string name="com_kustomer_camera">Kamera</string>
@@ -19,8 +11,7 @@
     <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">Cevapları kaçırmayın! E-posta ile haberdar olun:</string>
     <string name="com_kustomer_email_example">example@domain.com</string>
     <string name="com_kustomer_type_a_message...">Mesaj yaz …</string>
-    <string name="com_kustomer_Loading...">Yükleniyor…</string>
-    <string name="com_kustomer_ago">önce</string>
+    <string name="com_kustomer_loading...">Yükleniyor…</string>
     <string name="com_kustomer_chat_with">İle sohbet et</string>
     <string name="com_kustomer_processing">İşleme…</string>
     <string name="com_kustomer_no_internet_connection">İnternet bağlantısı yok</string>
@@ -45,19 +36,43 @@
     <string name="com_kustomer_home">Ev</string>
     <string name="com_kustomer_please_select_an_item">Lütfen bir ürün seçiniz</string>
     <string name="com_kustomer_someone_should_be_with_you_momentarily">Bir an önce seninle birlikte olmalı</string>
-    <string name="com_kustomer_your_expected_wait_time_is">Beklenen bekleme süreniz</string>
-    <string name="com_kustomer_second">ikinci</string>
-    <string name="com_kustomer_seconds">saniye</string>
     <string name="com_kustomer_volume_control_alternative_method_question">Üzgünüz, beklediğimiz zamanda kimsenin müsait olmadığı anlaşılıyor. Lütfen sizinle takip edebilmek için alternatif bir iletişim yöntemi seçin…</string>
     <string name="com_kustomer_our_current_wait_time_is_approximately">Mevcut bekleme süremiz yaklaşık olarak</string>
     <string name="com_kustomer_upfront_volume_control_alternative_method_question">Bir sonraki müsait aracı beklemeyi veya bir alternatif seçmeyi seçebilirsiniz yöntemi.</string>
     <string name="com_kustomer_volume_control_email_question">Harika, size ulaşacak en iyi e-posta nedir?</string>
     <string name="com_kustomer_volume_control_phone_question">Harika, size ulaşacak en iyi telefon numarası nedir?</string>
     <string name="com_kustomer_volume_control_thankyou_response">Teşekkür ederim. Kısa bir süre sonra size geri döneceğiz.</string>
-    <string name="com_kustomer_greater_than_one_day">bir günden fazla</string>
+    <string name="com_kustomer_unable_to_share_file">Dosya paylaşılamıyor.</string>
+    <string name="com_kustomer_unable_to_open_camera">Kamera açılamıyor.</string>
+    <string name="com_kustomer_low_memory_error">Düşük Hafıza Resimler yüklenemedi.</string>
+
+    <string name="com_kustomer_chat_with_param">%1$s ile sohbet et</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_second">Beklediğiniz bekleme süresi %1$d saniye</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_seconds">Beklediğiniz bekleme süresi %1$d saniye</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_minute">Beklediğiniz bekleme süresi %1$d dakika</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_minutes">Beklediğiniz bekleme süresi %1$d dakika</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_hour">Beklediğiniz bekleme süresi %1$d saat</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_hours">Beklediğiniz bekleme süresi %1$d saat</string>
+    <string name="com_kustomer_your_expected_wait_time_is_greater_than_one_day">Beklediğiniz bekleme süresi bir günden fazla</string>
+
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_second">Şu anki bekleme süremiz yaklaşık %1$d saniye</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_seconds">Geçerli bekleme süremiz yaklaşık %1$d saniyedir</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_minute">Mevcut bekleme süremiz yaklaşık %1$d dakika</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_minutes">Mevcut bekleme süremiz yaklaşık %1$d dakika</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_hour">Mevcut bekleme süremiz yaklaşık %1$d saattir</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_hours">Şu anki bekleme süremiz yaklaşık %1$d saat</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_greater_than_one_day">Şu andaki bekleme süremiz yaklaşık bir günden fazla</string>
+
+    <string name="com_kustomer_param_minute_ago">%1$d dakika önce</string>
+    <string name="com_kustomer_param_minutes_ago">%1$d dakika önce</string>
+    <string name="com_kustomer_param_hour_ago">%1$d saat önce</string>
+    <string name="com_kustomer_param_hours_ago">%1$d saat önce</string>
+    <string name="com_kustomer_param_day_ago">%1$d gün önce</string>
+    <string name="com_kustomer_param_days_ago">%1$d gün önce</string>
+    <string name="com_kustomer_param_week_ago">%1$d hafta önce</string>
+    <string name="com_kustomer_param_weeks_ago">%1$d hafta önce</string>
 
     <string name="com_kustomer_submit">Gönder</string>
     <string name="com_kustomer_thank_you_for_your_feedback">Geribildiriminiz için teşekkür ederiz!</string>
     <string name="com_kustomer_edit">Düzenle</string>
-
 </resources>

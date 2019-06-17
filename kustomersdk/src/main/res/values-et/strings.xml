@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="com_kustomer_week">nädal</string>
-    <string name="com_kustomer_day">päev</string>
-    <string name="com_kustomer_hour">tunnis</string>
-    <string name="com_kustomer_minute">minut</string>
-    <string name="com_kustomer_weeks">nädalat</string>
-    <string name="com_kustomer_days">päeva</string>
-    <string name="com_kustomer_hours">tundi</string>
-    <string name="com_kustomer_minutes">minutit</string>
     <string name="com_kustomer_just_now">Just praegu</string>
     <string name="com_kustomer_attachment">Manus</string>
     <string name="com_kustomer_camera">Kaamera</string>
@@ -19,8 +11,7 @@
     <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">Ära jäta vastust! Saate teatada e-posti teel:</string>
     <string name="com_kustomer_email_example">example@domain.com</string>
     <string name="com_kustomer_type_a_message...">Sisestage sõnum …</string>
-    <string name="com_kustomer_Loading...">Laadimine …</string>
-    <string name="com_kustomer_ago">tagasi</string>
+    <string name="com_kustomer_loading...">Laadimine …</string>
     <string name="com_kustomer_chat_with">Vestlema koos</string>
     <string name="com_kustomer_processing">Töötlemine …</string>
     <string name="com_kustomer_no_internet_connection">Interneti-ühendus puudub</string>
@@ -45,19 +36,43 @@
     <string name="com_kustomer_home">Kodu</string>
     <string name="com_kustomer_please_select_an_item">Palun valige üksus</string>
     <string name="com_kustomer_someone_should_be_with_you_momentarily">Keegi peaks olema sinuga hetkeks</string>
-    <string name="com_kustomer_your_expected_wait_time_is">Oodatav ooteaeg on</string>
-    <string name="com_kustomer_second">teine</string>
-    <string name="com_kustomer_seconds">sekundit</string>
-    <string name="com_kustomer_volume_control_alternative_method_question">Kahjuks tundub, et keegi ei ole kasutusele oodatud. Palun vali alternatiivne kontaktiviis, mida saaksime teiega jälgida ...</string>
+    <string name="com_kustomer_volume_control_alternative_method_question">Kahjuks tundub, et keegi ei ole kasutusele oodatud. Palun vali alternatiivne kontaktiviis, mida saaksime teiega jälgida …</string>
     <string name="com_kustomer_our_current_wait_time_is_approximately">Meie praegune ooteaeg on umbes</string>
     <string name="com_kustomer_upfront_volume_control_alternative_method_question">Võite oodata järgmise saadaval oleva agendi või valida alternatiiv\", teiega ühendust.</string>
     <string name="com_kustomer_volume_control_email_question">Hea, mis on parim e-kiri, et jõuda teie juurde?</string>
     <string name="com_kustomer_volume_control_phone_question">Suur, mis on parim telefoninumber, et jõuda teid?</string>
     <string name="com_kustomer_volume_control_thankyou_response">Aitäh. Me lähme peatselt teie juurde.</string>
-    <string name="com_kustomer_greater_than_one_day">suurem kui üks päev</string>
+    <string name="com_kustomer_unable_to_share_file">Faili ei saa jagada.</string>
+    <string name="com_kustomer_unable_to_open_camera">Kaamerat ei saa avada.</string>
+    <string name="com_kustomer_low_memory_error">Vähe mälu. Pilte ei õnnestunud üles laadida.</string>
+
+    <string name="com_kustomer_chat_with_param">Vestle %1$siga</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_second">Teie oodatav ooteaeg on %1$d sekund</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_seconds">Teie oodatav ooteaeg on %1$d sekundit</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_minute">Teie oodatav ooteaeg on %1$d minut</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_minutes">Teie oodatav ooteaeg on %1$d minutit</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_hour">Teie oodatav ooteaeg on %1$d tund</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_hours">Teie oodatav ooteaeg on %1$d tundi</string>
+    <string name="com_kustomer_your_expected_wait_time_is_greater_than_one_day">Teie oodatav ooteaeg on pikem kui üks päev</string>
+
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_second">Meie praegune ooteaeg on umbes %1$d sekund</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_seconds">Meie praegune ooteaeg on umbes %1$d sekundit</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_minute">Meie praegune ooteaeg on umbes %1$d minut</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_minutes">Meie praegune ooteaeg on umbes %1$d minutit</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_hour">Meie praegune ooteaeg on umbes %1$d tund</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_hours">Meie praegune ooteaeg on umbes %1$d tundi</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_greater_than_one_day">Meie praegune ooteaeg on umbes üks päev</string>
+
+    <string name="com_kustomer_param_minute_ago">%1$d minut tagasi</string>
+    <string name="com_kustomer_param_minutes_ago">%1$d minutit tagasi</string>
+    <string name="com_kustomer_param_hour_ago">%1$d tund tagasi</string>
+    <string name="com_kustomer_param_hours_ago">%1$d tundi tagasi</string>
+    <string name="com_kustomer_param_day_ago">%1$d päev tagasi</string>
+    <string name="com_kustomer_param_days_ago">%1$d päeva tagasi</string>
+    <string name="com_kustomer_param_week_ago">%1$d nädal tagasi</string>
+    <string name="com_kustomer_param_weeks_ago">%1$d nädalat tagasi</string>
 
     <string name="com_kustomer_submit">Esita</string>
     <string name="com_kustomer_thank_you_for_your_feedback">Aitäh tagasiside eest!</string>
     <string name="com_kustomer_edit">Edit</string>
-
 </resources>

@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="com_kustomer_week">săptămână</string>
-    <string name="com_kustomer_day">zi</string>
-    <string name="com_kustomer_hour">ora</string>
-    <string name="com_kustomer_minute">minut</string>
-    <string name="com_kustomer_weeks">săptămâni</string>
-    <string name="com_kustomer_days">zi</string>
-    <string name="com_kustomer_hours">ore</string>
-    <string name="com_kustomer_minutes">minute</string>
     <string name="com_kustomer_just_now">Chiar acum</string>
     <string name="com_kustomer_attachment">Atașament</string>
     <string name="com_kustomer_camera">aparat foto</string>
@@ -19,8 +11,7 @@
     <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">Nu ratați un răspuns! Obțineți notificarea prin e-mail:</string>
     <string name="com_kustomer_email_example">example@domain.com</string>
     <string name="com_kustomer_type_a_message...">Scrie un mesaj…</string>
-    <string name="com_kustomer_Loading...">Se incarca…</string>
-    <string name="com_kustomer_ago">în urmă</string>
+    <string name="com_kustomer_loading...">Se incarca…</string>
     <string name="com_kustomer_chat_with">Chat cu</string>
     <string name="com_kustomer_processing">Prelucrare…</string>
     <string name="com_kustomer_no_internet_connection">Fără conexiune internet</string>
@@ -45,19 +36,43 @@
     <string name="com_kustomer_home">Acasă</string>
     <string name="com_kustomer_please_select_an_item">Selectați un element</string>
     <string name="com_kustomer_someone_should_be_with_you_momentarily">Cineva ar trebui să fie cu tine pentru moment</string>
-    <string name="com_kustomer_your_expected_wait_time_is">Timpul așteptat de așteptare este</string>
-    <string name="com_kustomer_second">al doilea</string>
-    <string name="com_kustomer_seconds">secunde</string>
-    <string name="com_kustomer_volume_control_alternative_method_question">Ne pare rău, se pare că nimeni nu a devenit disponibil în perioada în care ne-am așteptat. Selectați o metodă de contact alternativă pentru a vă urma cu dvs. ...</string>
+    <string name="com_kustomer_volume_control_alternative_method_question">Ne pare rău, se pare că nimeni nu a devenit disponibil în perioada în care ne-am așteptat. Selectați o metodă de contact alternativă pentru a vă urma cu dvs. …</string>
     <string name="com_kustomer_our_current_wait_time_is_approximately">Timpul nostru de așteptare este aproximativ</string>
     <string name="com_kustomer_upfront_volume_control_alternative_method_question">Puteți alege să așteptați următorul agent disponibil sau să selectați o alternativă\",oi să urmărim cu dvs.</string>
     <string name="com_kustomer_volume_control_email_question">Ce e cel mai bun e-mail pentru a te contacta?</string>
     <string name="com_kustomer_volume_control_phone_question">Grozav, care este cel mai bun număr de telefon la care te afli?</string>
     <string name="com_kustomer_volume_control_thankyou_response">Mulțumesc. Ne vom întoarce în curând.</string>
-    <string name="com_kustomer_greater_than_one_day">mai mult de o zi</string>
+    <string name="com_kustomer_unable_to_share_file">Nu se poate partaja fișierul.</string>
+    <string name="com_kustomer_unable_to_open_camera">Imposibil de deschis camera.</string>
+    <string name="com_kustomer_low_memory_error">Memorie puțină. Imposibil de încărcat imagini.</string>
+
+    <string name="com_kustomer_chat_with_param">Chat cu %1$s</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_second">Timpul așteptat de așteptare este de %1$d secundă</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_seconds">Timpul așteptat de așteptare este de %1$d secunde</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_minute">Timpul așteptat de așteptare este de %1$d minut</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_minutes">Timpul așteptat de așteptare este de %1$d minute</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_hour">Timpul așteptat de așteptare este de %1$d oră</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_hours">Timpul așteptat de așteptare este de %1$d ore</string>
+    <string name="com_kustomer_your_expected_wait_time_is_greater_than_one_day">Timpul așteptat de așteptare este mai mare decât o zi</string>
+
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_second">Timpul de așteptare curent este de aproximativ %1$d secundă</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_seconds">Timpul de așteptare curent este de aproximativ %1$d secunde</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_minute">Timpul nostru de așteptare este de aproximativ %1$d minut</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_minutes">Timpul nostru de așteptare este de aproximativ %1$d minute</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_hour">Timpul nostru de așteptare este de aproximativ %1$d oră</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_hours">Timpul nostru de așteptare este de aproximativ %1$d ore</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_greater_than_one_day">Timpul de așteptare actual este aproximativ mai mare decât o zi</string>
+
+    <string name="com_kustomer_param_minute_ago">Acum %1$d minut</string>
+    <string name="com_kustomer_param_minutes_ago">acum %1$d minute</string>
+    <string name="com_kustomer_param_hour_ago">%1$d oră în urmă</string>
+    <string name="com_kustomer_param_hours_ago">%1$d ore în urmă</string>
+    <string name="com_kustomer_param_day_ago">Acum %1$d zi</string>
+    <string name="com_kustomer_param_days_ago">%1$d zile în urmă</string>
+    <string name="com_kustomer_param_week_ago">%1$d săptămână în urmă</string>
+    <string name="com_kustomer_param_weeks_ago">acum %1$d saptamani</string>
 
     <string name="com_kustomer_submit">A depune</string>
     <string name="com_kustomer_thank_you_for_your_feedback">Multumim pentru feedback-ul dvs!</string>
     <string name="com_kustomer_edit">Editați | ×</string>
-
 </resources>

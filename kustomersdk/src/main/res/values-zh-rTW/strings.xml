@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="com_kustomer_week">週</string>
-    <string name="com_kustomer_day">天</string>
-    <string name="com_kustomer_hour">小時</string>
-    <string name="com_kustomer_minute">分鐘</string>
-    <string name="com_kustomer_weeks">週</string>
-    <string name="com_kustomer_days">天</string>
-    <string name="com_kustomer_hours">小時</string>
-    <string name="com_kustomer_minutes">分鐘</string>
     <string name="com_kustomer_just_now">現在</string>
     <string name="com_kustomer_attachment">附件</string>
     <string name="com_kustomer_camera">相機</string>
@@ -19,8 +11,7 @@
     <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">不要錯過回應！通過電子郵件獲取通知</string>
     <string name="com_kustomer_email_example">example@domain.com</string>
     <string name="com_kustomer_type_a_message...">輸入消息…</string>
-    <string name="com_kustomer_Loading...">載入中…</string>
-    <string name="com_kustomer_ago">前</string>
+    <string name="com_kustomer_loading...">載入中…</string>
     <string name="com_kustomer_chat_with">和…聊天</string>
     <string name="com_kustomer_processing">處理…</string>
     <string name="com_kustomer_no_internet_connection">沒有網絡連接</string>
@@ -44,20 +35,44 @@
     <string name="com_kustomer_leave_a_message">留言</string>
     <string name="com_kustomer_home">家</string>
     <string name="com_kustomer_please_select_an_item">請選擇一個項目</string>
-    <string name="com_kustomer_second">第二</string>
-    <string name="com_kustomer_seconds">秒</string>
     <string name="com_kustomer_someone_should_be_with_you_momentarily">有人應該和你在一起</string>
-    <string name="com_kustomer_your_expected_wait_time_is">您預計的等待時間是</string>
     <string name="com_kustomer_our_current_wait_time_is_approximately">我們目前的等待時間大約是</string>
     <string name="com_kustomer_upfront_volume_control_alternative_method_question">您可以選擇等待下一個可用代理或選擇其他代理</string>
     <string name="com_kustomer_volume_control_phone_question">很棒，有什麼最適合您的電話號碼？</string>
     <string name="com_kustomer_volume_control_email_question">太棒了，什麼是最好的電子郵件給你？</string>
     <string name="com_kustomer_volume_control_thankyou_response">謝謝。我們很快就會回复你。</string>
-    <string name="com_kustomer_greater_than_one_day">超過一天</string>
-    <string name="com_kustomer_volume_control_alternative_method_question">對不起，在我們預期的時間裡似乎沒有人可用。請選擇其他聯繫方式，以便我們跟進...</string>
+    <string name="com_kustomer_volume_control_alternative_method_question">對不起，在我們預期的時間裡似乎沒有人可用。請選擇其他聯繫方式，以便我們跟進…</string>
+    <string name="com_kustomer_unable_to_share_file">無法共享文件。</string>
+    <string name="com_kustomer_unable_to_open_camera">無法打開相機。</string>
+    <string name="com_kustomer_low_memory_error">記憶不足。無法上傳圖片。</string>
+
+    <string name="com_kustomer_chat_with_param">與%1$s聊天</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_second">您的預計等待時間是%1$d秒</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_seconds">您預計的等待時間是%1$d秒</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_minute">您的預計等待時間是%1$d分鐘</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_minutes">您預計的等待時間是%1$d分鐘</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_hour">您預計的等待時間為%1$d小時</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_hours">您預計的等待時間為%1$d小時</string>
+    <string name="com_kustomer_your_expected_wait_time_is_greater_than_one_day">您預計的等待時間大於一天</string>
+
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_second">我們目前的等待時間約為%1$d秒</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_seconds">我們目前的等待時間約為%1$d秒</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_minute">我們目前的等待時間約為%1$d分鐘</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_minutes">我們目前的等待時間約為%1$d分鐘</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_hour">我們目前的等待時間約為%1$d小時</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_hours">我們目前的等待時間約為%1$d小時</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_greater_than_one_day">我們目前的等待時間大約超過一天</string>
+
+    <string name="com_kustomer_param_minute_ago">%1$d分鐘前</string>
+    <string name="com_kustomer_param_minutes_ago">%1$d分鐘前</string>
+    <string name="com_kustomer_param_hour_ago">%1$d小時前</string>
+    <string name="com_kustomer_param_hours_ago">%1$d小時前</string>
+    <string name="com_kustomer_param_day_ago">%1$d天前</string>
+    <string name="com_kustomer_param_days_ago">%1$d天前</string>
+    <string name="com_kustomer_param_week_ago">%1$d週前</string>
+    <string name="com_kustomer_param_weeks_ago">%1$d個星期前</string>
 
     <string name="com_kustomer_submit">提交</string>
     <string name="com_kustomer_thank_you_for_your_feedback">感謝您的反饋意見！</string>
     <string name="com_kustomer_edit">編輯</string>
-
 </resources>

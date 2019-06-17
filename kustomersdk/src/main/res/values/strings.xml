@@ -1,16 +1,7 @@
 <resources>
-    <string name="com_kustomer_app_name">KustomerSDK</string>
+    <string name="com_kustomer_app_name" translatable="false">KustomerSDK</string>
 
-    <string name="com_kustomer_week">week</string>
-    <string name="com_kustomer_day">day</string>
-    <string name="com_kustomer_hour">hour</string>
-    <string name="com_kustomer_minute">minute</string>
-    <string name="com_kustomer_weeks">weeks</string>
-    <string name="com_kustomer_days">days</string>
-    <string name="com_kustomer_hours">hours</string>
-    <string name="com_kustomer_minutes">minutes</string>
     <string name="com_kustomer_just_now">Just now</string>
-    <string name="com_kustomer_ago">ago</string>
 
     <string name="com_kustomer_attachment">Attachment</string>
     <string name="com_kustomer_camera">Camera</string>
@@ -23,7 +14,7 @@
     <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">Don\'t miss a response! Get notified by email:</string>
     <string name="com_kustomer_email_example">example@domain.com</string>
     <string name="com_kustomer_type_a_message...">Type a message…</string>
-    <string name="com_kustomer_Loading...">Loading…</string>
+    <string name="com_kustomer_loading...">Loading…</string>
 
     <string name="com_kustomer_chat_with">Chat with</string>
     <string name="com_kustomer_processing">Processing…</string>
@@ -50,10 +41,6 @@
     <string name="com_kustomer_home">Home</string>
     <string name="com_kustomer_please_select_an_item">Please select an item</string>
     <string name="com_kustomer_someone_should_be_with_you_momentarily">Someone should be with you momentarily</string>
-    <string name="com_kustomer_your_expected_wait_time_is">Your expected wait time is</string>
-    <string name="com_kustomer_second">second</string>
-    <string name="com_kustomer_greater_than_one_day">greater than one day</string>
-    <string name="com_kustomer_seconds">seconds</string>
     <string name="com_kustomer_volume_control_alternative_method_question">Sorry, it looks like no one has become available in the time we expected. Please select an alternate contact method for us to followup with you…</string>
     <string name="com_kustomer_our_current_wait_time_is_approximately">Our current wait time is approximately</string>
     <string name="com_kustomer_upfront_volume_control_alternative_method_question">You can choose to wait for the next available agent or select an alternative contact method for us to follow up with you.</string>
@@ -70,4 +57,29 @@
     <string name="com_kustomer_thank_you_for_your_feedback">Thank you for your feedback!</string>
     <string name="com_kustomer_edit">Edit</string>
 
+    <string name="com_kustomer_chat_with_param">Chat with %1$s</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_second">Your expected wait time is %1$d second</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_seconds">Your expected wait time is %1$d seconds</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_minute">Your expected wait time is %1$d minute</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_minutes">Your expected wait time is %1$d minutes</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_hour">Your expected wait time is %1$d hour</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_hours">Your expected wait time is %1$d hours</string>
+
+    <string name="com_kustomer_your_expected_wait_time_is_greater_than_one_day">Your expected wait time is greater than one day</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_second">Our current wait time is approximately %1$d second</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_seconds">Our current wait time is approximately %1$d seconds</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_minute">Our current wait time is approximately %1$d minute</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_minutes">Our current wait time is approximately %1$d minutes</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_hour">Our current wait time is approximately %1$d hour</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_hours">Our current wait time is approximately %1$d hours</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_greater_than_one_day">Our current wait time is approximately greater than one day</string>
+
+    <string name="com_kustomer_param_minute_ago">%1$d minute ago</string>
+    <string name="com_kustomer_param_minutes_ago">%1$d minutes ago</string>
+    <string name="com_kustomer_param_hour_ago">%1$d hour ago</string>
+    <string name="com_kustomer_param_hours_ago">%1$d hours ago</string>
+    <string name="com_kustomer_param_day_ago">%1$d day ago</string>
+    <string name="com_kustomer_param_days_ago">%1$d days ago</string>
+    <string name="com_kustomer_param_week_ago">%1$d week ago</string>
+    <string name="com_kustomer_param_weeks_ago">%1$d weeks ago</string>
 </resources>

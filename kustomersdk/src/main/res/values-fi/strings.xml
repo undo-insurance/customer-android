@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="com_kustomer_week">viikko</string>
-    <string name="com_kustomer_day">päivä</string>
-    <string name="com_kustomer_hour">tunnin</string>
-    <string name="com_kustomer_minute">minuutti</string>
-    <string name="com_kustomer_weeks">viikkoa</string>
-    <string name="com_kustomer_days">päivää</string>
-    <string name="com_kustomer_hours">tuntia</string>
-    <string name="com_kustomer_minutes">minuutit</string>
     <string name="com_kustomer_just_now">Juuri nyt</string>
     <string name="com_kustomer_attachment">liite</string>
     <string name="com_kustomer_camera">Kamera</string>
@@ -19,8 +11,7 @@
     <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">Älä missaa vastausta! Saat ilmoituksen sähköpostilla:</string>
     <string name="com_kustomer_email_example">example@domain.com</string>
     <string name="com_kustomer_type_a_message...">Kirjoita viesti …</string>
-    <string name="com_kustomer_Loading...">Ladataan…</string>
-    <string name="com_kustomer_ago">sitten</string>
+    <string name="com_kustomer_loading...">Ladataan…</string>
     <string name="com_kustomer_chat_with">Jutella</string>
     <string name="com_kustomer_processing">Processing …</string>
     <string name="com_kustomer_no_internet_connection">Ei Internet-yhteyttä</string>
@@ -45,19 +36,43 @@
     <string name="com_kustomer_home">Koti</string>
     <string name="com_kustomer_please_select_an_item">Valitse kohde</string>
     <string name="com_kustomer_someone_should_be_with_you_momentarily">Joku pitäisi olla kanssasi hetkeksi</string>
-    <string name="com_kustomer_your_expected_wait_time_is">Odotettu odotusaika on</string>
-    <string name="com_kustomer_second">toinen</string>
-    <string name="com_kustomer_seconds">sekuntia</string>
-    <string name="com_kustomer_volume_control_alternative_method_question">Valitettavasti keneltäkään ei ole tullut saatavana odotettua aikaa. Valitse vaihtoehtoinen yhteydenottomenetelmä, jotta voimme seurata kanssasi ...</string>
+    <string name="com_kustomer_volume_control_alternative_method_question">Valitettavasti keneltäkään ei ole tullut saatavana odotettua aikaa. Valitse vaihtoehtoinen yhteydenottomenetelmä, jotta voimme seurata kanssasi …</string>
     <string name="com_kustomer_our_current_wait_time_is_approximately">Nykyinen odotusaika on noin</string>
     <string name="com_kustomer_upfront_volume_control_alternative_method_question">Voit valita odottavan seuraavan käytettävissä olevan agentin tai valita vaihtoehdon\",eurata sinua.</string>
     <string name="com_kustomer_volume_control_email_question">Hyvä, mikä on paras sähköpostiosoite tavoittaa sinut?</string>
     <string name="com_kustomer_volume_control_phone_question">Hyvä, mikä on paras puhelinnumero tavoittaa sinut?</string>
     <string name="com_kustomer_volume_control_thankyou_response">Kiitos. Palataan takaisin sinulle pian.</string>
-    <string name="com_kustomer_greater_than_one_day">enemmän kuin yksi päivä</string>
+    <string name="com_kustomer_unable_to_share_file">Tiedoston jakaminen ei onnistu.</string>
+    <string name="com_kustomer_unable_to_open_camera">Kameraa ei voi avata.</string>
+    <string name="com_kustomer_low_memory_error">Muisti vähissä. Kuvien lataaminen epäonnistui.</string>
+
+    <string name="com_kustomer_chat_with_param">Keskustele %1$s: n kanssa</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_second">Odotettu odotusaika on %1$d sekunti</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_seconds">Odotettu odotusaika on %1$d sekuntia</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_minute">Odotettu odotusaika on %1$d minuutti</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_minutes">Odotettu odotusaika on %1$d minuuttia</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_hour">Odotettu odotusaika on %1$d tunti</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_hours">Odotettu odotusaika on %1$d tuntia</string>
+    <string name="com_kustomer_your_expected_wait_time_is_greater_than_one_day">Odotettu odotusaika on suurempi kuin yksi päivä</string>
+
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_second">Nykyinen odotusaika on noin %1$d sekunti</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_seconds">Nykyinen odotusaika on noin %1$d sekuntia</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_minute">Nykyinen odotusaika on noin %1$d minuutti</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_minutes">Nykyinen odotusaika on noin %1$d minuuttia</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_hour">Nykyinen odotusaika on noin %1$d tunti</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_hours">Nykyinen odotusaika on noin %1$d tuntia</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_greater_than_one_day">Nykyinen odotusaika on noin yksi päivä</string>
+
+    <string name="com_kustomer_param_minute_ago">%1$d minuutti sitten</string>
+    <string name="com_kustomer_param_minutes_ago">%1$d minuuttia sitten</string>
+    <string name="com_kustomer_param_hour_ago">%1$d tunti sitten</string>
+    <string name="com_kustomer_param_hours_ago">%1$d tuntia sitten</string>
+    <string name="com_kustomer_param_day_ago">%1$d päivä sitten</string>
+    <string name="com_kustomer_param_days_ago">%1$d päivää sitten</string>
+    <string name="com_kustomer_param_week_ago">%1$d viikko sitten</string>
+    <string name="com_kustomer_param_weeks_ago">%1$d viikkoa sitten</string>
 
     <string name="com_kustomer_submit">Lähetä</string>
     <string name="com_kustomer_thank_you_for_your_feedback">Kiitos palautteesta!</string>
     <string name="com_kustomer_edit">Muokata</string>
-
 </resources>

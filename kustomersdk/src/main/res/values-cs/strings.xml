@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="com_kustomer_week">týden</string>
-    <string name="com_kustomer_day">den</string>
-    <string name="com_kustomer_hour">hodina</string>
-    <string name="com_kustomer_minute">minuta</string>
-    <string name="com_kustomer_weeks">týdny</string>
-    <string name="com_kustomer_days">dnů</string>
-    <string name="com_kustomer_hours">hodin</string>
-    <string name="com_kustomer_minutes">minut</string>
     <string name="com_kustomer_just_now">Právě teď</string>
     <string name="com_kustomer_attachment">Příloha</string>
     <string name="com_kustomer_camera">Fotoaparát</string>
@@ -19,8 +11,7 @@
     <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">Nenechte si ujít odpověď! Obdržte oznámení prostřednictvím e-mailu:</string>
     <string name="com_kustomer_email_example">example@domain.com</string>
     <string name="com_kustomer_type_a_message...">Zadejte zprávu …</string>
-    <string name="com_kustomer_Loading...">Načítání…</string>
-    <string name="com_kustomer_ago">před</string>
+    <string name="com_kustomer_loading...">Načítání…</string>
     <string name="com_kustomer_chat_with">Chatovat s</string>
     <string name="com_kustomer_processing">Zpracovává se…</string>
     <string name="com_kustomer_no_internet_connection">Žádné internetové připojení</string>
@@ -45,19 +36,43 @@
     <string name="com_kustomer_home">Domov</string>
     <string name="com_kustomer_please_select_an_item">Vyberte prosím položku</string>
     <string name="com_kustomer_someone_should_be_with_you_momentarily">Někdo by měl být s tebou na okamžik</string>
-    <string name="com_kustomer_your_expected_wait_time_is">Váš očekávaný čas čekání je</string>
-    <string name="com_kustomer_second">druhý</string>
-    <string name="com_kustomer_seconds">sekundy</string>
     <string name="com_kustomer_volume_control_alternative_method_question">Je nám líto, zdá se, že nikdo nebyl dostupný v době, kterou jsme očekávali. Zvolte prosím alternativní metodu kontaktu s námi.</string>
     <string name="com_kustomer_our_current_wait_time_is_approximately">Aktuální čekací doba je přibližně</string>
     <string name="com_kustomer_upfront_volume_control_alternative_method_question">Můžete si vyčkat na další dostupný agent nebo vybrat alternativu\",li s vámi sledovat.</string>
     <string name="com_kustomer_volume_control_email_question">Skvělé, jaký je nejlepší e-mail, na který se chcete dostat?</string>
     <string name="com_kustomer_volume_control_phone_question">Skvělé, jaké je nejlepší telefonní číslo, na které se chcete dostat?</string>
     <string name="com_kustomer_volume_control_thankyou_response">Děkuji. Vrátíme se k vám brzy.</string>
-    <string name="com_kustomer_greater_than_one_day">více než jeden den</string>
+    <string name="com_kustomer_unable_to_share_file">Nelze sdílet soubor.</string>
+    <string name="com_kustomer_unable_to_open_camera">Nelze otevřít kameru.</string>
+    <string name="com_kustomer_low_memory_error">Nízká paměť. Nelze nahrát obrázky.</string>
+
+    <string name="com_kustomer_chat_with_param">Chatujte s %1$sem</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_second">Očekávaná doba čekání je %1$d sekunda</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_seconds">Očekávaná doba čekání je %1$d sekundy</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_minute">Očekávaná doba čekání je %1$d minuta</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_minutes">Očekávaná doba čekání je %1$d minuty</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_hour">Očekávaná doba čekání je %1$d hodina</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_hours">Očekávaná doba čekání je %1$d hodiny</string>
+    <string name="com_kustomer_your_expected_wait_time_is_greater_than_one_day">Očekávaná doba čekání je větší než jeden den</string>
+
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_second">Naše aktuální čekací doba je přibližně %1$d sekundu</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_seconds">Naše aktuální čekací doba je přibližně %1$d sekundy</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_minute">Naše aktuální čekací doba je přibližně %1$d minuta</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_minutes">Naše aktuální čekací doba je přibližně %1$d minuty</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_hour">Naše aktuální čekací doba je přibližně %1$d hodina</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_hours">Naše aktuální čekací doba je přibližně %1$d hodiny</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_greater_than_one_day">Naše aktuální čekací doba je přibližně větší než jeden den</string>
+
+    <string name="com_kustomer_param_minute_ago">Před %1$d minutou</string>
+    <string name="com_kustomer_param_minutes_ago">Před %1$d minutami</string>
+    <string name="com_kustomer_param_hour_ago">před %1$d hodinou</string>
+    <string name="com_kustomer_param_hours_ago">před %1$d hodinami</string>
+    <string name="com_kustomer_param_day_ago">před %1$d dnem</string>
+    <string name="com_kustomer_param_days_ago">před %1$d dny</string>
+    <string name="com_kustomer_param_week_ago">před %1$d týdnem</string>
+    <string name="com_kustomer_param_weeks_ago">Před %1$d týdny</string>
 
     <string name="com_kustomer_submit">Předložit</string>
     <string name="com_kustomer_thank_you_for_your_feedback">Děkujeme vám za vaši reakci!</string>
     <string name="com_kustomer_edit">Upravit</string>
-
 </resources>

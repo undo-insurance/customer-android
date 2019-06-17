@@ -1614,17 +1614,15 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
             if (chatSettings.getVolumeControlMode() == KUSVolumeControlMode.KUS_VOLUME_CONTROL_MODE_UPFRONT
                     && sessionQueue.getEstimatedWaitTimeSeconds() != 0) {
 
-                String currentWaitTime = Kustomer.getContext()
-                        .getString(R.string.com_kustomer_our_current_wait_time_is_approximately);
+                String approximateWaitingTimeString = KUSDate.upfrontVolumeControlApproximateWaitingTimeFromSeconds(
+                        Kustomer.getContext(),
+                        sessionQueue.getEstimatedWaitTimeSeconds());
+
                 String upfrontAlternatePrompt = Kustomer.getContext()
                         .getString(R.string.com_kustomer_upfront_volume_control_alternative_method_question);
 
-                String humanReadableTextFromSeconds = KUSDate.humanReadableTextFromSeconds(
-                        Kustomer.getContext(), sessionQueue.getEstimatedWaitTimeSeconds());
-                prompt = String.format("%s %s. %s", currentWaitTime, humanReadableTextFromSeconds,
-                        upfrontAlternatePrompt);
+                prompt = String.format("%s. %s", approximateWaitingTimeString, upfrontAlternatePrompt);
             }
-
 
             JSONObject formMessage = new JSONObject();
             try {

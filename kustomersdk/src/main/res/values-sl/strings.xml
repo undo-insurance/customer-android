@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="com_kustomer_week">teden</string>
-    <string name="com_kustomer_day">dan</string>
-    <string name="com_kustomer_hour">uro</string>
-    <string name="com_kustomer_minute">minuto</string>
-    <string name="com_kustomer_weeks">tednih</string>
-    <string name="com_kustomer_days">dnevi</string>
-    <string name="com_kustomer_hours">ure</string>
-    <string name="com_kustomer_minutes">minut</string>
     <string name="com_kustomer_just_now">Pravkar</string>
     <string name="com_kustomer_attachment">Priponka</string>
     <string name="com_kustomer_camera">Kamera</string>
@@ -19,8 +11,7 @@
     <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">Ne zamudite odgovora! Pridobite obvestilo po e-pošti:</string>
     <string name="com_kustomer_email_example">example@domain.com</string>
     <string name="com_kustomer_type_a_message...">Vnesite sporočilo …</string>
-    <string name="com_kustomer_Loading...">Nalaganje…</string>
-    <string name="com_kustomer_ago">nazaj</string>
+    <string name="com_kustomer_loading...">Nalaganje…</string>
     <string name="com_kustomer_chat_with">Klepetati z</string>
     <string name="com_kustomer_processing">Obravnavati…</string>
     <string name="com_kustomer_no_internet_connection">Brez internetne povezave</string>
@@ -45,19 +36,43 @@
     <string name="com_kustomer_home">Domov</string>
     <string name="com_kustomer_please_select_an_item">Izberite element</string>
     <string name="com_kustomer_someone_should_be_with_you_momentarily">Nekdo bi moral biti z vami trenutno</string>
-    <string name="com_kustomer_your_expected_wait_time_is">Vaš pričakovani čas čakanja je</string>
-    <string name="com_kustomer_second">drugič</string>
-    <string name="com_kustomer_seconds">sekund</string>
-    <string name="com_kustomer_volume_control_alternative_method_question">Oprostite, v času, ko smo pričakovali, se nihče ni pojavil na voljo. Prosimo, izberite način nadomestnega stika, s katerim nas lahko spremljamo ...</string>
+    <string name="com_kustomer_volume_control_alternative_method_question">Oprostite, v času, ko smo pričakovali, se nihče ni pojavil na voljo. Prosimo, izberite način nadomestnega stika, s katerim nas lahko spremljamo …</string>
     <string name="com_kustomer_our_current_wait_time_is_approximately">Naš trenutni čakalni čas je približno</string>
     <string name="com_kustomer_upfront_volume_control_alternative_method_question">Izberete lahko, da počakate na naslednji razpoložljivi agent ali izberete drugo možnost\",mi.</string>
     <string name="com_kustomer_volume_control_email_question">Odlično, v čem je najprimernejši e-poštni naslov za vas?</string>
     <string name="com_kustomer_volume_control_phone_question">Odlično, v čem je najboljša telefonska številka, na katero ste prišli?</string>
     <string name="com_kustomer_volume_control_thankyou_response">Hvala vam. Kmalu se bomo vrnili k vam.</string>
-    <string name="com_kustomer_greater_than_one_day">več kot en dan</string>
+    <string name="com_kustomer_unable_to_share_file">Datoteke ni mogoče dati v skupno rabo.</string>
+    <string name="com_kustomer_unable_to_open_camera">Ne morem odpreti kamere.</string>
+    <string name="com_kustomer_low_memory_error">Nizek pomnilnik. Slike ni bilo mogoče naložiti.</string>
+
+    <string name="com_kustomer_chat_with_param">Klepetajte z %1$s</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_second">Pričakovani čas čakanja je %1$d sekunda</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_seconds">Pričakovani čas čakanja je %1$d sekundi</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_minute">Pričakovani čas čakanja je %1$d minuta</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_minutes">Pričakovani čas čakanja je %1$d minuti</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_hour">Pričakovani čas čakanja je %1$d ura</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_hours">Pričakovani čas čakanja je %1$d uri</string>
+    <string name="com_kustomer_your_expected_wait_time_is_greater_than_one_day">Pričakovani čas čakanja je daljši od enega dne</string>
+
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_second">Naš trenutni čas čakanja je približno %1$d sekunda</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_seconds">Naš trenutni čas čakanja je približno %1$d sekundi</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_minute">Naš trenutni čas čakanja je približno %1$d minuto</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_minutes">Naš trenutni čas čakanja je približno %1$d minuti</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_hour">Trenutno čakamo približno %1$d uro</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_hours">Naš trenutni čas čakanja je približno %1$d uri</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_greater_than_one_day">Naš trenutni čas čakanja je približno več kot en dan</string>
+
+    <string name="com_kustomer_param_minute_ago">Pred %1$d minuto</string>
+    <string name="com_kustomer_param_minutes_ago">Pred %1$d minutama</string>
+    <string name="com_kustomer_param_hour_ago">Pred %1$d uro</string>
+    <string name="com_kustomer_param_hours_ago">pred %1$d urama</string>
+    <string name="com_kustomer_param_day_ago">Pred %1$d dnevom</string>
+    <string name="com_kustomer_param_days_ago">%1$d dni nazaj</string>
+    <string name="com_kustomer_param_week_ago">Pred %1$d tednom</string>
+    <string name="com_kustomer_param_weeks_ago">%1$d tedna nazaj</string>
 
     <string name="com_kustomer_submit">predloži</string>
     <string name="com_kustomer_thank_you_for_your_feedback">Hvala za vaše mnenje!</string>
     <string name="com_kustomer_edit">Uredi</string>
-
 </resources>

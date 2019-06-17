@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="com_kustomer_week">vika</string>
-    <string name="com_kustomer_day">dagur</string>
-    <string name="com_kustomer_hour">klukkustund</string>
-    <string name="com_kustomer_minute">mínútu</string>
-    <string name="com_kustomer_weeks">vikur</string>
-    <string name="com_kustomer_days">daga</string>
-    <string name="com_kustomer_hours">klukkustundir</string>
-    <string name="com_kustomer_minutes">mínútur</string>
     <string name="com_kustomer_just_now">Rétt í þessu</string>
     <string name="com_kustomer_attachment">Viðhengi</string>
     <string name="com_kustomer_camera">Myndavél</string>
@@ -19,8 +11,7 @@
     <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">Ekki missa af svari! Fáðu tilkynningu í tölvupósti:</string>
     <string name="com_kustomer_email_example">example@domain.com</string>
     <string name="com_kustomer_type_a_message...">Skrifaðu skilaboð …</string>
-    <string name="com_kustomer_Loading...">Hleð inn …</string>
-    <string name="com_kustomer_ago">síðan</string>
+    <string name="com_kustomer_loading...">Hleð inn …</string>
     <string name="com_kustomer_chat_with">Spjalla við</string>
     <string name="com_kustomer_processing">Vinnsla …</string>
     <string name="com_kustomer_no_internet_connection">Engin nettenging</string>
@@ -45,19 +36,43 @@
     <string name="com_kustomer_home">Heim</string>
     <string name="com_kustomer_please_select_an_item">Vinsamlegast veldu hlut</string>
     <string name="com_kustomer_someone_should_be_with_you_momentarily">Einhver ætti að vera með þér í augnablikinu</string>
-    <string name="com_kustomer_your_expected_wait_time_is">Búist er við biðtíma þínum</string>
-    <string name="com_kustomer_second">annað</string>
-    <string name="com_kustomer_seconds">sekúndur</string>
-    <string name="com_kustomer_volume_control_alternative_method_question">Því miður, það virðist sem enginn hefur orðið laus við þann tíma sem við búumst við. Vinsamlegast veldu aðra samskiptaaðferð til að fylgjast með þér ...</string>
+    <string name="com_kustomer_volume_control_alternative_method_question">Því miður, það virðist sem enginn hefur orðið laus við þann tíma sem við búumst við. Vinsamlegast veldu aðra samskiptaaðferð til að fylgjast með þér …</string>
     <string name="com_kustomer_our_current_wait_time_is_approximately">Núverandi biðtími okkar er um það bil</string>
     <string name="com_kustomer_upfront_volume_control_alternative_method_question">Þú getur valið að bíða eftir næsta umboðsmanni eða velja valkost\",lgja eftir með þér.</string>
     <string name="com_kustomer_volume_control_email_question">Frábær, hvað er besti tölvupósturinn til að ná þér á?</string>
     <string name="com_kustomer_volume_control_phone_question">Frábær, hvað er besta símanúmerið til að ná þér á?</string>
     <string name="com_kustomer_volume_control_thankyou_response">Þakka þér fyrir. Við munum komast aftur til þín fljótlega.</string>
-    <string name="com_kustomer_greater_than_one_day">meira en einn dagur</string>
+    <string name="com_kustomer_unable_to_share_file">Ekki er hægt að deila skrá.</string>
+    <string name="com_kustomer_unable_to_open_camera">Gat ekki opnað myndavélina.</string>
+    <string name="com_kustomer_low_memory_error">Lágt minni. Gat ekki hlaðið upp myndum.</string>
+
+    <string name="com_kustomer_chat_with_param">Spjallaðu við %1$s</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_second">Búist er við biðtíma þínum í %1$d sekúndu</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_seconds">Búist er við biðtíma þínum í %1$d sekúndur</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_minute">Búist er við biðtíma þínum í %1$d mínútu</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_minutes">Búist er við biðtíma þínum í %1$d mínútur</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_hour">Búist er við biðtíma þínum %1$d klukkustund</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_hours">Búist er við biðtíma þínum %1$d klst</string>
+    <string name="com_kustomer_your_expected_wait_time_is_greater_than_one_day">Væntanlegur biðtími þinn er meiri en einn dagur</string>
+
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_second">Núverandi biðtími okkar er um það bil %1$d sekúndu</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_seconds">Núverandi biðtími okkar er um það bil %1$d sekúndur</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_minute">Núverandi biðtími okkar er um það bil %1$d mínútu</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_minutes">Núverandi biðtími okkar er um það bil %1$d mínútur</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_hour">Núverandi biðtími okkar er um það bil %1$d klukkustund</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_hours">Núverandi biðtími okkar er um það bil %1$d klukkustundir</string>
+
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_greater_than_one_day">Núverandi biðtími okkar er um það bil stærri en ein dagur</string>
+    <string name="com_kustomer_param_minute_ago">Fyrir %1$d mínútu</string>
+    <string name="com_kustomer_param_minutes_ago">%1$d mínútum síðan</string>
+    <string name="com_kustomer_param_hour_ago">%1$d klukkustund síðan</string>
+    <string name="com_kustomer_param_hours_ago">%1$d klukkustundum síðan</string>
+    <string name="com_kustomer_param_day_ago">Fyrir %1$d degi síðan</string>
+    <string name="com_kustomer_param_days_ago">fyrir %1$d dögum</string>
+    <string name="com_kustomer_param_week_ago">Fyrir %1$d viku síðan</string>
+    <string name="com_kustomer_param_weeks_ago">Fyrir %1$d vikum</string>
 
     <string name="com_kustomer_submit">Senda inn</string>
     <string name="com_kustomer_thank_you_for_your_feedback">Takk fyrir ábendinguna!</string>
     <string name="com_kustomer_edit">Breyta</string>
-
 </resources>

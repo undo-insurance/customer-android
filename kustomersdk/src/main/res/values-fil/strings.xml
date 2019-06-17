@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="com_kustomer_week">linggo</string>
-    <string name="com_kustomer_day">araw</string>
-    <string name="com_kustomer_hour">oras</string>
-    <string name="com_kustomer_minute">minuto</string>
-    <string name="com_kustomer_weeks">linggo</string>
-    <string name="com_kustomer_days">araw</string>
-    <string name="com_kustomer_hours">oras</string>
-    <string name="com_kustomer_minutes">minuto</string>
     <string name="com_kustomer_just_now">Ngayon lang</string>
     <string name="com_kustomer_attachment">Attachment</string>
     <string name="com_kustomer_camera">Camera</string>
@@ -19,8 +11,7 @@
     <string name="com_kustomer_dont_miss_a_response_get_notified_soon_by_email">Huwag palampasin ang sagot! Maabisuhan sa pamamagitan ng email:</string>
     <string name="com_kustomer_email_example">example@domain.com</string>
     <string name="com_kustomer_type_a_message...">Mag-type ng mensahe …</string>
-    <string name="com_kustomer_Loading...">Naglo-load …</string>
-    <string name="com_kustomer_ago">nakaraan</string>
+    <string name="com_kustomer_loading...">Naglo-load …</string>
     <string name="com_kustomer_chat_with">Makipag-usap kay</string>
     <string name="com_kustomer_processing">Pinoproseso …</string>
     <string name="com_kustomer_no_internet_connection">Walang Koneksyon sa Internet</string>
@@ -45,19 +36,43 @@
     <string name="com_kustomer_home">Bahay</string>
     <string name="com_kustomer_please_select_an_item">Mangyaring pumili ng isang item</string>
     <string name="com_kustomer_someone_should_be_with_you_momentarily">Ang isang tao ay dapat kasama mo sa ilang sandali</string>
-    <string name="com_kustomer_your_expected_wait_time_is">Ang iyong inaasahang oras ng paghihintay ay</string>
-    <string name="com_kustomer_second">pangalawa</string>
-    <string name="com_kustomer_seconds">segundo</string>
-    <string name="com_kustomer_volume_control_alternative_method_question">Paumanhin, mukhang walang sinuman ang magagamit sa oras na inaasahan namin. Mangyaring pumili ng alternatibong paraan ng pakikipag-ugnay para sa amin upang mag-follow up sa iyo ...</string>
+    <string name="com_kustomer_volume_control_alternative_method_question">Paumanhin, mukhang walang sinuman ang magagamit sa oras na inaasahan namin. Mangyaring pumili ng alternatibong paraan ng pakikipag-ugnay para sa amin upang mag-follow up sa iyo …</string>
     <string name="com_kustomer_our_current_wait_time_is_approximately">Ang aming kasalukuyang oras ng paghihintay ay humigit-kumulang</string>
     <string name="com_kustomer_upfront_volume_control_alternative_method_question">Maaari mong piliin na maghintay para sa susunod na magagamit na ahente o pumili ng isang alternatibo\", amin upang mag-follow up sa iyo.</string>
     <string name="com_kustomer_volume_control_email_question">Mahusay, ano ang pinakamahusay na email upang maabot ka sa?</string>
     <string name="com_kustomer_volume_control_phone_question">Mahusay, ano ang pinakamahusay na numero ng telepono upang maabot ka sa?</string>
     <string name="com_kustomer_volume_control_thankyou_response">Salamat. Kami ay babalik sa iyo sa ilang sandali.</string>
-    <string name="com_kustomer_greater_than_one_day">mas malaki kaysa sa isang araw</string>
+    <string name="com_kustomer_unable_to_share_file">Hindi maibahagi ang file.</string>
+    <string name="com_kustomer_unable_to_open_camera">Hindi mabuksan ang camera.</string>
+    <string name="com_kustomer_low_memory_error">Mababang memorya. Hindi ma-upload ang mga larawan.</string>
+
+    <string name="com_kustomer_chat_with_param">Makipag-chat sa %1$s</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_second">Ang iyong inaasahang oras ng paghihintay ay %1$d segundo</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_seconds">Ang inaasahang oras ng paghihintay ay %1$d segundo</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_minute">Ang inaasahang oras ng paghihintay ay %1$d minuto</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_minutes">Ang inaasahang oras ng paghihintay ay %1$d minuto</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_hour">Ang inaasahang oras ng paghihintay ay %1$d oras</string>
+    <string name="com_kustomer_your_expected_wait_time_is_param_hours">Ang inaasahang oras ng paghihintay ay %1$d oras</string>
+    <string name="com_kustomer_your_expected_wait_time_is_greater_than_one_day">Ang iyong inaasahang oras ng paghihintay ay mas malaki sa isang araw</string>
+
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_second">Ang aming kasalukuyang oras ng paghihintay ay humigit-kumulang %1$d segundo</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_seconds">Ang aming kasalukuyang oras ng paghihintay ay humigit-kumulang sa %1$d segundo</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_minute">Ang aming kasalukuyang oras ng paghihintay ay humigit-kumulang %1$d minuto</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_minutes">Ang aming kasalukuyang oras ng paghihintay ay humigit-kumulang na %1$d minuto</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_hour">Ang aming kasalukuyang oras ng paghihintay ay humigit-kumulang na %1$d oras</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_param_hours">Ang aming kasalukuyang oras ng paghihintay ay humigit-kumulang na %1$d oras</string>
+    <string name="com_kustomer_our_expected_wait_time_is_approximately_greater_than_one_day">Ang aming kasalukuyang oras ng paghihintay ay humigit-kumulang na higit sa isang araw</string>
+
+    <string name="com_kustomer_param_minute_ago">%1$d minuto ang nakalipas</string>
+    <string name="com_kustomer_param_minutes_ago">%1$d minuto ang nakalipas</string>
+    <string name="com_kustomer_param_hour_ago">%1$d oras ang nakalipas</string>
+    <string name="com_kustomer_param_hours_ago">%1$d oras ang nakalipas</string>
+    <string name="com_kustomer_param_day_ago">%1$d araw na nakalipas</string>
+    <string name="com_kustomer_param_days_ago">%1$d araw na nakalipas</string>
+    <string name="com_kustomer_param_week_ago">%1$d linggo nakaraan</string>
+    <string name="com_kustomer_param_weeks_ago">%1$d linggo nakaraan</string>
 
     <string name="com_kustomer_submit">Ipasa</string>
     <string name="com_kustomer_thank_you_for_your_feedback">Salamat sa iyo para sa iyong feedback!</string>
     <string name="com_kustomer_edit">I-edit</string>
-
 </resources>

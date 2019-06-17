@@ -257,6 +257,11 @@ public class SessionViewHolder extends RecyclerView.ViewHolder implements KUSObj
     }
 
     @Override
+    public void onChatSessionEnded(@NonNull KUSChatMessagesDataSource dataSource) {
+
+    }
+
+    @Override
     public void onReceiveTypingUpdate(@NonNull KUSChatMessagesDataSource source, @Nullable KUSTypingIndicator typingIndicator) {
         //No need to do anything here
     }

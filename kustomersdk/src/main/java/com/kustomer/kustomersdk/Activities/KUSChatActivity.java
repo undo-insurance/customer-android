@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.PersistableBundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -327,6 +326,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
 
         chatMessagesDataSource.addListener(this);
         chatMessagesDataSource.fetchLatest();
+        chatMessagesDataSource.fetchSatisfactionResponseIfNecessary();
         if (!chatMessagesDataSource.isFetched()) {
             progressDialog.show();
         }
@@ -890,13 +890,6 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
                     checkShouldShowInputView();
                     checkShouldShowCloseChatButtonView();
 
-                    KUSChatSession session = (KUSChatSession) userSession
-                            .getChatSessionsDataSource().findById(getValidChatSessionId());
-
-                    if (session != null && session.getLockedAt() != null) {
-                        chatMessagesDataSource.stopListeningForTypingUpdate();
-                    }
-
                     if (dataSource.getSize() >= 1)
                         setupToolbar();
 
@@ -937,6 +930,23 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
                 setupToolbar();
                 checkShouldShowEmailInput();
                 chatMessagesDataSource.startListeningForTypingUpdate();
+            }
+        };
+        handler.post(runnable);
+    }
+
+    @Override
+    public void onChatSessionEnded(@NonNull final KUSChatMessagesDataSource dataSource) {
+        Handler handler = new Handler(Looper.getMainLooper());
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                if (dataSource == chatMessagesDataSource) {
+                    adapter.notifyDataSetChanged();
+                    checkShouldShowInputView();
+                    checkShouldShowCloseChatButtonView();
+                    chatMessagesDataSource.stopListeningForTypingUpdate();
+                }
             }
         };
         handler.post(runnable);

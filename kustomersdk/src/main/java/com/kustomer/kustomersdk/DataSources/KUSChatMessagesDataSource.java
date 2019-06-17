@@ -193,7 +193,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
 
     @Nullable
     public KUSSatisfactionResponseDataSource getSatisfactionResponseDataSource() {
-        if (satisfactionResponseDataSource == null && isActualSession()) {
+        if (satisfactionResponseDataSource == null && isActualSession() && getUserSession() != null) {
             satisfactionResponseDataSource = new KUSSatisfactionResponseDataSource(getUserSession(),
                     sessionId);
             satisfactionResponseDataSource.addListener(this);
@@ -547,11 +547,8 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
                         if (session != null)
                             session.setLockedAt(new Date());
 
-                        // Cancel Volume Control Polling if necessary
-                        if (sessionQueuePollingManager != null)
-                            sessionQueuePollingManager.cancelPolling();
+                        notifyAnnouncersChatHasEnded();
 
-                        notifyAnnouncersOnContentChange();
                         if (onEndChatListener != null)
                             onEndChatListener.onComplete(true);
                     }
@@ -740,6 +737,9 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
     }
 
     public void startListeningForTypingUpdate() {
+        if(getUserSession() == null)
+            return;
+
         if (!isActualSession())
             return;
 
@@ -759,6 +759,9 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
     }
 
     public void stopListeningForTypingUpdate() {
+        if(getUserSession() == null)
+            return;
+
         sendTypingStatusToPusher(KUSTypingStatus.KUS_TYPING_ENDED);
         getUserSession().getPushClient().disconnectFromChatActivityChannel();
         getUserSession().getPushClient().removeTypingStatusListener();
@@ -775,6 +778,9 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
     }
 
     public boolean isLatestMessageAfterLastSeen(){
+        if(getUserSession() == null)
+            return false;
+
         KUSChatSession chatSession= (KUSChatSession) getUserSession().getChatSessionsDataSource()
                 .findById(sessionId);
 
@@ -796,6 +802,32 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
                 && chatSession.getLastMessageAt().after(latestChatMessage.getCreatedAt()));
 
         return lastSeenBeforeMessage && lastMessageAtNewerThanLocalLastMessage;
+    }
+
+    public void fetchSatisfactionResponseIfNecessary() {
+        if (getUserSession() == null)
+            return;
+
+        if(getSatisfactionResponseDataSource() == null)
+            return;
+
+        KUSChatSession chatSession = (KUSChatSession) getUserSession().getChatSessionsDataSource()
+                .findById(sessionId);
+
+        if (chatSession == null)
+            return;
+
+        boolean isChatClosed = chatSession.getLockedAt() != null;
+        boolean isSatisfactionResponseFetched = getSatisfactionResponseDataSource().isFetched();
+        boolean isSatisfactionFormEnabled = getSatisfactionResponseDataSource().isSatisfactionEnabled();
+        boolean hasAgentMessage = getOtherUserIds().size() > 0;
+
+        boolean needSatisfactionForm = isChatClosed && hasAgentMessage;
+        boolean shouldFetchSatisfactionForm = !isSatisfactionResponseFetched && isSatisfactionFormEnabled
+                && needSatisfactionForm;
+
+        if (shouldFetchSatisfactionForm)
+            getSatisfactionResponseDataSource().fetch();
     }
 
     //endregion
@@ -865,32 +897,6 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
                 }
             }
         }, KUS_TYPING_ENDED_DELAY);
-    }
-
-    private void fetchSatisfactionResponseIfNecessary() {
-        if (getUserSession() == null)
-            return;
-
-        if(getSatisfactionResponseDataSource() == null)
-            return;
-
-        KUSChatSession chatSession = (KUSChatSession) getUserSession().getChatSessionsDataSource()
-                .findById(sessionId);
-
-        if (chatSession == null)
-            return;
-
-        boolean isChatClosed = chatSession.getLockedAt() != null;
-        boolean isSatisfactionResponseFetched = getSatisfactionResponseDataSource().isFetched();
-        boolean isSatisfactionFormEnabled = getSatisfactionResponseDataSource().isSatisfactionEnabled();
-        boolean hasAgentMessage = getOtherUserIds().size() > 0;
-
-        boolean needSatisfactionForm = isChatClosed && hasAgentMessage;
-        boolean shouldFetchSatisfactionForm = !isSatisfactionResponseFetched && isSatisfactionFormEnabled
-                && needSatisfactionForm;
-
-        if (shouldFetchSatisfactionForm)
-            getSatisfactionResponseDataSource().fetch();
     }
 
     private void fullySendMessage(final List<KUSModel> temporaryMessages, final List<Bitmap> attachments,
@@ -1740,7 +1746,8 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
             closeProactiveCampaignIfNecessary();
 
         // Update the locally session last seen
-        getUserSession().getChatSessionsDataSource().updateLocallyLastSeenAtForSessionId(sessionId);
+        if(getUserSession()!=null)
+            getUserSession().getChatSessionsDataSource().updateLocallyLastSeenAtForSessionId(sessionId);
     }
 
     @Nullable
@@ -1833,6 +1840,15 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
         }
     }
 
+    public void notifyAnnouncersChatHasEnded() {
+        for (KUSPaginatedDataSourceListener listener : listeners) {
+
+            if (listener instanceof KUSChatMessagesDataSourceListener) {
+                ((KUSChatMessagesDataSourceListener) listener).onChatSessionEnded(this);
+            }
+        }
+    }
+
     //endregion
 
     //region Listener
@@ -1877,6 +1893,15 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
     }
 
     @Override
+    public void onChatSessionEnded(@NonNull KUSChatMessagesDataSource dataSource) {
+        // Cancel Volume Control Polling if necessary
+        if (sessionQueuePollingManager != null)
+            sessionQueuePollingManager.cancelPolling();
+
+        fetchSatisfactionResponseIfNecessary();
+    }
+
+    @Override
     public void onReceiveTypingUpdate(@NonNull KUSChatMessagesDataSource source, @Nullable KUSTypingIndicator typingIndicator) {
         //No need to do anything here
     }
@@ -1899,7 +1924,6 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
     public void onContentChange(KUSPaginatedDataSource dataSource) {
         insertFormMessageIfNecessary();
         insertVolumeControlFormMessageIfNecessary();
-        fetchSatisfactionResponseIfNecessary();
     }
 
     @Override

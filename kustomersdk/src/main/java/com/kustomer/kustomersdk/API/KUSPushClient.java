@@ -418,7 +418,7 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
                 });
     }
 
-    private void fetchSessionForId(@Nullable final String sessionId) {
+    private void fetchEndedSessionForId(@Nullable final String endedSessionId) {
         if (userSession.get() == null)
             return;
 
@@ -438,7 +438,7 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
                             Runnable runnable = new Runnable() {
                                 @Override
                                 public void run() {
-                                    fetchSessionForId(sessionId);
+                                    fetchEndedSessionForId(endedSessionId);
                                 }
                             };
                             handler.postDelayed(runnable, KUS_RETRY_DELAY);
@@ -454,8 +454,8 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
                         if (chatSessions != null) {
                             for (KUSModel model : chatSessions) {
                                 KUSChatSession session = (KUSChatSession) model;
-                                if (session.getId().equals(sessionId)) {
-                                    upsertSession(Collections.singletonList((KUSModel) session));
+                                if (session.getId().equals(endedSessionId)) {
+                                    upsertEndedSessionAndNotify(Collections.singletonList((KUSModel) session));
                                 }
                             }
                         }
@@ -493,7 +493,7 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
         });
     }
 
-    private void upsertSession(@Nullable List<KUSModel> chatSessions) {
+    private void upsertEndedSessionAndNotify(@Nullable List<KUSModel> chatSessions) {
         if (userSession.get() == null || chatSessions == null || chatSessions.isEmpty()) {
             return;
         }
@@ -510,7 +510,7 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
                         .chatMessageDataSourceForSessionId(session.getId());
 
                 if (messagesDataSource != null)
-                    messagesDataSource.fetchLatest();
+                    messagesDataSource.notifyAnnouncersChatHasEnded();
             }
         } else {
 
@@ -519,7 +519,7 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
                     .chatMessageDataSourceForSessionId(chatSession.getId());
 
             if (messagesDataSource != null)
-                messagesDataSource.fetchLatest();
+                messagesDataSource.notifyAnnouncersChatHasEnded();
         }
     }
 
@@ -559,13 +559,13 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
         if (isMessageClipped) {
             String sessionId = JsonHelper.stringFromKeyPath(jsonObject, "data.id");
 
-            fetchSessionForId(sessionId);
+            fetchEndedSessionForId(sessionId);
 
         } else {
             List<KUSModel> chatSessions = userSession.get().getChatSessionsDataSource()
                     .objectsFromJSON(JsonHelper.jsonObjectFromKeyPath(jsonObject, "data"));
 
-            upsertSession(chatSessions);
+            upsertEndedSessionAndNotify(chatSessions);
         }
     }
 

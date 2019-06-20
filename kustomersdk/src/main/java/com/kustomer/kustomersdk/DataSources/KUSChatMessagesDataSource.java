@@ -91,6 +91,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
     private KUSFormQuestion formQuestion;
     private boolean submittingForm = false;
     private boolean creatingSession = false;
+    private boolean isChatEnding;
 
     private int vcFormQuestionIndex;
     private boolean vcTrackingStarted;
@@ -128,6 +129,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
         vcFormActive = false;
         vcChatClosed = false;
         nonBusinessHours = false;
+        isChatEnding=false;
         temporaryVCMessagesResponses = new ArrayList<>();
         delayedChatMessageIds = new HashSet<>();
         messageRetryHashMap = new HashMap<>();
@@ -520,6 +522,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
             return;
         }
 
+        isChatEnding =true;
         getUserSession().getRequestManager().performRequestType(
                 KUSRequestType.KUS_REQUEST_TYPE_PUT,
                 String.format(KUSConstants.URL.SESSION_LOCK_ENDPOINT, sessionId),
@@ -531,6 +534,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
                 new KUSRequestCompletionListener() {
                     @Override
                     public void onCompletion(Error error, JSONObject response) {
+                        isChatEnding =false;
                         if (getUserSession() == null) {
                             if (onEndChatListener != null)
                                 onEndChatListener.onComplete(false);
@@ -540,6 +544,9 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
                         if (error != null) {
                             if (onEndChatListener != null)
                                 onEndChatListener.onComplete(false);
+
+                            //Submit VCForm response if pending
+                            insertVolumeControlFormMessageIfNecessary();
                             return;
                         }
                         // Temporary set locked at to reflect changes in UI
@@ -1142,8 +1149,12 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
 
         // If last question, send request on backend
         if (vcFormQuestionIndex == 3) {
-            endVolumeControlTracking();
-            submitVCFormResponses();
+
+            // Submit VCForm response if chatEnding request is not in process
+            if(!isChatEnding) {
+                endVolumeControlTracking();
+                submitVCFormResponses();
+            }
             return;
 
         }
@@ -1222,7 +1233,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
         Runnable timeOutRunnable = new Runnable() {
             @Override
             public void run() {
-                KUSChatMessagesDataSource strongReference = weakReference.get();
+                final KUSChatMessagesDataSource strongReference = weakReference.get();
                 if (strongReference == null) {
                     return;
                 }
@@ -1230,7 +1241,13 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
                 // End Control Tracking and Automatically marked it Closed, if form not end
                 if (!strongReference.vcFormEnd) {
                     strongReference.endVolumeControlTracking();
-                    strongReference.endChat("timed_out", null);
+                    strongReference.endChat("timed_out", new OnEndChatListener() {
+                        @Override
+                        public void onComplete(boolean success) {
+                            if(success)
+                                strongReference.endVolumeControlTracking();
+                        }
+                    });
                 }
             }
         };

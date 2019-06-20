@@ -71,7 +71,7 @@ public class UserMessageViewHolder extends RecyclerView.ViewHolder {
         ButterKnife.bind(this,itemView);
     }
 
-    public void onBind(final KUSChatMessage chatMessage, boolean showDate, final MessageListAdapter.ChatMessageItemListener listener){
+    public void onBind(final KUSChatMessage chatMessage, boolean showDate, MessageListAdapter.ChatMessageItemListener listener){
         this.chatMessage = chatMessage;
         this.mListener = listener;
 
@@ -91,7 +91,7 @@ public class UserMessageViewHolder extends RecyclerView.ViewHolder {
             retry.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    listener.onChatMessageErrorClicked(chatMessage);
+                    mListener.onChatMessageErrorClicked(chatMessage);
                 }
             });
         }else{
@@ -108,6 +108,7 @@ public class UserMessageViewHolder extends RecyclerView.ViewHolder {
 
         updateAlphaForState();
     }
+
     //endregion
 
     //region Private Methods
@@ -164,19 +165,17 @@ public class UserMessageViewHolder extends RecyclerView.ViewHolder {
             case KUS_CHAT_MESSAGE_STATE_SENT:
                 tvMessage.setAlpha(1.0f);
                 attachmentLayout.setAlpha(1.0f);
+                stopTimer();
                 break;
             case KUS_CHAT_MESSAGE_STATE_SENDING:{
                 long timeElapsed = Calendar.getInstance().getTimeInMillis() - chatMessage.getCreatedAt().getTime();
                 if(timeElapsed >= OPTIMISTIC_SEND_LOADING_DELAY){
                     tvMessage.setAlpha(0.5f);
                     attachmentLayout.setAlpha(0.5f);
+                    stopTimer();
                 }else{
                     tvMessage.setAlpha(1.0f);
                     attachmentLayout.setAlpha(1.0f);
-
-                    if(sendingFadingTimer != null)
-                        sendingFadingTimer.cancel();
-                    sendingFadingTimer = null;
 
                     long timeInterval = OPTIMISTIC_SEND_LOADING_DELAY - timeElapsed;
                     startTimer(timeInterval);
@@ -187,16 +186,21 @@ public class UserMessageViewHolder extends RecyclerView.ViewHolder {
             case KUS_CHAT_MESSAGE_STATE_FAILED:
                 tvMessage.setAlpha(0.5f);
                 attachmentLayout.setAlpha(0.5f);
+                stopTimer();
                 break;
+        }
+    }
+
+    private void stopTimer(){
+        if(sendingFadingTimer != null) {
+            sendingFadingTimer.cancel();
+            sendingFadingTimer = null;
         }
     }
 
     private void startTimer(long time) {
         try {
-            if(sendingFadingTimer != null) {
-                sendingFadingTimer.cancel();
-                sendingFadingTimer = null;
-            }
+            stopTimer();
 
             final Handler handler = new Handler();
             sendingFadingTimer = new Timer();

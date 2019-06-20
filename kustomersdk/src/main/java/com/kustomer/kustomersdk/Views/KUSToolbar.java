@@ -85,17 +85,17 @@ public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, 
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
 
-        if (userSession != null && userSession.getChatSettingsDataSource() != null)
+        if (userSession != null) {
             userSession.getChatSettingsDataSource().removeListener(this);
-
-        if (userSession != null && userSession.getChatSessionsDataSource() != null)
             userSession.getChatSessionsDataSource().removeListener(this);
+            userSession.getScheduleDataSource().removeListener(this);
+        }
 
         if (userDataSource != null)
             userDataSource.removeListener(this);
 
-        if (chatMessagesDataSource != null)
-        {
+        if (chatMessagesDataSource != null) {
+
             if(chatMessagesDataSource.getSessionQueuePollingManager() != null)
                 chatMessagesDataSource.getSessionQueuePollingManager().removeListener(this);
 
@@ -110,13 +110,20 @@ public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, 
         this.userSession = userSession;
         kusMultipleAvatarsView.initWithUserSession(userSession);
 
-        this.userSession.getChatSettingsDataSource().addListener(this);
-        this.userSession.getChatSessionsDataSource().addListener(this);
-        this.userSession.getScheduleDataSource().addListener(this);
+        userSession.getChatSessionsDataSource().addListener(this);
+
+        if (!userSession.getChatSettingsDataSource().isFetched()){
+            userSession.getChatSettingsDataSource().addListener(this);
+            userSession.getChatSettingsDataSource().fetch();
+        }
+
+        if (!userSession.getScheduleDataSource().isFetched()){
+            userSession.getScheduleDataSource().addListener(this);
+            userSession.getScheduleDataSource().fetch();
+        }
 
         updateTextLabel();
         updateBackButtonBadge();
-
     }
     //endregion
 
@@ -241,8 +248,11 @@ public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, 
 
         KUSUser firstOtherUser = null;
         if (userDataSource != null) {
-            userDataSource.addListener(this);
             firstOtherUser = (KUSUser) userDataSource.getObject();
+            if (firstOtherUser == null) {
+                userDataSource.addListener(this);
+                userDataSource.fetch();
+            }
         }
 
         String responderName = "";
@@ -335,23 +345,25 @@ public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, 
         }
 
         chatMessagesDataSource = userSession.getChatMessagesDataSources().get(sessionId);
-        chatMessagesDataSource.addListener(this);
+        if (chatMessagesDataSource != null) {
+            chatMessagesDataSource.addListener(this);
 
-        if(chatMessagesDataSource.getSessionQueuePollingManager() != null)
-            chatMessagesDataSource.getSessionQueuePollingManager().addListener(this);
+            if(chatMessagesDataSource.getSessionQueuePollingManager() != null)
+                chatMessagesDataSource.getSessionQueuePollingManager().addListener(this);
 
-        kusMultipleAvatarsView.setUserIds(chatMessagesDataSource.getOtherUserIds());
+            kusMultipleAvatarsView.setUserIds(chatMessagesDataSource.getOtherUserIds());
 
-        boolean isVolumeControlPollingActive = chatMessagesDataSource.getSessionQueuePollingManager() != null
-                && chatMessagesDataSource.getSessionQueuePollingManager().getPollingStarted()
-                && !chatMessagesDataSource.getSessionQueuePollingManager().getPollingCanceled();
+            boolean isVolumeControlPollingActive = chatMessagesDataSource.getSessionQueuePollingManager() != null
+                    && chatMessagesDataSource.getSessionQueuePollingManager().getPollingStarted()
+                    && !chatMessagesDataSource.getSessionQueuePollingManager().getPollingCanceled();
 
-        if(isVolumeControlPollingActive){
-            KUSSessionQueue sessionQueue = chatMessagesDataSource.getSessionQueuePollingManager().getSessionQueue();
+            if(isVolumeControlPollingActive){
+                KUSSessionQueue sessionQueue = chatMessagesDataSource.getSessionQueuePollingManager().getSessionQueue();
 
-            if(sessionQueue != null)
-                waitingMessage = KUSDate.humanReadableUpfrontVolumeControlWaitingTimeFromSeconds(
-                        getContext(),sessionQueue.getEstimatedWaitTimeSeconds());
+                if(sessionQueue != null)
+                    waitingMessage = KUSDate.humanReadableUpfrontVolumeControlWaitingTimeFromSeconds(
+                            getContext(),sessionQueue.getEstimatedWaitTimeSeconds());
+            }
         }
 
         updateTextLabel();
@@ -407,6 +419,7 @@ public class KUSToolbar extends Toolbar implements KUSObjectDataSourceListener, 
     //region Listeners
     @Override
     public void objectDataSourceOnLoad(KUSObjectDataSource dataSource) {
+        dataSource.removeListener(this);
         Handler handler = new Handler(Looper.getMainLooper());
         Runnable runnable = new Runnable() {
             @Override

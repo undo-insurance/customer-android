@@ -90,7 +90,6 @@ public class KUSAvatarImageView extends FrameLayout implements KUSObjectDataSour
     //region Public Methods
     public void initWithUserSession(KUSUserSession userSession){
         this.userSession = userSession;
-        userSession.getChatSettingsDataSource().addListener(this);
 
         staticImageView = new ImageView(getContext());
         staticImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
@@ -128,9 +127,6 @@ public class KUSAvatarImageView extends FrameLayout implements KUSObjectDataSour
         this.userId = userId;
         this.userDataSource = userSession.userDataSourceForUserId(userId);
 
-        if(userDataSource != null)
-            userDataSource.addListener(this);
-
         updateAvatarImage();
     }
 
@@ -154,7 +150,7 @@ public class KUSAvatarImageView extends FrameLayout implements KUSObjectDataSour
             getContext().getTheme().resolveAttribute(R.attr.kus_company_image, typedValue, true);
             int drawableRes = typedValue.resourceId;
 
-            Drawable companyAvatarImage = null;
+            Drawable companyAvatarImage;
 
             companyAvatarImage = getContext().getResources().getDrawable(drawableRes);
             if(this.userId == null && companyAvatarImage != null){
@@ -162,21 +158,22 @@ public class KUSAvatarImageView extends FrameLayout implements KUSObjectDataSour
                 return;
             }
 
-        } catch (Exception e) {}
+        } catch (Exception ignored) {}
 
         KUSUser user = null;
         if(userDataSource != null) {
             user = (KUSUser) userDataSource.getObject();
-            if (user == null && !userDataSource.isFetching()) {
+            if (user == null) {
+                userDataSource.addListener(this);
                 userDataSource.fetch();
             }
         }
 
         KUSChatSettings chatSettings = (KUSChatSettings) userSession.getChatSettingsDataSource().getObject();
-        if(userSession.getChatSettingsDataSource() != null && chatSettings == null && !this.userSession.getChatSettingsDataSource().isFetching()){
+        if(chatSettings == null){
+            userSession.getChatSettingsDataSource().addListener(this);
             userSession.getChatSettingsDataSource().fetch();
         }
-
 
         String name = "";
         if (user != null && user.getDisplayName() != null)
@@ -239,28 +236,15 @@ public class KUSAvatarImageView extends FrameLayout implements KUSObjectDataSour
     //region Listener
     @Override
     public void objectDataSourceOnLoad(final KUSObjectDataSource dataSource) {
-
-        if(dataSource == userSession.getChatSettingsDataSource()){
-            Handler handler = new Handler(Looper.getMainLooper());
-            Runnable runnable = new Runnable() {
-                @Override
-                public void run() {
-                    updateAvatarImage();
-                }
-            };
-            handler.post(runnable);
-        }else if(dataSource == userDataSource){
-            Handler handler = new Handler(Looper.getMainLooper());
-            Runnable runnable = new Runnable() {
-                @Override
-                public void run() {
-                    updateAvatarImage();
-                }
-            };
-            handler.post(runnable);
-        }
-
-
+        dataSource.removeListener(this);
+        Handler handler = new Handler(Looper.getMainLooper());
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                updateAvatarImage();
+            }
+        };
+        handler.post(runnable);
     }
 
     @Override

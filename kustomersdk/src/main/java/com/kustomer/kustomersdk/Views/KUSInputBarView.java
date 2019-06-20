@@ -95,6 +95,16 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
         setListeners();
         setupAdapter();
     }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+
+        if (userSession != null) {
+            userSession.getChatSettingsDataSource().removeListener(this);
+            userSession.getScheduleDataSource().removeListener(this);
+        }
+    }
     //endregion
 
     //region Initializer
@@ -156,8 +166,17 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
     //region Public Methods
     public void initWithUserSession(KUSUserSession userSession) {
         this.userSession = userSession;
-        this.userSession.getChatSettingsDataSource().addListener(this);
-        this.userSession.getScheduleDataSource().addListener(this);
+
+        if (!userSession.getChatSettingsDataSource().isFetched()){
+            userSession.getChatSettingsDataSource().addListener(this);
+            userSession.getChatSettingsDataSource().fetch();
+        }
+
+        if (!userSession.getScheduleDataSource().isFetched()){
+            userSession.getScheduleDataSource().addListener(this);
+            userSession.getScheduleDataSource().fetch();
+        }
+
         updatePlaceHolder();
     }
 

@@ -107,6 +107,7 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
         if (chatSessionsDataSource != null)
             chatSessionsDataSource.removeListener(this);
 
+        rvSessions.setAdapter(null);
         userSession.getPushClient().setSupportScreenShown(false);
         super.onDestroy();
     }

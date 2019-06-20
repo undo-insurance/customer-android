@@ -78,21 +78,20 @@ public class KUSLargeImageViewer implements View.OnClickListener {
 
         currentImageLink = imageURIs.get(startingIndex);
 
-        imageViewer = BxImageViewer.getInstance(mContext);
-        imageViewer.initialization()
+        imageViewer = new  BxImageViewer.Builder(mContext)
                 .setImageChangeListener(new BxImageViewer.OnImageChangeListener() {
                     @Override
                     public void onImageChanged(int position) {
-                        tvheader.setText(String.format(Locale.getDefault(), "%d/%d", position + 1, imageURIs.size()));
+                        tvheader.setText(String.format(Locale.getDefault(),
+                                "%d/%d", position + 1, imageURIs.size()));
                         currentImageLink = imageURIs.get(position);
                     }
                 })
                 .setImageMarginPx((int) KUSUtils.dipToPixels(mContext, 20.0f))
-                .addDataSet(imageURIs)
+                .setDataSet(imageURIs)
                 .setStartPosition(startingIndex)
-                .setOverlayView(header)
+                .setHeaderView(header)
                 .show();
-
     }
 
     private void shareImage() {
@@ -188,7 +187,7 @@ public class KUSLargeImageViewer implements View.OnClickListener {
     public void onClick(View v) {
         if (v == ivClose) {
             if (imageViewer != null) {
-                imageViewer.onDismiss();
+                imageViewer.dismiss();
             }
         } else if (v == ivShare) {
             shareImage();

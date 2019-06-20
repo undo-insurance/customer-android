@@ -75,7 +75,11 @@ public class SessionViewHolder extends RecyclerView.ViewHolder implements KUSObj
         mUserSession = userSession;
         mChatSession = chatSession;
 
-        mUserSession.getChatSettingsDataSource().addListener(this);
+        clearListeners();
+
+        if(!mUserSession.getChatSettingsDataSource().isFetched())
+            mUserSession.getChatSettingsDataSource().addListener(this);
+
         chatMessagesDataSource = userSession.chatMessageDataSourceForSessionId(chatSession.getId());
         chatMessagesDataSource.addListener(this);
         if (!chatMessagesDataSource.isFetched() && !chatMessagesDataSource.isFetching())
@@ -93,17 +97,21 @@ public class SessionViewHolder extends RecyclerView.ViewHolder implements KUSObj
     }
 
     public void onDetached() {
-        if (mUserSession != null && mUserSession.getChatSettingsDataSource() != null)
-            mUserSession.getChatSettingsDataSource().removeListener(this);
-
-        if (userDataSource != null)
-            userDataSource.removeListener(this);
-
-        if (chatMessagesDataSource != null)
-            chatMessagesDataSource.removeListener(this);
+        clearListeners();
     }
 
     //region Private Methods
+    private void clearListeners(){
+        if (mUserSession != null && mUserSession.getChatSettingsDataSource() != null)
+            mUserSession.getChatSettingsDataSource().removeListener(this);
+
+        if (chatMessagesDataSource != null)
+            chatMessagesDataSource.removeListener(this);
+
+        if (userDataSource != null)
+            userDataSource.removeListener(this);
+    }
+
     private void updateAvatar() {
         imageLayout.removeAllViews();
 
@@ -130,12 +138,14 @@ public class SessionViewHolder extends RecyclerView.ViewHolder implements KUSObj
 
         userDataSource = mUserSession.userDataSourceForUserId(chatMessagesDataSource.getFirstOtherUserId());
 
-        if (userDataSource != null)
-            userDataSource.addListener(this);
-
-        //Title text (from last responder, chat settings or organization name)
-        KUSUser firstOtherUser = userDataSource != null ? (KUSUser) userDataSource.getObject() : null;
-
+        KUSUser firstOtherUser = null;
+        if (userDataSource != null) {
+            firstOtherUser = (KUSUser) userDataSource.getObject();
+            if (firstOtherUser == null) {
+                userDataSource.addListener(this);
+                userDataSource.fetch();
+            }
+        }
 
         String responderName = firstOtherUser != null ? firstOtherUser.getDisplayName() : null;
 
@@ -212,6 +222,7 @@ public class SessionViewHolder extends RecyclerView.ViewHolder implements KUSObj
     //region Listener
     @Override
     public void objectDataSourceOnLoad(KUSObjectDataSource dataSource) {
+        dataSource.removeListener(this);
         Handler handler = new Handler(Looper.getMainLooper());
         Runnable runnable = new Runnable() {
             @Override

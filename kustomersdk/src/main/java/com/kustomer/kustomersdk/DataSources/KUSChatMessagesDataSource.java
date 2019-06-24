@@ -1000,66 +1000,47 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
         if (form == null)
             return;
 
-        // Make sure we submit the form if we just inserted a non-response question
-        if (!submittingForm && !KUSFormQuestion.KUSFormQuestionRequiresResponse(formQuestion)
-                && questionIndex == form.getQuestions().size() - 1 && delayedChatMessageIds.size() == 0)
-            submitFormResponses();
-
-        KUSChatMessage lastMessage = getLatestMessage();
-        if (!KUSChatMessageSentByUser(lastMessage))
-            return;
-
         if (shouldPreventSendingMessage())
             return;
 
-        long additionalInsertDelay = 0;
-        int latestQuestionIndex = questionIndex;
-        int startingOffset = formQuestion != null ? 1 : 0;
-        for (int i = Math.max(questionIndex + startingOffset, 0); i < form.getQuestions().size(); i++) {
-            KUSFormQuestion question = form.getQuestions().get(i);
+        KUSChatMessage lastMessage = getLatestMessage();
 
-            Date createdAt = new Date(lastMessage.getCreatedAt().getTime()
-                    + KUS_CHAT_AUTO_REPLY_DELAY + additionalInsertDelay);
+        boolean isResponseRequired = KUSFormQuestion.KUSFormQuestionRequiresResponse(formQuestion);
+        boolean isAnswered = KUSChatMessageSentByUser(lastMessage);
 
-            String questionId = String.format("question_%s", question.getId());
+        if (isResponseRequired && !isAnswered)
+            return;
 
-            JSONObject attributes = new JSONObject();
-            try {
-                attributes.put("body", question.getPrompt());
-                attributes.put("direction", "out");
-                attributes.put("createdAt", KUSDate.stringFromDate(createdAt));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+        boolean isLastQuestion = questionIndex == form.getQuestions().size() - 1;
 
-            JSONObject messageJSON = new JSONObject();
-            try {
-                messageJSON.put("type", "chat_message");
-                messageJSON.put("id", questionId);
-                messageJSON.put("attributes", attributes);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            try {
-                KUSChatMessage formMessage = new KUSChatMessage(messageJSON);
-                insertDelayedMessage(formMessage);
-                additionalInsertDelay += KUS_CHAT_AUTO_REPLY_DELAY;
-
-            } catch (KUSInvalidJsonException e) {
-                e.printStackTrace();
-            }
-
-            latestQuestionIndex = i;
-            if (KUSFormQuestion.KUSFormQuestionRequiresResponse(question))
-                break;
+        if (isLastQuestion && !submittingForm) {
+            submitFormResponses();
+            return;
         }
 
-        if (latestQuestionIndex == questionIndex)
-            submitFormResponses();
-        else
-            questionIndex = latestQuestionIndex;
+        questionIndex++;
         formQuestion = form.getQuestions().get(questionIndex);
+        final Date createdAt = new Date(lastMessage.getCreatedAt().getTime() + KUS_CHAT_AUTO_REPLY_DELAY);
+        final String questionId = String.format("question_%s", formQuestion.getId());
+
+        final JSONObject attributesJson = JsonHelper.jsonObjectFromHashMap(new HashMap<String, Object>() {{
+            put("body", formQuestion.getPrompt());
+            put("direction", "out");
+            put("createdAt", KUSDate.stringFromDate(createdAt));
+        }});
+
+        JSONObject messageJson = JsonHelper.jsonObjectFromHashMap(new HashMap<String, Object>() {{
+            put("type", "chat_message");
+            put("id", questionId);
+            put("attributes", attributesJson);
+        }});
+
+        try {
+            KUSChatMessage formMessage = new KUSChatMessage(messageJson);
+            insertDelayedMessage(formMessage);
+        } catch (KUSInvalidJsonException e) {
+            KUSLog.KUSLogError(e.getMessage());
+        }
     }
 
     private boolean shouldPreventVCFormQuestionMessage() {
@@ -1347,13 +1328,13 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
                                 }
                             }
 
+                            submittingForm = false;
+                            vcChatClosed = true;
+
                             removeAll(temporaryMessages);
                             removeAll(temporaryVCMessagesResponses);
                             upsertNewMessages(chatMessages);
-
                         }
-                        vcChatClosed = true;
-                        submittingForm = false;
 
                         // Cancel Volume Control Polling if necessary
                         if (sessionQueuePollingManager != null)

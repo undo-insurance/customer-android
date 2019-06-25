@@ -975,7 +975,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
             public void run() {
                 if (dataSource == chatMessagesDataSource) {
                     adapter.notifyDataSetChanged();
-                    checkShouldShowInputView();
+                    checkShouldUpdateInputView();
                     checkShouldShowCloseChatButtonView();
                     chatMessagesDataSource.stopListeningForTypingUpdate();
                 }

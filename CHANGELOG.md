@@ -1,5 +1,11 @@
 # Changelog for Kustomer Android SDK
 
+## 0.2.5
+Release Date: 06/26/2019
+* Optimized & Improved Performance of API calls that fetch Satisfaction Forms data
+* Fixed duplicate chatbot text issue in conversational form
+* Fixed volume control prompt issue on network reconnection
+
 ## 0.2.4
 Release Date: 06/10/2019
 * Embedded Link issue fixed

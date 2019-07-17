@@ -11,7 +11,7 @@ public class KUSConstants {
     }
 
     public interface URL {
-        String HOST_NAME = "kustomerapp.com";
+        String HOST_NAME = "helpapp.io";
         String PUSHER_AUTH = "/c/v1/pusher/auth";
         String MESSAGES_LIST_ENDPOINT = "/c/v1/chat/sessions/%s/messages";
         String SEND_MESSAGE_ENDPOINT = "/c/v1/chat/messages";

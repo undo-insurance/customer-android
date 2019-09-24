@@ -17,7 +17,7 @@ import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.LazyHeaders;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.kustomer.kustomersdk.Adapters.MessageListAdapter;
+import com.kustomer.kustomersdk.Adapters.KUSMessageListAdapter;
 import com.kustomer.kustomersdk.Enums.KUSChatMessageState;
 import com.kustomer.kustomersdk.Enums.KUSChatMessageType;
 import com.kustomer.kustomersdk.Helpers.KUSCache;
@@ -41,7 +41,7 @@ import butterknife.ButterKnife;
  * Created by Junaid on 1/19/2018.
  */
 
-public class UserMessageViewHolder extends RecyclerView.ViewHolder {
+public class KUSUserMessageViewHolder extends RecyclerView.ViewHolder {
 
     //region Properties
     private static final long OPTIMISTIC_SEND_LOADING_DELAY = 750;
@@ -62,16 +62,16 @@ public class UserMessageViewHolder extends RecyclerView.ViewHolder {
 
     private boolean imageLoadedSuccessfully = false;
     private KUSChatMessage chatMessage;
-    private MessageListAdapter.ChatMessageItemListener mListener;
+    private KUSMessageListAdapter.ChatMessageItemListener mListener;
     //endregion
 
     //region LifeCycle
-    public UserMessageViewHolder(View itemView) {
+    public KUSUserMessageViewHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this,itemView);
     }
 
-    public void onBind(final KUSChatMessage chatMessage, boolean showDate, MessageListAdapter.ChatMessageItemListener listener){
+    public void onBind(final KUSChatMessage chatMessage, boolean showDate, final KUSMessageListAdapter.ChatMessageItemListener listener){
         this.chatMessage = chatMessage;
         this.mListener = listener;
 

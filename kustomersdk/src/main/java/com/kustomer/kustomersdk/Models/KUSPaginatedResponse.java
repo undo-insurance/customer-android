@@ -2,7 +2,6 @@ package com.kustomer.kustomersdk.Models;
 
 import com.kustomer.kustomersdk.DataSources.KUSPaginatedDataSource;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
-import com.kustomer.kustomersdk.Utils.JsonHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -11,8 +10,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.kustomer.kustomersdk.Utils.JsonHelper.integerFromKeyPath;
-import static com.kustomer.kustomersdk.Utils.JsonHelper.stringFromKeyPath;
+import static com.kustomer.kustomersdk.Utils.KUSJsonHelper.integerFromKeyPath;
+import static com.kustomer.kustomersdk.Utils.KUSJsonHelper.stringFromKeyPath;
 
 /**
  * Created by Junaid on 1/20/2018.

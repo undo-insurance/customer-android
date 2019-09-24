@@ -44,7 +44,7 @@ import com.kustomer.kustomersdk.Models.KUSRetry;
 import com.kustomer.kustomersdk.Models.KUSSessionQueue;
 import com.kustomer.kustomersdk.Models.KUSTypingIndicator;
 import com.kustomer.kustomersdk.R;
-import com.kustomer.kustomersdk.Utils.JsonHelper;
+import com.kustomer.kustomersdk.Utils.KUSJsonHelper;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
 
 import org.json.JSONArray;
@@ -732,7 +732,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
         }};
 
         getUserSession().getPushClient().sendChatActivityForSessionId(sessionId,
-                JsonHelper.jsonObjectFromHashMap(activityData).toString());
+                KUSJsonHelper.jsonObjectFromHashMap(activityData).toString());
 
         if (typingStatus.equals(KUSTypingStatus.KUS_TYPING)) {
             lastTypingStatusSentAt = currentDate;
@@ -1023,13 +1023,13 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
         final Date createdAt = new Date(lastMessage.getCreatedAt().getTime() + KUS_CHAT_AUTO_REPLY_DELAY);
         final String questionId = String.format("question_%s", formQuestion.getId());
 
-        final JSONObject attributesJson = JsonHelper.jsonObjectFromHashMap(new HashMap<String, Object>() {{
+        final JSONObject attributesJson = KUSJsonHelper.jsonObjectFromHashMap(new HashMap<String, Object>() {{
             put("body", formQuestion.getPrompt());
             put("direction", "out");
             put("createdAt", KUSDate.stringFromDate(createdAt));
         }});
 
-        JSONObject messageJson = JsonHelper.jsonObjectFromHashMap(new HashMap<String, Object>() {{
+        JSONObject messageJson = KUSJsonHelper.jsonObjectFromHashMap(new HashMap<String, Object>() {{
             put("type", "chat_message");
             put("id", questionId);
             put("attributes", attributesJson);
@@ -1303,13 +1303,13 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
                         }
 
                         ArrayList<KUSModel> chatMessages = new ArrayList<>();
-                        JSONArray includedModelsJSON = JsonHelper.arrayFromKeyPath(response, "included");
+                        JSONArray includedModelsJSON = KUSJsonHelper.arrayFromKeyPath(response, "included");
 
                         if (includedModelsJSON != null) {
                             for (int i = 0; i < includedModelsJSON.length(); i++) {
                                 try {
                                     JSONObject includedModelJSON = includedModelsJSON.getJSONObject(i);
-                                    String type = JsonHelper.stringFromKeyPath(includedModelJSON, "type");
+                                    String type = KUSJsonHelper.stringFromKeyPath(includedModelJSON, "type");
 
                                     if (type != null && type.equals(new KUSChatMessage().modelType())) {
                                         KUSChatMessage chatMessage = new KUSChatMessage(includedModelJSON);
@@ -1699,12 +1699,12 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
 
     @Override
     public List<KUSModel> objectsFromJSON(JSONObject jsonObject) {
-        return JsonHelper.kusChatModelsFromJSON(Kustomer.getContext(), jsonObject);
+        return KUSJsonHelper.kusChatModelsFromJSON(Kustomer.getContext(), jsonObject);
     }
 
     private void handleMessageSent(JSONObject response, List<KUSModel> temporaryMessages,
                                    List<Bitmap> attachments, List<String> cachedImageKeys) {
-        List<KUSModel> finalMessages = objectsFromJSON(JsonHelper.jsonObjectFromKeyPath(response, "data"));
+        List<KUSModel> finalMessages = objectsFromJSON(KUSJsonHelper.jsonObjectFromKeyPath(response, "data"));
 
         if (finalMessages == null)
             return;

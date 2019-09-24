@@ -17,7 +17,7 @@ import butterknife.ButterKnife;
  * Created by Junaid on 1/19/2018.
  */
 
-public class AgentTypingViewHolder extends RecyclerView.ViewHolder {
+public class KUSAgentTypingViewHolder extends RecyclerView.ViewHolder {
 
     //region Properties
 
@@ -27,7 +27,7 @@ public class AgentTypingViewHolder extends RecyclerView.ViewHolder {
     //endregion
 
     //region Initializer
-    public AgentTypingViewHolder(View itemView) {
+    public KUSAgentTypingViewHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
     }

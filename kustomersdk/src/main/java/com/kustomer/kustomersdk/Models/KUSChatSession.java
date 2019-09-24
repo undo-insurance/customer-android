@@ -16,8 +16,8 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 
-import static com.kustomer.kustomersdk.Utils.JsonHelper.dateFromKeyPath;
-import static com.kustomer.kustomersdk.Utils.JsonHelper.stringFromKeyPath;
+import static com.kustomer.kustomersdk.Utils.KUSJsonHelper.dateFromKeyPath;
+import static com.kustomer.kustomersdk.Utils.KUSJsonHelper.stringFromKeyPath;
 
 /**
  * Created by Junaid on 1/20/2018.

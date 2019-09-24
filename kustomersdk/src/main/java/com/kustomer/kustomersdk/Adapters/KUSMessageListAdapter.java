@@ -14,17 +14,17 @@ import com.kustomer.kustomersdk.Models.KUSChatMessage;
 import com.kustomer.kustomersdk.Models.KUSChatSession;
 import com.kustomer.kustomersdk.Models.KUSTypingIndicator;
 import com.kustomer.kustomersdk.R;
-import com.kustomer.kustomersdk.ViewHolders.AgentMessageViewHolder;
-import com.kustomer.kustomersdk.ViewHolders.CSatisfactionFormViewHolder;
-import com.kustomer.kustomersdk.ViewHolders.AgentTypingViewHolder;
-import com.kustomer.kustomersdk.ViewHolders.DummyViewHolder;
-import com.kustomer.kustomersdk.ViewHolders.UserMessageViewHolder;
+import com.kustomer.kustomersdk.ViewHolders.KUSAgentMessageViewHolder;
+import com.kustomer.kustomersdk.ViewHolders.KUSCSatisfactionFormViewHolder;
+import com.kustomer.kustomersdk.ViewHolders.KUSAgentTypingViewHolder;
+import com.kustomer.kustomersdk.ViewHolders.KUSDummyViewHolder;
+import com.kustomer.kustomersdk.ViewHolders.KUSUserMessageViewHolder;
 
 /**
  * Created by Junaid on 1/19/2018.
  */
 
-public class MessageListAdapter extends RecyclerView.Adapter {
+public class KUSMessageListAdapter extends RecyclerView.Adapter {
 
     //region Properties
     private static final int K_PREFETCH_PADDING = 20;
@@ -46,10 +46,10 @@ public class MessageListAdapter extends RecyclerView.Adapter {
     //endregion
 
     //region LifeCycle
-    public MessageListAdapter(KUSPaginatedDataSource paginatedDataSource,
-                              KUSUserSession userSession,
-                              KUSChatMessagesDataSource chatMessagesDataSource,
-                              ChatMessageItemListener listener) {
+    public KUSMessageListAdapter(KUSPaginatedDataSource paginatedDataSource,
+                                 KUSUserSession userSession,
+                                 KUSChatMessagesDataSource chatMessagesDataSource,
+                                 ChatMessageItemListener listener) {
         mPaginatedDataSource = paginatedDataSource;
         mUserSession = userSession;
         mChatMessagesDataSource = chatMessagesDataSource;
@@ -61,23 +61,23 @@ public class MessageListAdapter extends RecyclerView.Adapter {
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         if (viewType == USER_VIEW)
-            return new UserMessageViewHolder(LayoutInflater.from(parent.getContext())
+            return new KUSUserMessageViewHolder(LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.kus_item_user_view_holder, parent, false));
 
         else if (viewType == AGENT_VIEW)
-            return new AgentMessageViewHolder(LayoutInflater.from(parent.getContext())
+            return new KUSAgentMessageViewHolder(LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.kus_item_agent_view_holder, parent, false));
 
         else if (viewType == END_VIEW)
-            return new DummyViewHolder(LayoutInflater.from(parent.getContext())
+            return new KUSDummyViewHolder(LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.kus_item_closed_chat_layout, parent, false));
 
         else if (viewType == TYPING_VIEW)
-            return new AgentTypingViewHolder(LayoutInflater.from(parent.getContext())
+            return new KUSAgentTypingViewHolder(LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.kus_item_agent_typing_view_holder, parent, false));
 
         else
-            return new CSatisfactionFormViewHolder(LayoutInflater.from(parent.getContext())
+            return new KUSCSatisfactionFormViewHolder(LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.kus_item_csat_view_holder, parent, false),
                     mListener);
     }
@@ -88,7 +88,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
             return;
 
         if (holder.getItemViewType() == TYPING_VIEW) {
-            ((AgentTypingViewHolder) holder).onBind(typingIndicator, mUserSession);
+            ((KUSAgentTypingViewHolder) holder).onBind(typingIndicator, mUserSession);
             return;
         }
 
@@ -100,7 +100,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
                         .getSatisfactionResponseDataSource().getObject();
 
             if (response != null)
-                ((CSatisfactionFormViewHolder) holder)
+                ((KUSCSatisfactionFormViewHolder) holder)
                         .onBind(response, mUserSession, isSatisfactionFormEditing);
             return;
         }
@@ -119,12 +119,12 @@ public class MessageListAdapter extends RecyclerView.Adapter {
                 nextChatMessage.getCreatedAt().getTime() - chatMessage.getCreatedAt().getTime() > K_5_MINUTE;
 
         if (holder.getItemViewType() == USER_VIEW) {
-            ((UserMessageViewHolder) holder).onBind(chatMessage, nextMessageOlderThan5Min, mListener);
+            ((KUSUserMessageViewHolder) holder).onBind(chatMessage, nextMessageOlderThan5Min, mListener);
 
         } else if (holder.getItemViewType() == AGENT_VIEW) {
             boolean previousMessageDiffSender =
                     !KUSChatMessage.KUSMessagesSameSender(previousChatMessage, chatMessage);
-            ((AgentMessageViewHolder) holder).onBind(chatMessage, mUserSession,
+            ((KUSAgentMessageViewHolder) holder).onBind(chatMessage, mUserSession,
                     previousMessageDiffSender, nextMessageOlderThan5Min, mListener);
         }
     }

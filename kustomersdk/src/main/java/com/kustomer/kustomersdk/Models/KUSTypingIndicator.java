@@ -8,7 +8,7 @@ import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
 
 import org.json.JSONObject;
 
-import static com.kustomer.kustomersdk.Utils.JsonHelper.stringFromKeyPath;
+import static com.kustomer.kustomersdk.Utils.KUSJsonHelper.stringFromKeyPath;
 
 public class KUSTypingIndicator {
 

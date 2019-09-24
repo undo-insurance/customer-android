@@ -211,7 +211,7 @@ Kustomer.describeNextConversation(conversationObject);
 
 
  <receiver
-     android:name="com.kustomer.kustomersdk.Receivers.NotificationDismissReceiver"
+     android:name="com.kustomer.kustomersdk.Receivers.KUSNotificationDismissReceiver"
      android:enabled="true"
      android:exported="true"/>
 

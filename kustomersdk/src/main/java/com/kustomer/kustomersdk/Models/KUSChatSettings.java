@@ -3,7 +3,7 @@ package com.kustomer.kustomersdk.Models;
 import com.kustomer.kustomersdk.Enums.KUSBusinessHoursAvailability;
 import com.kustomer.kustomersdk.Enums.KUSVolumeControlMode;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
-import com.kustomer.kustomersdk.Utils.JsonHelper;
+import com.kustomer.kustomersdk.Utils.KUSJsonHelper;
 
 import org.json.JSONObject;
 
@@ -52,38 +52,38 @@ public class KUSChatSettings extends KUSModel implements Serializable {
     public KUSChatSettings(JSONObject json) throws KUSInvalidJsonException {
         super(json);
 
-        teamName = JsonHelper.stringFromKeyPath(json, "attributes.teamName");
-        teamIconURL = JsonHelper.urlFromKeyPath(json, "attributes.teamIconUrl");
-        greeting = JsonHelper.stringFromKeyPath(json, "attributes.greeting");
-        activeFormId = JsonHelper.stringFromKeyPath(json, "attributes.activeForm");
-        pusherAccessKey = JsonHelper.stringFromKeyPath(json, "attributes.pusherAccessKey");
-        enabled = JsonHelper.boolFromKeyPath(json, "attributes.enabled");
+        teamName = KUSJsonHelper.stringFromKeyPath(json, "attributes.teamName");
+        teamIconURL = KUSJsonHelper.urlFromKeyPath(json, "attributes.teamIconUrl");
+        greeting = KUSJsonHelper.stringFromKeyPath(json, "attributes.greeting");
+        activeFormId = KUSJsonHelper.stringFromKeyPath(json, "attributes.activeForm");
+        pusherAccessKey = KUSJsonHelper.stringFromKeyPath(json, "attributes.pusherAccessKey");
+        enabled = KUSJsonHelper.boolFromKeyPath(json, "attributes.enabled");
 
-        closableChat = JsonHelper.boolFromKeyPath(json, "attributes.closableChat");
-        waitMessage = JsonHelper.stringFromKeyPath(json, "attributes.waitMessage");
-        singleSessionChat = JsonHelper.boolFromKeyPath(json, "attributes.singleSessionChat");
-        noHistory = JsonHelper.boolFromKeyPath(json, "attributes.noHistory");
+        closableChat = KUSJsonHelper.boolFromKeyPath(json, "attributes.closableChat");
+        waitMessage = KUSJsonHelper.stringFromKeyPath(json, "attributes.waitMessage");
+        singleSessionChat = KUSJsonHelper.boolFromKeyPath(json, "attributes.singleSessionChat");
+        noHistory = KUSJsonHelper.boolFromKeyPath(json, "attributes.noHistory");
 
-        customWaitMessage = JsonHelper.stringFromKeyPath(json, "attributes.volumeControl.customWaitMessage");
-        timeOut = JsonHelper.integerFromKeyPath(json, "attributes.volumeControl.timeout");
-        promptDelay = JsonHelper.integerFromKeyPath(json, "attributes.volumeControl.promptDelay");
-        hideWaitOption = JsonHelper.boolFromKeyPath(json, "attributes.volumeControl.hideWaitOption");
-        followUpChannels = JsonHelper.arrayListFromKeyPath(json, "attributes.volumeControl.followUpChannels");
-        useDynamicWaitMessage = JsonHelper.boolFromKeyPath(json, "attributes.volumeControl.useDynamicWaitMessage");
-        markDoneAfterTimeout = JsonHelper.boolFromKeyPath(json, "attributes.volumeControl.markDoneAfterTimeout");
-        volumeControlEnabled = JsonHelper.boolFromKeyPath(json, "attributes.volumeControl.enabled");
+        customWaitMessage = KUSJsonHelper.stringFromKeyPath(json, "attributes.volumeControl.customWaitMessage");
+        timeOut = KUSJsonHelper.integerFromKeyPath(json, "attributes.volumeControl.timeout");
+        promptDelay = KUSJsonHelper.integerFromKeyPath(json, "attributes.volumeControl.promptDelay");
+        hideWaitOption = KUSJsonHelper.boolFromKeyPath(json, "attributes.volumeControl.hideWaitOption");
+        followUpChannels = KUSJsonHelper.arrayListFromKeyPath(json, "attributes.volumeControl.followUpChannels");
+        useDynamicWaitMessage = KUSJsonHelper.boolFromKeyPath(json, "attributes.volumeControl.useDynamicWaitMessage");
+        markDoneAfterTimeout = KUSJsonHelper.boolFromKeyPath(json, "attributes.volumeControl.markDoneAfterTimeout");
+        volumeControlEnabled = KUSJsonHelper.boolFromKeyPath(json, "attributes.volumeControl.enabled");
 
-        offHoursMessage = JsonHelper.stringFromKeyPath(json,"attributes.offhoursMessage");
-        offHoursImageUrl = JsonHelper.stringFromKeyPath(json,"attributes.offhoursImageUrl");
-        availability = getKUSBusinessHoursAvailabilityFromString(JsonHelper.stringFromKeyPath(json,"attributes.offhoursDisplay"));
+        offHoursMessage = KUSJsonHelper.stringFromKeyPath(json,"attributes.offhoursMessage");
+        offHoursImageUrl = KUSJsonHelper.stringFromKeyPath(json,"attributes.offhoursImageUrl");
+        availability = getKUSBusinessHoursAvailabilityFromString(KUSJsonHelper.stringFromKeyPath(json,"attributes.offhoursDisplay"));
 
-        volumeControlMode = KUSVolumeControlModeFromString(JsonHelper.stringFromKeyPath(json,"attributes.volumeControl.mode"));
-        upfrontWaitThreshold = JsonHelper.integerFromKeyPath(json,"attributes.volumeControl.upfrontWaitThreshold");
-        showKustomerBranding = JsonHelper.boolFromKeyPath(json, "attributes.showBrandingIdentifier");
+        volumeControlMode = KUSVolumeControlModeFromString(KUSJsonHelper.stringFromKeyPath(json,"attributes.volumeControl.mode"));
+        upfrontWaitThreshold = KUSJsonHelper.integerFromKeyPath(json,"attributes.volumeControl.upfrontWaitThreshold");
+        showKustomerBranding = KUSJsonHelper.boolFromKeyPath(json, "attributes.showBrandingIdentifier");
 
-        shouldShowTypingIndicatorCustomerWeb = JsonHelper.boolFromKeyPath(json,
+        shouldShowTypingIndicatorCustomerWeb = KUSJsonHelper.boolFromKeyPath(json,
                 "attributes.showTypingIndicatorCustomerWeb");
-        shouldShowTypingIndicatorWeb = JsonHelper.boolFromKeyPath(json,
+        shouldShowTypingIndicatorWeb = KUSJsonHelper.boolFromKeyPath(json,
                 "attributes.showTypingIndicatorWeb");
     }
 

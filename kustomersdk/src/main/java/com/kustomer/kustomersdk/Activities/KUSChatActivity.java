@@ -572,9 +572,9 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
             boolean teamOptionsDidFail = false;
 
             if (isConversationTeamQuestion) {
-                teamOptionsDidFail = teamOptionsDatasource == null
-                        || teamOptionsDatasource.getError() != null
-                        || (teamOptionsDatasource.isFetched() && teamOptionsDatasource.getSize() == 0);
+                teamOptionsDidFail = (teamOptionsDatasource != null && teamOptionsDatasource.getError() != null)
+                        || (teamOptionsDatasource != null && teamOptionsDatasource.isFetched()
+                        && teamOptionsDatasource.getSize() == 0);
 
                 if (!teamOptionsDidFail) {
                     List<String> teamIds = currentQuestion.getValues();

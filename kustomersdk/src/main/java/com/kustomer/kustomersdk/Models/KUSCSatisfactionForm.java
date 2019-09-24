@@ -8,8 +8,8 @@ import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
 
 import org.json.JSONObject;
 
-import static com.kustomer.kustomersdk.Utils.KUSJsonHelper.integerFromKeyPath;
-import static com.kustomer.kustomersdk.Utils.KUSJsonHelper.stringFromKeyPath;
+import static com.kustomer.kustomersdk.Utils.JsonHelper.integerFromKeyPath;
+import static com.kustomer.kustomersdk.Utils.JsonHelper.stringFromKeyPath;
 
 public class KUSCSatisfactionForm extends KUSForm {
 

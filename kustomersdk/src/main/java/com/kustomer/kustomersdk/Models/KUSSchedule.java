@@ -2,13 +2,14 @@ package com.kustomer.kustomersdk.Models;
 
 
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
-import com.kustomer.kustomersdk.Utils.KUSJsonHelper;
+import com.kustomer.kustomersdk.Utils.JsonHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Dictionary;
 
 public class KUSSchedule extends KUSModel {
     //region Properties
@@ -24,10 +25,10 @@ public class KUSSchedule extends KUSModel {
     public KUSSchedule (JSONObject json) throws KUSInvalidJsonException {
         super(json);
 
-        name = KUSJsonHelper.stringFromKeyPath(json,"attributes.name");
-        hours = KUSJsonHelper.jsonObjectFromKeyPath(json,"attributes.hours");
-        timezone = KUSJsonHelper.stringFromKeyPath(json,"attributes.timezone");
-        enabled = KUSJsonHelper.boolFromKeyPath(json,"attributes.default");
+        name = JsonHelper.stringFromKeyPath(json,"attributes.name");
+        hours = JsonHelper.jsonObjectFromKeyPath(json,"attributes.hours");
+        timezone = JsonHelper.stringFromKeyPath(json,"attributes.timezone");
+        enabled = JsonHelper.boolFromKeyPath(json,"attributes.default");
     }
     //endregion
 

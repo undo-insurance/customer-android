@@ -3,7 +3,7 @@ package com.kustomer.kustomersdk.Models;
 import android.support.annotation.Nullable;
 
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
-import com.kustomer.kustomersdk.Utils.KUSJsonHelper;
+import com.kustomer.kustomersdk.Utils.JsonHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,12 +25,12 @@ public class KUSMLNode extends KUSModel {
     public KUSMLNode(JSONObject json) throws KUSInvalidJsonException {
         super(json);
 
-        displayName = KUSJsonHelper.stringFromKeyPath(json, "displayName");
-        nodeId = KUSJsonHelper.stringFromKeyPath(json, "id");
-        deleted = KUSJsonHelper.boolFromKeyPath(json, "deleted");
+        displayName = JsonHelper.stringFromKeyPath(json, "displayName");
+        nodeId = JsonHelper.stringFromKeyPath(json, "id");
+        deleted = JsonHelper.boolFromKeyPath(json, "deleted");
 
         //Filter deleted nodes
-        ArrayList<KUSMLNode> nodes = KUSMLNode.objectsFromJSONs(KUSJsonHelper.arrayFromKeyPath(json,
+        ArrayList<KUSMLNode> nodes = KUSMLNode.objectsFromJSONs(JsonHelper.arrayFromKeyPath(json,
                 "children"));
         ArrayList<KUSMLNode> filteredNodes = new ArrayList<>();
 

@@ -7,7 +7,7 @@ import com.kustomer.kustomersdk.Enums.KUSRequestType;
 import com.kustomer.kustomersdk.Interfaces.KUSImageUploadListener;
 import com.kustomer.kustomersdk.Interfaces.KUSRequestCompletionListener;
 import com.kustomer.kustomersdk.Models.KUSChatAttachment;
-import com.kustomer.kustomersdk.Utils.KUSJsonHelper;
+import com.kustomer.kustomersdk.Utils.JsonHelper;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
 
 import org.json.JSONObject;
@@ -122,15 +122,15 @@ public class KUSUpload {
 
                         final KUSChatAttachment chatAttachment;
                         try {
-                            chatAttachment = new KUSChatAttachment(KUSJsonHelper.jsonObjectFromKeyPath(response,"data"));
+                            chatAttachment = new KUSChatAttachment(JsonHelper.jsonObjectFromKeyPath(response,"data"));
                         } catch (KUSInvalidJsonException e) {
                             return;
                         }
 
                         try {
-                            URL uploadURL = new URL(KUSJsonHelper.stringFromKeyPath(response,"meta.upload.url"));
+                            URL uploadURL = new URL(JsonHelper.stringFromKeyPath(response,"meta.upload.url"));
                             HashMap<String, String> uploadFields =
-                                    KUSJsonHelper.hashMapFromKeyPath(response,"meta.upload.fields");
+                                    JsonHelper.hashMapFromKeyPath(response,"meta.upload.fields");
 
                             userSession.getRequestManager().uploadImageOnS3(uploadURL,
                                     filename,

@@ -7,7 +7,7 @@ import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
 import com.kustomer.kustomersdk.Interfaces.KUSObjectDataSourceListener;
 import com.kustomer.kustomersdk.Interfaces.KUSRequestCompletionListener;
 import com.kustomer.kustomersdk.Models.KUSModel;
-import com.kustomer.kustomersdk.Utils.KUSJsonHelper;
+import com.kustomer.kustomersdk.Utils.JsonHelper;
 
 import org.json.JSONObject;
 
@@ -62,8 +62,8 @@ public class KUSObjectDataSource {
 
                 KUSModel model = null;
                 try {
-                    model = objectFromJson(KUSJsonHelper.jsonObjectFromKeyPath(response,"data"));
-                    model.addIncludedWithJSON(KUSJsonHelper.arrayFromKeyPath(response,"included"));
+                    model = objectFromJson(JsonHelper.jsonObjectFromKeyPath(response,"data"));
+                    model.addIncludedWithJSON(JsonHelper.arrayFromKeyPath(response,"included"));
                 } catch (KUSInvalidJsonException ignore) { }
 
                 fetching = false;

@@ -2,7 +2,7 @@ package com.kustomer.kustomersdk.Models;
 
 
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
-import com.kustomer.kustomersdk.Utils.KUSJsonHelper;
+import com.kustomer.kustomersdk.Utils.JsonHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,15 +26,15 @@ public class KUSClientActivity extends KUSModel {
     public KUSClientActivity(JSONObject json) throws KUSInvalidJsonException {
         super(json);
 
-        JSONArray intervalsArray = KUSJsonHelper.arrayFromKeyPath(json,"attributes.intervals");
+        JSONArray intervalsArray = JsonHelper.arrayFromKeyPath(json,"attributes.intervals");
 
         if(intervalsArray != null)
             this.intervals = arrayListFromJsonArray(intervalsArray,"seconds");
 
-        currentPage = KUSJsonHelper.stringFromKeyPath(json,"attributes.currentPage");
-        previousPage = KUSJsonHelper.stringFromKeyPath(json,"attributes.previousPage");
-        currentPageSeconds = KUSJsonHelper.doubleFromKeyPath(json,"attributes.currentPageSeconds");
-        createdAt = KUSJsonHelper.dateFromKeyPath(json,"attributes.createdAt");
+        currentPage = JsonHelper.stringFromKeyPath(json,"attributes.currentPage");
+        previousPage = JsonHelper.stringFromKeyPath(json,"attributes.previousPage");
+        currentPageSeconds = JsonHelper.doubleFromKeyPath(json,"attributes.currentPageSeconds");
+        createdAt = JsonHelper.dateFromKeyPath(json,"attributes.createdAt");
     }
 
     @Override

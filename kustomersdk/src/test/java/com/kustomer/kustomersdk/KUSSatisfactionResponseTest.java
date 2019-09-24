@@ -4,7 +4,7 @@ import android.os.Build;
 
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
 import com.kustomer.kustomersdk.Models.KUSCSatisfactionResponse;
-import com.kustomer.kustomersdk.Utils.KUSJsonHelper;
+import com.kustomer.kustomersdk.Utils.JsonHelper;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -28,12 +28,12 @@ public class KUSSatisfactionResponseTest {
     public void testSatisfactionFormInitializer() {
 
         final JSONArray answersArray = new JSONArray();
-        answersArray.put(KUSJsonHelper.jsonObjectFromHashMap(new HashMap<String, Object>() {{
+        answersArray.put(JsonHelper.jsonObjectFromHashMap(new HashMap<String, Object>() {{
             put("id", "fake_answer_id");
             put("answer", "Nice experience");
         }}));
 
-        final JSONObject attributes = KUSJsonHelper.jsonObjectFromHashMap(new HashMap<String, Object>() {{
+        final JSONObject attributes = JsonHelper.jsonObjectFromHashMap(new HashMap<String, Object>() {{
             put("answers", answersArray);
             put("createdAt", "2019-04-26T13:03:39.511Z");
             put("updatedAt", "2019-04-26T13:03:39.511Z");
@@ -43,7 +43,7 @@ public class KUSSatisfactionResponseTest {
             put("status", "rated");
         }});
 
-        JSONObject satisfactionResponseJson = KUSJsonHelper.jsonObjectFromHashMap(new HashMap<String, Object>() {{
+        JSONObject satisfactionResponseJson = JsonHelper.jsonObjectFromHashMap(new HashMap<String, Object>() {{
             put("type", "satisfaction_response");
             put("id", "fake_satisfaction_response_id");
             put("attributes", attributes);

@@ -11,7 +11,7 @@ import com.kustomer.kustomersdk.Helpers.KUSLocalization;
 import com.kustomer.kustomersdk.Interfaces.KUSRequestCompletionListener;
 import com.kustomer.kustomersdk.Models.KUSChatSettings;
 import com.kustomer.kustomersdk.Models.KUSModel;
-import com.kustomer.kustomersdk.Utils.KUSJsonHelper;
+import com.kustomer.kustomersdk.Utils.JsonHelper;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
 
 import org.json.JSONObject;
@@ -65,7 +65,7 @@ public class KUSChatSettingsDataSource extends KUSObjectDataSource implements Se
                 KUSChatSettings settings = null;
                 try {
                     settings = (KUSChatSettings) objectFromJson(
-                            KUSJsonHelper.jsonObjectFromKeyPath(response,"data"));
+                            JsonHelper.jsonObjectFromKeyPath(response,"data"));
 
                 } catch (KUSInvalidJsonException e) {
                     e.printStackTrace();

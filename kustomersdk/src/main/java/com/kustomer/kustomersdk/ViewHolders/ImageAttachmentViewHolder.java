@@ -14,7 +14,7 @@ import butterknife.ButterKnife;
  * Created by Junaid on 1/19/2018.
  */
 
-public class KUSImageAttachmentViewHolder extends RecyclerView.ViewHolder {
+public class ImageAttachmentViewHolder extends RecyclerView.ViewHolder {
     //region Properties
     @BindView(R2.id.ivAttachment)
     ImageView ivAttachment;
@@ -23,7 +23,7 @@ public class KUSImageAttachmentViewHolder extends RecyclerView.ViewHolder {
     //endregion
 
     //region Methods
-    public KUSImageAttachmentViewHolder(View itemView) {
+    public ImageAttachmentViewHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
     }

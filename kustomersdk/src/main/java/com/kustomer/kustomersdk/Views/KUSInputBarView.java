@@ -21,7 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kustomer.kustomersdk.API.KUSUserSession;
-import com.kustomer.kustomersdk.Adapters.KUSImageAttachmentListAdapter;
+import com.kustomer.kustomersdk.Adapters.ImageAttachmentListAdapter;
 import com.kustomer.kustomersdk.DataSources.KUSObjectDataSource;
 import com.kustomer.kustomersdk.Helpers.KUSPermission;
 import com.kustomer.kustomersdk.Interfaces.KUSBitmapListener;
@@ -44,7 +44,7 @@ import butterknife.OnClick;
  */
 
 public class KUSInputBarView extends LinearLayout implements TextWatcher, TextView.OnEditorActionListener,
-        KUSImageAttachmentListAdapter.onItemClickListener, KUSObjectDataSourceListener {
+        ImageAttachmentListAdapter.onItemClickListener, KUSObjectDataSourceListener {
 
     @BindView(R2.id.etTypeMessage)
     EditText etTypeMessage;
@@ -59,7 +59,7 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
     KUSInputBarTextChangeListener textChangeListener;
 
     KUSInputBarViewListener listener;
-    KUSImageAttachmentListAdapter adapter;
+    ImageAttachmentListAdapter adapter;
     KUSUserSession userSession;
 
     Handler handler;
@@ -123,7 +123,7 @@ public class KUSInputBarView extends LinearLayout implements TextWatcher, TextVi
     }
 
     private void setupAdapter() {
-        adapter = new KUSImageAttachmentListAdapter(this);
+        adapter = new ImageAttachmentListAdapter(this);
         rvImageAttachment.setAdapter(adapter);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),

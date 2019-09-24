@@ -11,7 +11,7 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
 import com.kustomer.kustomersdk.API.KUSUserSession;
-import com.kustomer.kustomersdk.BaseClasses.KUSBaseActivity;
+import com.kustomer.kustomersdk.BaseClasses.BaseActivity;
 import com.kustomer.kustomersdk.Helpers.KUSLocalization;
 import com.kustomer.kustomersdk.Kustomer;
 import com.kustomer.kustomersdk.R;
@@ -24,7 +24,7 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class KUSKnowledgeBaseActivity extends KUSBaseActivity {
+public class KUSKnowledgeBaseActivity extends BaseActivity {
 
     //region Properties
     @BindView(R2.id.wvKnowledge)

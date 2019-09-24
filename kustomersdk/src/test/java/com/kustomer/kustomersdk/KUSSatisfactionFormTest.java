@@ -5,7 +5,7 @@ import android.os.Build;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
 import com.kustomer.kustomersdk.Models.KUSCSatisfactionForm;
 import com.kustomer.kustomersdk.Models.KUSFormQuestion;
-import com.kustomer.kustomersdk.Utils.KUSJsonHelper;
+import com.kustomer.kustomersdk.Utils.JsonHelper;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -29,26 +29,26 @@ public class KUSSatisfactionFormTest {
     public void testSatisfactionFormInitializer() {
 
         final JSONArray questionArray = new JSONArray();
-        questionArray.put(KUSJsonHelper.jsonObjectFromHashMap(new HashMap<String, Object>() {{
+        questionArray.put(JsonHelper.jsonObjectFromHashMap(new HashMap<String, Object>() {{
             put("id", "fake_question_id");
             put("prompt", "Thank you, Any further details? Share your experience with us?");
             put("type", "response");
         }}));
 
-        final JSONObject scaleJson = KUSJsonHelper.jsonObjectFromHashMap(new HashMap<String, Object>() {{
+        final JSONObject scaleJson = JsonHelper.jsonObjectFromHashMap(new HashMap<String, Object>() {{
             put("labelHigh", "Extremely Likely");
             put("labelLow", "Not Likely at all");
             put("options", 5);
             put("type", "number");
         }});
 
-        final JSONObject attributes = KUSJsonHelper.jsonObjectFromHashMap(new HashMap<String, Object>() {{
+        final JSONObject attributes = JsonHelper.jsonObjectFromHashMap(new HashMap<String, Object>() {{
             put("questions", questionArray);
             put("ratingPrompt", "How satisfied were you with your interaction?");
             put("scale", scaleJson);
         }});
 
-        JSONObject satisfactionFormJson = KUSJsonHelper.jsonObjectFromHashMap(new HashMap<String, Object>() {{
+        JSONObject satisfactionFormJson = JsonHelper.jsonObjectFromHashMap(new HashMap<String, Object>() {{
             put("type", "satisfaction");
             put("id", "fake_satisfaction_id");
             put("attributes", attributes);

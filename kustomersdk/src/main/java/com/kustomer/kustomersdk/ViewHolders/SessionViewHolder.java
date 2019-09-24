@@ -11,7 +11,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.kustomer.kustomersdk.API.KUSUserSession;
-import com.kustomer.kustomersdk.Adapters.KUSSessionListAdapter;
+import com.kustomer.kustomersdk.Adapters.SessionListAdapter;
 import com.kustomer.kustomersdk.DataSources.KUSChatMessagesDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSObjectDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSPaginatedDataSource;
@@ -41,7 +41,7 @@ import butterknife.ButterKnife;
  * Created by Junaid on 1/19/2018.
  */
 
-public class KUSSessionViewHolder extends RecyclerView.ViewHolder implements KUSObjectDataSourceListener,
+public class SessionViewHolder extends RecyclerView.ViewHolder implements KUSObjectDataSourceListener,
         KUSChatMessagesDataSourceListener {
 
     //region Properties
@@ -65,13 +65,13 @@ public class KUSSessionViewHolder extends RecyclerView.ViewHolder implements KUS
     private Date sessionDate = null;
     //endregion
 
-    public KUSSessionViewHolder(View itemView) {
+    public SessionViewHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
     }
 
     public void onBind(final KUSChatSession chatSession, KUSUserSession userSession,
-                       final KUSSessionListAdapter.onItemClickListener listener) {
+                       final SessionListAdapter.onItemClickListener listener) {
         mUserSession = userSession;
         mChatSession = chatSession;
 

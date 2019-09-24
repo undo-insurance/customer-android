@@ -20,7 +20,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class KUSBaseActivity extends AppCompatActivity {
+public class BaseActivity extends AppCompatActivity {
 
     //region Properties
     public ProgressDialog progressDialog;
@@ -35,7 +35,7 @@ public class KUSBaseActivity extends AppCompatActivity {
     //endregion
 
     //region Activity LifeCycle
-    public KUSBaseActivity() {
+    public BaseActivity() {
         KUSLocalization.getSharedInstance().updateConfig(this);
     }
 

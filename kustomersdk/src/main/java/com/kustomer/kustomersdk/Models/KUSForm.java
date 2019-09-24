@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 
 import com.kustomer.kustomersdk.Enums.KUSFormQuestionProperty;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
-import com.kustomer.kustomersdk.Utils.KUSJsonHelper;
+import com.kustomer.kustomersdk.Utils.JsonHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,7 +29,7 @@ public class KUSForm extends KUSModel{
     public KUSForm(JSONObject jsonObject) throws KUSInvalidJsonException {
         super(jsonObject);
 
-        questions = getQuestionsFromJsonArray(KUSJsonHelper.arrayFromKeyPath(jsonObject,
+        questions = getQuestionsFromJsonArray(JsonHelper.arrayFromKeyPath(jsonObject,
                 "attributes.questions"));
     }
 

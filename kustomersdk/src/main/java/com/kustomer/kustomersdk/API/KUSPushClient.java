@@ -24,7 +24,7 @@ import com.kustomer.kustomersdk.Models.KUSChatSettings;
 import com.kustomer.kustomersdk.Models.KUSModel;
 import com.kustomer.kustomersdk.Models.KUSTrackingToken;
 import com.kustomer.kustomersdk.Models.KUSTypingIndicator;
-import com.kustomer.kustomersdk.Utils.KUSJsonHelper;
+import com.kustomer.kustomersdk.Utils.JsonHelper;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
 import com.kustomer.kustomersdk.Views.KUSNotificationWindow;
 import com.pusher.client.Pusher;
@@ -449,7 +449,7 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
                             return;
 
                         List<KUSModel> chatSessions = userSession.get().getChatSessionsDataSource()
-                                .objectsFromJSONArray(KUSJsonHelper.arrayFromKeyPath(response, "data"));
+                                .objectsFromJSONArray(JsonHelper.arrayFromKeyPath(response, "data"));
 
                         if (chatSessions != null) {
                             for (KUSModel model : chatSessions) {
@@ -467,8 +467,8 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
         if (userSession.get() == null)
             return;
 
-        final List<KUSModel> chatMessages = KUSJsonHelper.kusChatModelsFromJSON(Kustomer.getContext(),
-                KUSJsonHelper.jsonObjectFromKeyPath(jsonObject, "data"));
+        final List<KUSModel> chatMessages = JsonHelper.kusChatModelsFromJSON(Kustomer.getContext(),
+                JsonHelper.jsonObjectFromKeyPath(jsonObject, "data"));
 
         if (chatMessages == null || chatMessages.isEmpty())
             return;
@@ -524,16 +524,16 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
     }
 
     private void onPusherChatMessageSend(String data) {
-        JSONObject jsonObject = KUSJsonHelper.stringToJson(data);
+        JSONObject jsonObject = JsonHelper.stringToJson(data);
 
         if (jsonObject == null)
             return;
 
         boolean isMessageClipped = jsonObject.optBoolean("clipped");
         if (isMessageClipped) {
-            String sessionId = KUSJsonHelper.stringFromKeyPath(jsonObject,
+            String sessionId = JsonHelper.stringFromKeyPath(jsonObject,
                     "data.relationships.session.data.id");
-            String messageId = KUSJsonHelper.stringFromKeyPath(jsonObject, "data.id");
+            String messageId = JsonHelper.stringFromKeyPath(jsonObject, "data.id");
 
             KUSChatMessagesDataSource messagesDataSource = userSession.get()
                     .chatMessageDataSourceForSessionId(sessionId);
@@ -550,20 +550,20 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
     }
 
     private void onPusherChatSessionEnd(String data) {
-        JSONObject jsonObject = KUSJsonHelper.stringToJson(data);
+        JSONObject jsonObject = JsonHelper.stringToJson(data);
 
         if (jsonObject == null)
             return;
 
         boolean isMessageClipped = jsonObject.optBoolean("clipped");
         if (isMessageClipped) {
-            String sessionId = KUSJsonHelper.stringFromKeyPath(jsonObject, "data.id");
+            String sessionId = JsonHelper.stringFromKeyPath(jsonObject, "data.id");
 
             fetchEndedSessionForId(sessionId);
 
         } else {
             List<KUSModel> chatSessions = userSession.get().getChatSessionsDataSource()
-                    .objectsFromJSON(KUSJsonHelper.jsonObjectFromKeyPath(jsonObject, "data"));
+                    .objectsFromJSON(JsonHelper.jsonObjectFromKeyPath(jsonObject, "data"));
 
             upsertEndedSessionAndNotify(chatSessions);
         }
@@ -774,7 +774,7 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
 
         @Override
         public void onEvent(String channelName, String eventName, String data) {
-            JSONObject jsonObject = KUSJsonHelper.stringToJson(data);
+            JSONObject jsonObject = JsonHelper.stringToJson(data);
             if (jsonObject == null)
                 return;
 

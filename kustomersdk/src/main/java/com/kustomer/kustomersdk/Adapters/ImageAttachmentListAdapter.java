@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import com.kustomer.kustomersdk.Interfaces.KUSBitmapListener;
 import com.kustomer.kustomersdk.Models.KUSBitmap;
 import com.kustomer.kustomersdk.R;
-import com.kustomer.kustomersdk.ViewHolders.KUSImageAttachmentViewHolder;
+import com.kustomer.kustomersdk.ViewHolders.ImageAttachmentViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,8 +19,8 @@ import java.util.List;
  * Created by Junaid on 1/19/2018.
  */
 
-public class KUSImageAttachmentListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
-        implements KUSImageAttachmentViewHolder.ImageAttachmentListener {
+public class ImageAttachmentListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+        implements ImageAttachmentViewHolder.ImageAttachmentListener {
 
     //region Properties
     private List<KUSBitmap> imageBitmaps;
@@ -28,7 +28,7 @@ public class KUSImageAttachmentListAdapter extends RecyclerView.Adapter<Recycler
     //endregion
 
     //region LifeCycle
-    public KUSImageAttachmentListAdapter(onItemClickListener listener) {
+    public ImageAttachmentListAdapter(onItemClickListener listener) {
         imageBitmaps = new ArrayList<>();
         mListener = listener;
     }
@@ -36,13 +36,13 @@ public class KUSImageAttachmentListAdapter extends RecyclerView.Adapter<Recycler
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new KUSImageAttachmentViewHolder(LayoutInflater.from(parent.getContext())
+        return new ImageAttachmentViewHolder(LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.kus_item_image_attachment_view_holder, parent, false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        ((KUSImageAttachmentViewHolder) holder).onBind(imageBitmaps.get(position), this);
+        ((ImageAttachmentViewHolder) holder).onBind(imageBitmaps.get(position), this);
     }
 
     @Override

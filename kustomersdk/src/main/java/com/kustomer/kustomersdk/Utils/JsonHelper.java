@@ -33,7 +33,7 @@ import java.util.regex.Pattern;
  * Created by Junaid on 1/23/2018.
  */
 
-public class KUSJsonHelper {
+public class JsonHelper {
 
     @NonNull
     public static JSONObject jsonObjectFromHashMap(@NonNull HashMap<String, Object> dataMap) {

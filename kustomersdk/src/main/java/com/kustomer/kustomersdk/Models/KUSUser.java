@@ -1,7 +1,7 @@
 package com.kustomer.kustomersdk.Models;
 
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
-import com.kustomer.kustomersdk.Utils.KUSJsonHelper;
+import com.kustomer.kustomersdk.Utils.JsonHelper;
 
 import org.json.JSONObject;
 
@@ -20,8 +20,8 @@ public class KUSUser extends KUSModel {
     //region Initializer
     public KUSUser(JSONObject json) throws KUSInvalidJsonException {
         super(json);
-        displayName = KUSJsonHelper.stringFromKeyPath(json,"attributes.displayName");
-        avatarURL = KUSJsonHelper.urlFromKeyPath(json,"attributes.avatarUrl");
+        displayName = JsonHelper.stringFromKeyPath(json,"attributes.displayName");
+        avatarURL = JsonHelper.urlFromKeyPath(json,"attributes.avatarUrl");
     }
 
     @Override

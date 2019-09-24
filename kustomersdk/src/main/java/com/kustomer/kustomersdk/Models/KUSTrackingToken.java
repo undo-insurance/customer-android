@@ -2,10 +2,13 @@ package com.kustomer.kustomersdk.Models;
 
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
-import static com.kustomer.kustomersdk.Utils.KUSJsonHelper.boolFromKeyPath;
-import static com.kustomer.kustomersdk.Utils.KUSJsonHelper.stringFromKeyPath;
+import java.util.HashMap;
+
+import static com.kustomer.kustomersdk.Utils.JsonHelper.boolFromKeyPath;
+import static com.kustomer.kustomersdk.Utils.JsonHelper.stringFromKeyPath;
 
 /**
  * Created by Junaid on 1/20/2018.

@@ -1,7 +1,7 @@
 package com.kustomer.kustomersdk.Models;
 
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
-import com.kustomer.kustomersdk.Utils.KUSJsonHelper;
+import com.kustomer.kustomersdk.Utils.JsonHelper;
 
 import org.json.JSONObject;
 
@@ -20,10 +20,10 @@ public class KUSSessionQueue extends KUSModel {
     public KUSSessionQueue(JSONObject json) throws KUSInvalidJsonException {
         super(json);
 
-        enteredAt = KUSJsonHelper.dateFromKeyPath(json,"attributes.enteredAt");
-        estimatedWaitTimeSeconds = KUSJsonHelper.integerFromKeyPath(json,"attributes.estimatedWaitTimeSeconds");
-        latestWaitTimeSeconds = KUSJsonHelper.integerFromKeyPath(json,"attributes.latestWaitTimeSeconds");
-        name = KUSJsonHelper.stringFromKeyPath(json,"attributes.name");
+        enteredAt = JsonHelper.dateFromKeyPath(json,"attributes.enteredAt");
+        estimatedWaitTimeSeconds = JsonHelper.integerFromKeyPath(json,"attributes.estimatedWaitTimeSeconds");
+        latestWaitTimeSeconds = JsonHelper.integerFromKeyPath(json,"attributes.latestWaitTimeSeconds");
+        name = JsonHelper.stringFromKeyPath(json,"attributes.name");
 
     }
     //endregion

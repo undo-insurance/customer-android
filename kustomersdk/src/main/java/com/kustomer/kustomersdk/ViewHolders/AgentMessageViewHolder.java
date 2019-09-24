@@ -16,7 +16,7 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.kustomer.kustomersdk.API.KUSUserSession;
-import com.kustomer.kustomersdk.Adapters.KUSMessageListAdapter;
+import com.kustomer.kustomersdk.Adapters.MessageListAdapter;
 import com.kustomer.kustomersdk.Enums.KUSChatMessageType;
 import com.kustomer.kustomersdk.Helpers.KUSDate;
 import com.kustomer.kustomersdk.Helpers.KUSText;
@@ -33,7 +33,7 @@ import butterknife.ButterKnife;
  * Created by Junaid on 1/19/2018.
  */
 
-public class KUSAgentMessageViewHolder extends RecyclerView.ViewHolder {
+public class AgentMessageViewHolder extends RecyclerView.ViewHolder {
 
     //region Properties
     @BindView(R2.id.tvMessage)
@@ -53,7 +53,7 @@ public class KUSAgentMessageViewHolder extends RecyclerView.ViewHolder {
     //endregion
 
     //region Initializer
-    public KUSAgentMessageViewHolder(View itemView) {
+    public AgentMessageViewHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this,itemView);
     }
@@ -61,7 +61,7 @@ public class KUSAgentMessageViewHolder extends RecyclerView.ViewHolder {
 
     //region Methods
     public void onBind(final KUSChatMessage chatMessage, KUSUserSession userSession, boolean showAvatar,
-                       boolean showDate, final KUSMessageListAdapter.ChatMessageItemListener mListener){
+                       boolean showDate, final MessageListAdapter.ChatMessageItemListener mListener){
 
         if(chatMessage.getType() == KUSChatMessageType.KUS_CHAT_MESSAGE_TYPE_TEXT){
             tvMessage.setVisibility(View.VISIBLE);
@@ -104,7 +104,7 @@ public class KUSAgentMessageViewHolder extends RecyclerView.ViewHolder {
     }
 
     private void updateImageForMessage(final KUSChatMessage chatMessage,
-                                       final KUSMessageListAdapter.ChatMessageItemListener mListener){
+                                       final MessageListAdapter.ChatMessageItemListener mListener){
 
 
         progressBarImage.setVisibility(View.VISIBLE);

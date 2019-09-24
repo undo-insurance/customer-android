@@ -49,6 +49,8 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource
     private JSONObject pendingCustomChatSessionAttributesForNextConversation;
     private HashMap<String, Date> localLastSeenAtBySessionId;
     private String messageToCreateNewChatSession;
+    @Nullable
+    private String formIdForConversationalForm;
     //endregion
 
     //region Initializer
@@ -104,6 +106,11 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource
 
     public String getMessageToCreateNewChatSession() {
         return messageToCreateNewChatSession;
+    }
+
+    @Nullable
+    public String getFormIdForConversationalForm(){
+        return formIdForConversationalForm;
     }
     //endregion
 
@@ -396,6 +403,10 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource
 
     public void setMessageToCreateNewChatSession(String messageToCreateNewChatSession) {
         this.messageToCreateNewChatSession = messageToCreateNewChatSession;
+    }
+
+    public void setFormIdForConversationalForm(@Nullable String formId){
+        formIdForConversationalForm =formId;
     }
 
     public int getOpenProactiveCampaignsCount() {

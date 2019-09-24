@@ -35,6 +35,20 @@ import java.util.regex.Pattern;
 
 public class JsonHelper {
 
+    public static int getErrorStatus(@NonNull Error error) {
+        try {
+            JSONArray errorArray = JsonHelper.arrayFromKeyPath(new JSONObject(error.getMessage()),
+                    "errors");
+
+            if (errorArray != null) {
+                JSONObject errorJson = (JSONObject) errorArray.get(0);
+                return (int) errorJson.get("status");
+            }
+        } catch (Exception ignore) {
+        }
+        return 0;
+    }
+
     @NonNull
     public static JSONObject jsonObjectFromHashMap(@NonNull HashMap<String, Object> dataMap) {
         JSONObject jsonObject = new JSONObject();

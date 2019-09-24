@@ -202,6 +202,9 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
             intent.putExtra(KUSConstants.BundleName.CHAT_SCREEN_MESSAGE,
                     chatSessionsDataSource.getMessageToCreateNewChatSession());
 
+            intent.putExtra(KUSConstants.BundleName.CHAT_SCREEN_FORM_ID,
+                    chatSessionsDataSource.getFormIdForConversationalForm());
+
         } else if (chatSessionsDataSource != null &&
                 (chatSessionsDataSource.getSize() == 0 || chatSessionsDataSource.getOpenChatSessionsCount() == 0)) {
             intent.putExtra(KUSConstants.BundleName.CHAT_SCREEN_BACK_BUTTON_KEY, false);

@@ -68,7 +68,7 @@ public class KUSObjectDataSource {
 
                 fetching = false;
                 if(errorObject != null || model == null){
-                    if(error == null)
+                    if(errorObject == null)
                         error = new Error();
                     else
                         error = errorObject;

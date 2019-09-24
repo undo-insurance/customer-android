@@ -26,7 +26,7 @@ The Kustomer Android SDK requires a valid API Key with role `org.tracking`. See 
 Include the library in your `app.gradle`:
 
 ```gradle
-implementation 'com.kustomer.kustomersdk:kustomersdk:0.2.4'
+implementation 'com.kustomer.kustomersdk:kustomersdk:0.2.5'
 ```
 
 #### Or through Maven
@@ -104,8 +104,43 @@ Kustomer.init(this, "API_KEY");
 ```
 
 ```java
-// Convenience method that will present the chat interface.
+// Convenience methods that will present the chat interface.
+
+
+//Present new or most recent chat conversation.
+
 Kustomer.showSupport(ACTIVITY);
+
+//Present new chat conversation with message.
+
+Kustomer.showSupportWithMessage(Activity, "message");
+
+//Present new chat conversation with message and set custom attributes for that conversation.
+
+JSONObject customAttributes = new JSONObject();
+conversationObject.put("customAttributeStr", "value");
+// ...
+
+Kustomer.showSupportWithMessage(Activity, "message", customAttributes);
+
+//Present new chat conversation with message and set chat assistant form for that conversation.
+
+Kustomer.showSupportWithMessage(Activity, "message", "form-id");
+
+/*
+  Present new chat conversation with message, set chat assistant form andcustom attributes
+  for that conversation.
+*/
+
+JSONObject customAttributes = new JSONObject();
+conversationObject.put("customAttributeStr", "value");
+// ...
+
+Kustomer.showSupportWithMessage(Activity, "message", "form-id", customAttributes);
+
+```
+
+```java
 
 // Convenience methods that will present a browser interface pointing to your KnowledgeBase.
 Kustomer.presentKnowledgeBase(ACTIVITY);

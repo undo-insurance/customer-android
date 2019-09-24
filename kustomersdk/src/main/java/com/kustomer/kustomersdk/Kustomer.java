@@ -117,7 +117,7 @@ public class Kustomer {
      * Returns the identification status in listener on background thread.
      *
      * @param externalToken A valid JWT web token to identify user
-     * @param listener The callback which will receive identification status.
+     * @param listener      The callback which will receive identification status.
      */
     public static void identify(@NonNull String externalToken, @Nullable KUSIdentifyListener listener) {
         getSharedInstance().mIdentify(externalToken, listener);
@@ -192,13 +192,60 @@ public class Kustomer {
         getSharedInstance().mHideNewConversationButtonInClosedChat(status);
     }
 
-    public static void showSupportWithMessage(Activity activity, String message, JSONObject customAttributes) {
-        getSharedInstance().mShowSupportWithMessage(activity, message, customAttributes);
+    /**
+     * Convenience method that will present chat interface, initiate new chat conversation with message
+     * and set customAttributes of that conversation.
+     *
+     * @param activity         activity calling this method
+     * @param message          A message to create chat conversation
+     * @param customAttributes CustomAttribute of chat conversation
+     */
+    public static void showSupportWithMessage(@NonNull Activity activity,
+                                              @NonNull String message,
+                                              @Nullable JSONObject customAttributes) {
+        getSharedInstance().mShowSupportWithMessage(activity, message, null, customAttributes);
     }
 
-    public static void showSupportWithMessage(Activity activity, String message) {
-        getSharedInstance().mShowSupportWithMessage(activity, message, null);
+    /**
+     * Convenience method that will present chat interface and initiate new chat conversation with message.
+     *
+     * @param activity activity calling this method
+     * @param message  A message to create chat conversation
+     */
+    public static void showSupportWithMessage(@NonNull Activity activity,
+                                              @NonNull String message) {
+        getSharedInstance().mShowSupportWithMessage(activity, message, null, null);
     }
+
+    /**
+     * Convenience method that will present chat interface, initiate new chat assistant form with message
+     * and set customAttributes of that conversation.
+     *
+     * @param activity         activity calling this method
+     * @param message          A message to create chat conversation
+     * @param formId           formId of chat assistant form
+     * @param customAttributes CustomAttribute of chat conversation
+     */
+    public static void showSupportWithMessage(@NonNull Activity activity,
+                                              @NonNull String message,
+                                              @NonNull String formId,
+                                              @Nullable JSONObject customAttributes) {
+        getSharedInstance().mShowSupportWithMessage(activity, message, formId, customAttributes);
+    }
+
+    /**
+     * Convenience method that will present chat interface and initiate new chat assistant form with message.
+     *
+     * @param activity activity calling this method
+     * @param message  A message to create chat conversation
+     * @param formId   formId of chat assistant form
+     */
+    public static void showSupportWithMessage(@NonNull Activity activity,
+                                              @NonNull String message,
+                                              @NonNull String formId) {
+        getSharedInstance().mShowSupportWithMessage(activity, message, formId, null);
+    }
+
     //endregion
 
     //region Private Methods
@@ -256,8 +303,8 @@ public class Kustomer {
             throw new AssertionError("Kustomer expects externalToken to be non-null");
         }
 
-        if(externalToken.isEmpty()){
-            if(listener != null)
+        if (externalToken.isEmpty()) {
+            if (listener != null)
                 listener.onComplete(false);
 
             return;
@@ -372,9 +419,13 @@ public class Kustomer {
         getUserSession().getSharedPreferences().setShouldHideConversationButton(status);
     }
 
-    private void mShowSupportWithMessage(Activity activity, String message, JSONObject customAttributes) {
+    private void mShowSupportWithMessage(Activity activity, String message, String formId,
+                                         JSONObject customAttributes) {
+
         if (TextUtils.isEmpty(message))
             throw new AssertionError("Requires a valid message to create chat session.");
+
+        getUserSession().getChatSessionsDataSource().setFormIdForConversationalForm(formId);
 
         getUserSession().getChatSessionsDataSource().setMessageToCreateNewChatSession(message);
 

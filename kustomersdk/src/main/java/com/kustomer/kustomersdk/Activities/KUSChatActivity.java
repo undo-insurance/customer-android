@@ -140,6 +140,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
     boolean shouldShowNonBusinessHoursImage = false;
 
     String message;
+    String formId;
 
     String mCurrentPhotoPath;
     //endregion
@@ -307,6 +308,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         kusChatSession = (KUSChatSession) getIntent().getSerializableExtra(KUSConstants.BundleName.CHAT_SESSION_BUNDLE_KEY);
         shouldShowBackButton = getIntent().getBooleanExtra(KUSConstants.BundleName.CHAT_SCREEN_BACK_BUTTON_KEY, true);
         message = getIntent().getStringExtra(KUSConstants.BundleName.CHAT_SCREEN_MESSAGE);
+        formId = getIntent().getStringExtra(KUSConstants.BundleName.CHAT_SCREEN_FORM_ID);
 
         shouldShowNonBusinessHoursImage = !userSession.getScheduleDataSource().isActiveBusinessHours();
 
@@ -314,11 +316,15 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         if (settings != null && settings.getNoHistory())
             shouldShowBackButton = false;
 
-        if (kusChatSession != null) {
+        if (formId != null) {
+            chatMessagesDataSource = new KUSChatMessagesDataSource(userSession, formId, true);
+            userSession.getChatSessionsDataSource().setFormIdForConversationalForm(null);
+
+        }else if (kusChatSession != null) {
             chatSessionId = kusChatSession.getId();
             chatMessagesDataSource = userSession.chatMessageDataSourceForSessionId(chatSessionId);
         } else {
-            chatMessagesDataSource = new KUSChatMessagesDataSource(userSession, true);
+            chatMessagesDataSource = new KUSChatMessagesDataSource(userSession, null, true);
         }
 
         if (message != null) {
@@ -831,7 +837,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
             chatMessagesDataSource = userSession.chatMessageDataSourceForSessionId(chatSessionId);
 
         } else {
-            chatMessagesDataSource = new KUSChatMessagesDataSource(userSession, true);
+            chatMessagesDataSource = new KUSChatMessagesDataSource(userSession, null,true);
             chatSessionId = null;
             kusInputBarView.setAllowsAttachment(false);
 

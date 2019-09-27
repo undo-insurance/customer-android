@@ -106,41 +106,33 @@ Kustomer.init(this, "API_KEY");
 ```java
 // Convenience methods that will present the chat interface.
 
-
-//Present new or most recent chat conversation.
-
+// Present new or recent chat conversation if there is any.
 Kustomer.showSupport(ACTIVITY);
 
-//Present new chat conversation with message.
 
-Kustomer.showSupportWithMessage(Activity, "message");
+// Present new chat conversation with chatAttributes a.k.a Key-Pair values.
 
-//Present new chat conversation with message and set custom attributes for that conversation.
+KUSChatAttributes chatAttributes = new KUSChatAttributes();
 
-JSONObject customAttributes = new JSONObject();
-conversationObject.put("customAttributeStr", "value");
-// ...
+    // Initial message to start a new conversation
+    // if not specified then it will show either the most recent session or new window to start a new conversation
+    chatAttributes.put(Kustomer.KUS_MESSAGE,"MESSAGE");
 
-Kustomer.showSupportWithMessage(Activity, "message", customAttributes);
+    // Custom schedule id, if not specified then SDK will use the schedule id specified on the admin panel
+    // This can be access by an admin panel via Administration > Business Schedules
+    chatAttributes.put(Kustomer.KUS_SCHEDULE_ID,"SCHEDULE_ID");
 
-//Present new chat conversation with message and set chat assistant form for that conversation.
+    // Custom form id, if not specified then SDK will use the conversational assistant form specified on the admin panel
+    // This can be access be an admin panel via Channels > Chat > Conversational Assistant
+    chatAttributes.put(Kustomer.KUS_FORM_ID,"FORM_ID");
 
-Kustomer.showSupportWithMessage(Activity, "message", "form-id");
+    // Attach custom attributes to the user's next new conversation
+    // These key-value pairs must be enabled on the Conversation Klass via the admin portal.
+    // This can be done by an admin via Settings > Platform Settings > Klasses > Conversation
+    JSONObject customObject = new JSONObject();
+    customObject.put("customAttributeStr", "value");
 
-/*
-  Present new chat conversation with message, set chat assistant form andcustom attributes
-  for that conversation.
-*/
-
-JSONObject customAttributes = new JSONObject();
-conversationObject.put("customAttributeStr", "value");
-// ...
-
-Kustomer.showSupportWithMessage(Activity, "message", "form-id", customAttributes);
-
-```
-
-```java
+    chatAttributes.put(Kustomer.KUS_CUSTOM_ATTRIBUTES, customObject);
 
 // Convenience methods that will present a browser interface pointing to your KnowledgeBase.
 Kustomer.presentKnowledgeBase(ACTIVITY);

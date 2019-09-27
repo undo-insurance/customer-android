@@ -26,6 +26,7 @@ import com.kustomer.kustomersdk.Interfaces.KUSLogOptions;
 import com.kustomer.kustomersdk.Interfaces.KUSRequestCompletionListener;
 import com.kustomer.kustomersdk.Managers.KUSNetworkStateManager;
 import com.kustomer.kustomersdk.Managers.KUSVolumeControlTimerManager;
+import com.kustomer.kustomersdk.Models.KUSChatAttributes;
 import com.kustomer.kustomersdk.Models.KUSCustomerDescription;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
 
@@ -50,6 +51,13 @@ import okhttp3.Response;
 public class Kustomer {
 
     //region Properties
+
+
+    public static String KUS_MESSAGE = "KUSMessageAttributeKey";
+    public static String KUS_FORM_ID = "KUFormIdAttributeKey";
+    public static String KUS_SCHEDULE_ID = "KUSScheduleIdAttributeKey";
+    public static String KUS_CUSTOM_ATTRIBUTES = "KUSCustomAttributesKey";
+
     private static Context mContext;
     private static Kustomer sharedInstance = null;
 
@@ -193,59 +201,22 @@ public class Kustomer {
     }
 
     /**
-     * Convenience method that will present chat interface, initiate new chat conversation with message
-     * and set customAttributes of that conversation.
-     *
-     * @param activity         activity calling this method
-     * @param message          A message to create chat conversation
-     * @param customAttributes CustomAttribute of chat conversation
+     * @deprecated use {@link #showSupportWithAttributes(Activity activity, KUSChatAttributes attributes)} instead.
      */
-    public static void showSupportWithMessage(@NonNull Activity activity,
-                                              @NonNull String message,
-                                              @Nullable JSONObject customAttributes) {
-        getSharedInstance().mShowSupportWithMessage(activity, message, null, customAttributes);
+    public static void showSupportWithMessage(Activity activity, String message, JSONObject customAttributes) {
+        getSharedInstance().mShowSupportWithMessage(activity, message, customAttributes);
     }
 
     /**
-     * Convenience method that will present chat interface and initiate new chat conversation with message.
-     *
-     * @param activity activity calling this method
-     * @param message  A message to create chat conversation
+     * @deprecated use {@link #showSupportWithAttributes(Activity activity, KUSChatAttributes attributes)} instead.
      */
-    public static void showSupportWithMessage(@NonNull Activity activity,
-                                              @NonNull String message) {
-        getSharedInstance().mShowSupportWithMessage(activity, message, null, null);
+    public static void showSupportWithMessage(Activity activity, String message) {
+        getSharedInstance().mShowSupportWithMessage(activity, message, null);
     }
 
-    /**
-     * Convenience method that will present chat interface, initiate new chat assistant form with message
-     * and set customAttributes of that conversation.
-     *
-     * @param activity         activity calling this method
-     * @param message          A message to create chat conversation
-     * @param formId           formId of chat assistant form
-     * @param customAttributes CustomAttribute of chat conversation
-     */
-    public static void showSupportWithMessage(@NonNull Activity activity,
-                                              @NonNull String message,
-                                              @NonNull String formId,
-                                              @Nullable JSONObject customAttributes) {
-        getSharedInstance().mShowSupportWithMessage(activity, message, formId, customAttributes);
+    public static void showSupportWithAttributes(Activity activity, KUSChatAttributes attributes) {
+        getSharedInstance().mShowSupportWithAttributes(activity, attributes);
     }
-
-    /**
-     * Convenience method that will present chat interface and initiate new chat assistant form with message.
-     *
-     * @param activity activity calling this method
-     * @param message  A message to create chat conversation
-     * @param formId   formId of chat assistant form
-     */
-    public static void showSupportWithMessage(@NonNull Activity activity,
-                                              @NonNull String message,
-                                              @NonNull String formId) {
-        getSharedInstance().mShowSupportWithMessage(activity, message, formId, null);
-    }
-
     //endregion
 
     //region Private Methods
@@ -419,18 +390,36 @@ public class Kustomer {
         getUserSession().getSharedPreferences().setShouldHideConversationButton(status);
     }
 
-    private void mShowSupportWithMessage(Activity activity, String message, String formId,
-                                         JSONObject customAttributes) {
-
+    private void mShowSupportWithMessage(Activity activity, String message, JSONObject customAttributes) {
         if (TextUtils.isEmpty(message))
             throw new AssertionError("Requires a valid message to create chat session.");
-
-        getUserSession().getChatSessionsDataSource().setFormIdForConversationalForm(formId);
 
         getUserSession().getChatSessionsDataSource().setMessageToCreateNewChatSession(message);
 
         if (customAttributes != null)
             mDescribeNextConversation(customAttributes);
+
+        showSupport(activity);
+    }
+
+    private void mShowSupportWithAttributes(Activity activity, KUSChatAttributes attributes) {
+
+        Object message = attributes.get(KUS_MESSAGE);
+        if (message instanceof String && !TextUtils.isEmpty((String) message))
+            userSession.getChatSessionsDataSource().setMessageToCreateNewChatSession((String) message);
+
+        Object formId = attributes.get(KUS_FORM_ID);
+        if (formId instanceof String && !TextUtils.isEmpty((String) formId))
+            userSession.getChatSessionsDataSource().setFormIdForConversationalForm((String) formId);
+
+
+        Object scheduleId = attributes.get(KUS_SCHEDULE_ID);
+        if (scheduleId instanceof String && !TextUtils.isEmpty((String) scheduleId))
+            userSession.getScheduleDataSource().setScheduleId((String) scheduleId);
+
+        Object customAttributes = attributes.get(KUS_CUSTOM_ATTRIBUTES);
+        if (customAttributes instanceof JSONObject)
+            mDescribeNextConversation((JSONObject) customAttributes);
 
         showSupport(activity);
     }

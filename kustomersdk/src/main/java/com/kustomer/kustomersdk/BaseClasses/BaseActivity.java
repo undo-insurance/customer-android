@@ -116,7 +116,8 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     protected void showErrorWithText(String text){
-        progressDialog.dismiss();
+        if(progressDialog!=null)
+            progressDialog.dismiss();
 
         if(retryView != null && retryView.getVisibility() == View.GONE)
             retryView.setVisibility(View.VISIBLE);

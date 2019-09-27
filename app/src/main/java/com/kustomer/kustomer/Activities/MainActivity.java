@@ -13,6 +13,7 @@ import com.kustomer.kustomer.BaseClasses.BaseActivity;
 import com.kustomer.kustomer.R;
 import com.kustomer.kustomersdk.Interfaces.KUSChatAvailableListener;
 import com.kustomer.kustomersdk.Kustomer;
+import com.kustomer.kustomersdk.Models.KUSChatAttributes;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 

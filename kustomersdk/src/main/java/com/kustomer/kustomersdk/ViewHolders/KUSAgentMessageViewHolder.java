@@ -17,7 +17,7 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.kustomer.kustomersdk.API.KUSUserSession;
-import com.kustomer.kustomersdk.Adapters.MessageListAdapter;
+import com.kustomer.kustomersdk.Adapters.KUSMessageListAdapter;
 import com.kustomer.kustomersdk.Enums.KUSChatMessageType;
 import com.kustomer.kustomersdk.Helpers.KUSDate;
 import com.kustomer.kustomersdk.Helpers.KUSText;
@@ -34,7 +34,7 @@ import butterknife.ButterKnife;
  * Created by Junaid on 1/19/2018.
  */
 
-public class AgentMessageViewHolder extends RecyclerView.ViewHolder {
+public class KUSAgentMessageViewHolder extends RecyclerView.ViewHolder {
 
     //region Properties
     @BindView(R2.id.tvMessage)
@@ -54,7 +54,7 @@ public class AgentMessageViewHolder extends RecyclerView.ViewHolder {
     //endregion
 
     //region Initializer
-    public AgentMessageViewHolder(@NonNull View itemView) {
+    public KUSAgentMessageViewHolder(@NonNull View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
     }
@@ -65,7 +65,7 @@ public class AgentMessageViewHolder extends RecyclerView.ViewHolder {
                        @NonNull KUSUserSession userSession,
                        boolean showAvatar,
                        boolean showDate,
-                       @NonNull final MessageListAdapter.ChatMessageItemListener mListener) {
+                       @NonNull final KUSMessageListAdapter.ChatMessageItemListener mListener) {
 
         if (chatMessage == null || chatMessage.getType() == KUSChatMessageType.KUS_CHAT_MESSAGE_TYPE_TEXT) {
             tvMessage.setVisibility(View.VISIBLE);
@@ -108,7 +108,7 @@ public class AgentMessageViewHolder extends RecyclerView.ViewHolder {
     }
 
     private void updateImageForMessage(@Nullable final KUSChatMessage chatMessage,
-                                       @NonNull final MessageListAdapter.ChatMessageItemListener mListener) {
+                                       @NonNull final KUSMessageListAdapter.ChatMessageItemListener mListener) {
 
         progressBarImage.setVisibility(View.VISIBLE);
 

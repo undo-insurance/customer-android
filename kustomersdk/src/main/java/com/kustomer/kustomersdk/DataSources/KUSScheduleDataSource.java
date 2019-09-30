@@ -11,7 +11,7 @@ import com.kustomer.kustomersdk.Models.KUSChatSettings;
 import com.kustomer.kustomersdk.Models.KUSHoliday;
 import com.kustomer.kustomersdk.Models.KUSModel;
 import com.kustomer.kustomersdk.Models.KUSSchedule;
-import com.kustomer.kustomersdk.Utils.JsonHelper;
+import com.kustomer.kustomersdk.Utils.KUSJsonHelper;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
 
 import org.json.JSONArray;
@@ -66,7 +66,7 @@ public class KUSScheduleDataSource extends KUSObjectDataSource {
 
                         boolean isSuccessfullyFetched = error == null;
 
-                        int statusCode = JsonHelper.getErrorStatus(error);
+                        int statusCode = KUSJsonHelper.getErrorStatus(error);
 
                         isScheduleNotFound = statusCode == KUSConstants.ApiStatusCodes.NOT_FOUND_CODE;
                         isFetched = isSuccessfullyFetched || isScheduleNotFound;
@@ -151,7 +151,7 @@ public class KUSScheduleDataSource extends KUSObjectDataSource {
         int weekDay = calendar.get(Calendar.DAY_OF_WEEK) - 1;
         int minutes = calendar.get(Calendar.HOUR_OF_DAY) * 60 + calendar.get(Calendar.MINUTE);
 
-        JSONArray businessHoursOfCurrentDay = JsonHelper.arrayFromKeyPath(businessHours.getHours(),
+        JSONArray businessHoursOfCurrentDay = KUSJsonHelper.arrayFromKeyPath(businessHours.getHours(),
                 String.valueOf(weekDay));
         if (businessHoursOfCurrentDay == null)
             return false;

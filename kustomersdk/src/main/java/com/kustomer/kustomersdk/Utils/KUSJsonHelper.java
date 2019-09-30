@@ -34,7 +34,7 @@ import java.util.regex.Pattern;
  * Created by Junaid on 1/23/2018.
  */
 
-public class JsonHelper {
+public class KUSJsonHelper {
 
     public static int getErrorStatus(@Nullable Error error) {
         if (error == null)

@@ -1,7 +1,7 @@
 package com.kustomer.kustomersdk.Models;
 
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
-import com.kustomer.kustomersdk.Utils.JsonHelper;
+import com.kustomer.kustomersdk.Utils.KUSJsonHelper;
 
 import org.json.JSONObject;
 
@@ -19,10 +19,10 @@ public class KUSMLFormValue extends KUSModel {
     KUSMLFormValue(JSONObject json) throws KUSInvalidJsonException {
         super(json);
 
-        displayName = JsonHelper.stringFromKeyPath(json,"displayName");
-        lastNodeRequired = JsonHelper.boolFromKeyPath(json,"lastNodeRequired");
+        displayName = KUSJsonHelper.stringFromKeyPath(json,"displayName");
+        lastNodeRequired = KUSJsonHelper.boolFromKeyPath(json,"lastNodeRequired");
 
-        ArrayList<KUSMLNode> nodes = KUSMLNode.objectsFromJSONs(JsonHelper.arrayFromKeyPath(json,
+        ArrayList<KUSMLNode> nodes = KUSMLNode.objectsFromJSONs(KUSJsonHelper.arrayFromKeyPath(json,
                 "tree.children"));
         ArrayList<KUSMLNode> filteredNodes = new ArrayList<>();
 

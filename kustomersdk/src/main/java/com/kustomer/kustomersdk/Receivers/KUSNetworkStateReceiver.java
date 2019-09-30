@@ -11,7 +11,7 @@ import android.support.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NetworkStateReceiver extends BroadcastReceiver {
+public class KUSNetworkStateReceiver extends BroadcastReceiver {
 
     //region Properties
     @NonNull
@@ -23,7 +23,7 @@ public class NetworkStateReceiver extends BroadcastReceiver {
 
     //region methods
 
-    public NetworkStateReceiver() {
+    public KUSNetworkStateReceiver() {
         listeners = new ArrayList<>();
         connected = true;
     }

@@ -15,8 +15,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.kustomer.kustomersdk.API.KUSUserSession;
-import com.kustomer.kustomersdk.Adapters.SessionListAdapter;
-import com.kustomer.kustomersdk.BaseClasses.BaseActivity;
+import com.kustomer.kustomersdk.Adapters.KUSSessionListAdapter;
+import com.kustomer.kustomersdk.BaseClasses.KUSBaseActivity;
 import com.kustomer.kustomersdk.DataSources.KUSChatSessionsDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSObjectDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSPaginatedDataSource;
@@ -28,7 +28,7 @@ import com.kustomer.kustomersdk.Models.KUSChatSession;
 import com.kustomer.kustomersdk.Models.KUSChatSettings;
 import com.kustomer.kustomersdk.R;
 import com.kustomer.kustomersdk.R2;
-import com.kustomer.kustomersdk.Utils.JsonHelper;
+import com.kustomer.kustomersdk.Utils.KUSJsonHelper;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
 import com.kustomer.kustomersdk.Views.KUSToolbar;
 
@@ -36,7 +36,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import butterknife.Optional;
 
-public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDataSourceListener, SessionListAdapter.onItemClickListener, KUSToolbar.OnToolbarItemClickListener, KUSObjectDataSourceListener {
+public class KUSSessionsActivity extends KUSBaseActivity implements KUSPaginatedDataSourceListener, KUSSessionListAdapter.onItemClickListener, KUSToolbar.OnToolbarItemClickListener, KUSObjectDataSourceListener {
 
     //region Properties
     @BindView(R2.id.rvSessions)
@@ -50,7 +50,7 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
     private KUSChatSessionsDataSource chatSessionsDataSource;
 
     private boolean didHandleFirstLoad = false;
-    private SessionListAdapter adapter;
+    private KUSSessionListAdapter adapter;
     private boolean shouldAnimateChatScreen = false;
     //endregion
 
@@ -152,7 +152,7 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
     }
 
     private void setupAdapter() {
-        adapter = new SessionListAdapter(rvSessions, chatSessionsDataSource, userSession, this);
+        adapter = new KUSSessionListAdapter(rvSessions, chatSessionsDataSource, userSession, this);
         rvSessions.setAdapter(adapter);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this,
@@ -369,7 +369,7 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
     @Override
     public void objectDataSourceOnError(KUSObjectDataSource dataSource, Error error) {
         if (dataSource == userSession.getScheduleDataSource()) {
-            int statusCode = JsonHelper.getErrorStatus(error);
+            int statusCode = KUSJsonHelper.getErrorStatus(error);
 
             boolean isNotFoundError = statusCode == KUSConstants.ApiStatusCodes.NOT_FOUND_CODE;
 

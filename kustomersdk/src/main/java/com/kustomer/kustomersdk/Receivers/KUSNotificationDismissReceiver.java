@@ -9,7 +9,7 @@ import com.kustomer.kustomersdk.Kustomer;
 
 import static com.kustomer.kustomersdk.Utils.KUSConstants.BundleName.NOTIFICATION_ID_BUNDLE_KEY;
 
-public class NotificationDismissReceiver extends BroadcastReceiver {
+public class KUSNotificationDismissReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {

@@ -1,7 +1,7 @@
 package com.kustomer.kustomersdk.Models;
 
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
-import com.kustomer.kustomersdk.Utils.JsonHelper;
+import com.kustomer.kustomersdk.Utils.KUSJsonHelper;
 
 import org.json.JSONObject;
 
@@ -20,10 +20,10 @@ public class KUSHoliday extends KUSModel {
     public KUSHoliday(JSONObject json) throws KUSInvalidJsonException {
         super(json);
 
-        name = JsonHelper.stringFromKeyPath(json,"attributes.name");
-        startDate = JsonHelper.dateFromKeyPath(json,"attributes.startDate");
-        endDate = JsonHelper.dateFromKeyPath(json,"attributes.endDate");
-        enabled = JsonHelper.boolFromKeyPath(json,"attributes.enabled");
+        name = KUSJsonHelper.stringFromKeyPath(json,"attributes.name");
+        startDate = KUSJsonHelper.dateFromKeyPath(json,"attributes.startDate");
+        endDate = KUSJsonHelper.dateFromKeyPath(json,"attributes.endDate");
+        enabled = KUSJsonHelper.boolFromKeyPath(json,"attributes.enabled");
     }
     //endregion
 

@@ -38,7 +38,7 @@ import com.kustomer.kustomersdk.Models.KUSChatSettings;
 import com.kustomer.kustomersdk.Models.KUSModel;
 import com.kustomer.kustomersdk.Models.KUSUser;
 import com.kustomer.kustomersdk.R;
-import com.kustomer.kustomersdk.Receivers.NotificationDismissReceiver;
+import com.kustomer.kustomersdk.Receivers.KUSNotificationDismissReceiver;
 import com.kustomer.kustomersdk.Utils.KUSUtils;
 
 import java.net.URL;
@@ -292,7 +292,7 @@ public class KUSNotificationWindow {
                     mContext.getString(R.string.com_kustomer_chat_with_param, responderName),
                     subtitleText, getDate(),getUnreadCount());
 
-            Intent dismiss = new Intent(mContext, NotificationDismissReceiver.class);
+            Intent dismiss = new Intent(mContext, KUSNotificationDismissReceiver.class);
             dismiss.putExtra(NOTIFICATION_ID_BUNDLE_KEY, notificationId);
 
             PendingIntent pIntentNegative = PendingIntent.getBroadcast(mContext, notificationId,

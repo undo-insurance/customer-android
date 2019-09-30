@@ -31,8 +31,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.kustomer.kustomersdk.API.KUSUserSession;
-import com.kustomer.kustomersdk.Adapters.MessageListAdapter;
-import com.kustomer.kustomersdk.BaseClasses.BaseActivity;
+import com.kustomer.kustomersdk.Adapters.KUSMessageListAdapter;
+import com.kustomer.kustomersdk.BaseClasses.KUSBaseActivity;
 import com.kustomer.kustomersdk.DataSources.KUSChatMessagesDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSObjectDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSPaginatedDataSource;
@@ -88,12 +88,12 @@ import static com.kustomer.kustomersdk.Enums.KUSFormQuestionProperty.*;
 import static com.kustomer.kustomersdk.Models.KUSFormQuestion.KUSFormQuestionRequiresResponse;
 import static com.kustomer.kustomersdk.Utils.KUSConstants.BundleName.CHAT_SCREEN_RESTARTED_KEY;
 
-public class KUSChatActivity extends BaseActivity implements KUSChatMessagesDataSourceListener,
+public class KUSChatActivity extends KUSBaseActivity implements KUSChatMessagesDataSourceListener,
         KUSToolbar.OnToolbarItemClickListener,
         KUSEmailInputViewListener,
         KUSInputBarViewListener,
         KUSOptionPickerViewListener,
-        MessageListAdapter.ChatMessageItemListener,
+        KUSMessageListAdapter.ChatMessageItemListener,
         KUSMLFormValuesPickerViewListener,
         KUSObjectDataSourceListener,
         KUSInputBarTextChangeListener {
@@ -132,7 +132,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
     KUSChatMessagesDataSource chatMessagesDataSource;
     KUSTeamsDataSource teamOptionsDatasource;
     String chatSessionId;
-    MessageListAdapter adapter;
+    KUSMessageListAdapter adapter;
     KUSToolbar kusToolbar;
     boolean shouldShowBackButton = true;
     boolean backPressed = false;
@@ -651,7 +651,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
     }
 
     private void setupAdapter() {
-        adapter = new MessageListAdapter(chatMessagesDataSource, userSession, chatMessagesDataSource, this);
+        adapter = new KUSMessageListAdapter(chatMessagesDataSource, userSession, chatMessagesDataSource, this);
         rvMessages.setAdapter(adapter);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true);

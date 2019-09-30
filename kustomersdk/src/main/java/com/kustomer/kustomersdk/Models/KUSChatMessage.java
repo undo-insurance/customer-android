@@ -7,9 +7,8 @@ import com.kustomer.kustomersdk.Enums.KUSChatMessageState;
 import com.kustomer.kustomersdk.Enums.KUSChatMessageType;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
 import com.kustomer.kustomersdk.Kustomer;
-import com.kustomer.kustomersdk.Utils.JsonHelper;
+import com.kustomer.kustomersdk.Utils.KUSJsonHelper;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
-import com.kustomer.kustomersdk.Utils.KUSUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,15 +16,12 @@ import org.json.JSONObject;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.regex.Pattern;
 
-import static com.kustomer.kustomersdk.Utils.JsonHelper.arrayListFromKeyPath;
-import static com.kustomer.kustomersdk.Utils.JsonHelper.dateFromKeyPath;
-import static com.kustomer.kustomersdk.Utils.JsonHelper.stringFromKeyPath;
+import static com.kustomer.kustomersdk.Utils.KUSJsonHelper.dateFromKeyPath;
+import static com.kustomer.kustomersdk.Utils.KUSJsonHelper.stringFromKeyPath;
 
 /**
  * Created by Junaid on 1/20/2018.
@@ -70,7 +66,7 @@ public class KUSChatMessage extends KUSModel {
         this.type = type;
         this.imageUrl = imageUrl;
 
-        JSONArray attachmentArray = JsonHelper.arrayFromKeyPath(json,"relationships.attachments.data");
+        JSONArray attachmentArray = KUSJsonHelper.arrayFromKeyPath(json,"relationships.attachments.data");
 
         if(attachmentArray != null)
             this.attachmentIds = arrayListFromJsonArray(attachmentArray,"id");

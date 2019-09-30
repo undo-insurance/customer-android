@@ -3,7 +3,7 @@ package com.kustomer.kustomersdk.Models;
 import com.kustomer.kustomersdk.Enums.KUSFormQuestionProperty;
 import com.kustomer.kustomersdk.Enums.KUSFormQuestionType;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
-import com.kustomer.kustomersdk.Utils.JsonHelper;
+import com.kustomer.kustomersdk.Utils.KUSJsonHelper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,17 +30,17 @@ public class KUSFormQuestion extends KUSModel {
     public KUSFormQuestion(JSONObject json) throws KUSInvalidJsonException {
         super(json);
 
-        name = JsonHelper.stringFromKeyPath(json, "name");
-        prompt = JsonHelper.stringFromKeyPath(json, "prompt");
-        skipIfSatisfied = JsonHelper.boolFromKeyPath(json, "skipIfSatisfied");
-        type = KUSFormQuestionTypeFromString(JsonHelper.stringFromKeyPath(json, "type"));
-        property = KUSFormQuestionPropertyFromString(JsonHelper.stringFromKeyPath(json, "property"));
+        name = KUSJsonHelper.stringFromKeyPath(json, "name");
+        prompt = KUSJsonHelper.stringFromKeyPath(json, "prompt");
+        skipIfSatisfied = KUSJsonHelper.boolFromKeyPath(json, "skipIfSatisfied");
+        type = KUSFormQuestionTypeFromString(KUSJsonHelper.stringFromKeyPath(json, "type"));
+        property = KUSFormQuestionPropertyFromString(KUSJsonHelper.stringFromKeyPath(json, "property"));
 
         if (property == KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_MLV) {
             JSONObject tempJson = null;
 
             try {
-                JSONObject valueMeta = JsonHelper.jsonObjectFromKeyPath(json, "valueMeta");
+                JSONObject valueMeta = KUSJsonHelper.jsonObjectFromKeyPath(json, "valueMeta");
 
                 if (valueMeta != null) {
                     tempJson = new JSONObject(valueMeta.toString());
@@ -51,7 +51,7 @@ public class KUSFormQuestion extends KUSModel {
             }
         }
 
-        values = JsonHelper.arrayListFromKeyPath(json, "values");
+        values = KUSJsonHelper.arrayListFromKeyPath(json, "values");
     }
     //endregion
 

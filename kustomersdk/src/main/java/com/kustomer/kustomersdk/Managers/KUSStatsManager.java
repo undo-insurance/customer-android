@@ -8,7 +8,7 @@ import android.support.annotation.Nullable;
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Interfaces.KUSCustomerStatsListener;
 import com.kustomer.kustomersdk.Interfaces.KUSRequestCompletionListener;
-import com.kustomer.kustomersdk.Utils.JsonHelper;
+import com.kustomer.kustomersdk.Utils.KUSJsonHelper;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
 
 import org.json.JSONObject;
@@ -55,9 +55,9 @@ public class KUSStatsManager {
                             return;
                         }
 
-                        JSONObject jsonObject = JsonHelper.jsonObjectFromKeyPath(response,
+                        JSONObject jsonObject = KUSJsonHelper.jsonObjectFromKeyPath(response,
                                 "data");
-                        Date lastActivity = JsonHelper.dateFromKeyPath(jsonObject,
+                        Date lastActivity = KUSJsonHelper.dateFromKeyPath(jsonObject,
                                 "attributes.lastActivity");
 
                         final boolean sessionUpdated = (KUSStatsManager.this.lastActivity == null

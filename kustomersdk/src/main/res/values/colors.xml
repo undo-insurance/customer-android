@@ -7,7 +7,7 @@
     <color name="kusSessionItemBackground">#FFFFFF</color>
     <color name="kusSessionItemSelectedBackground">#E0E0E0</color>
     <color name="kusSessionTitleColor">#000000</color>
-    <color name="kusSessionDateColor">#000000</color>
+    <color name="kusSessionDateColor">#757575</color>
     <color name="kusSessionSubtitleColor">#000000</color>
     <color name="kusSessionUnreadColor">#FFFFFF</color>
     <color name="kusSessionUnreadBackground">#aacc0000</color>
@@ -17,13 +17,13 @@
     <color name="kusNewSessionTextColor">#FFFFFF</color>
 
     <color name="kusToolbarNameColor">#000000</color>
-    <color name="kusToolbarGreetingColor">#000000</color>
+    <color name="kusToolbarGreetingColor">#757575</color>
     <color name="kusToolbarSeparatorColor">#BDBDBD</color>
     <color name="kusToolbarUnreadTextColor">#FFFFFF</color>
     <color name="kusToolbarUnreadBackground">#aacc0000</color>
     <color name="kusEmailInputBackground">#FFFFFF</color>
     <color name="kusEmailInputBorderColor">#4CAF50</color>
-    <color name="kusEmailInputPromptColor">#000000</color>
+    <color name="kusEmailInputPromptColor">#757575</color>
     <color name="kusChatListBackground">#FFFFFF</color>
     <color name="kusChatItemBackground">#FFFFFF</color>
     <color name="kusChatTimestampTextColor">#BDBDBD</color>
@@ -54,7 +54,6 @@
     <color name="kusWebToolbarBackTintColor">#000000</color>
 
     <color name="kusSessionClosedViewBackgroundColor">#F1F1F1</color>
-    <color name="kusSessionClosedViewTextColor">#000000</color>
     <color name="kusChatHasEndedTextColor">#000000</color>
     <color name="kusChatHasEndedBackGroundColor">#E0E0E0</color>
     <color name="kusStartANewConversationTextColor">#2962FF</color>

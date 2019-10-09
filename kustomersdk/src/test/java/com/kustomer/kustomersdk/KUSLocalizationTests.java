@@ -81,20 +81,20 @@ public class KUSLocalizationTests {
         KUSLocalization.getSharedInstance().setUserLocale(null);
         KUSLocalization.getSharedInstance().updateKustomerLocaleWithFallback(mContext);
         KUSLocalization.getSharedInstance().updateConfig(mContext);
-        assertEquals(KUSLocalization.getSharedInstance().localizedString(mContext, "attachment"), "Attachment");
-        assertEquals(KUSLocalization.getSharedInstance().localizedString(mContext,"just_now"), "Just now");
-        assertEquals(KUSLocalization.getSharedInstance().localizedString(mContext,"gallery"), "Gallery");
-        assertEquals(KUSLocalization.getSharedInstance().localizedString(mContext,"cancel"), "Cancel");
-        assertEquals(KUSLocalization.getSharedInstance().localizedString(mContext,"camera"), "Camera");
+        assertEquals(KUSLocalization.getSharedInstance().localizedString(mContext, "com_kustomer_attachment"), "Attachment");
+        assertEquals(KUSLocalization.getSharedInstance().localizedString(mContext,"com_kustomer_just_now"), "Just now");
+        assertEquals(KUSLocalization.getSharedInstance().localizedString(mContext,"com_kustomer_gallery"), "Gallery");
+        assertEquals(KUSLocalization.getSharedInstance().localizedString(mContext,"com_kustomer_cancel"), "Cancel");
+        assertEquals(KUSLocalization.getSharedInstance().localizedString(mContext,"com_kustomer_camera"), "Camera");
 
         KUSLocalization.getSharedInstance().setUserLocale(new Locale("en"));
         KUSLocalization.getSharedInstance().updateKustomerLocaleWithFallback(mContext);
         KUSLocalization.getSharedInstance().updateConfig(mContext);
-        assertEquals(KUSLocalization.getSharedInstance().localizedString(mContext,"attachment"), "Attachment");
-        assertEquals(KUSLocalization.getSharedInstance().localizedString(mContext,"just_now"), "Just now");
-        assertEquals(KUSLocalization.getSharedInstance().localizedString(mContext,"gallery"), "Gallery");
-        assertEquals(KUSLocalization.getSharedInstance().localizedString(mContext,"cancel"), "Cancel");
-        assertEquals(KUSLocalization.getSharedInstance().localizedString(mContext,"camera"), "Camera");
+        assertEquals(KUSLocalization.getSharedInstance().localizedString(mContext,"com_kustomer_attachment"), "Attachment");
+        assertEquals(KUSLocalization.getSharedInstance().localizedString(mContext,"com_kustomer_just_now"), "Just now");
+        assertEquals(KUSLocalization.getSharedInstance().localizedString(mContext,"com_kustomer_gallery"), "Gallery");
+        assertEquals(KUSLocalization.getSharedInstance().localizedString(mContext,"com_kustomer_cancel"), "Cancel");
+        assertEquals(KUSLocalization.getSharedInstance().localizedString(mContext,"com_kustomer_camera"), "Camera");
 
     }
 
@@ -103,11 +103,11 @@ public class KUSLocalizationTests {
     @Test
     public void testLocalizedUrduString(){
 
-        assertEquals(KUSLocalization.getSharedInstance().localizedString(mContext,"cancel"), "منسوخ کریں");
-        assertEquals(KUSLocalization.getSharedInstance().localizedString(mContext,"attachment"), "منسلکہ");
-        assertEquals(KUSLocalization.getSharedInstance().localizedString(mContext,"just_now"), "ابھی ابھی");
-        assertEquals(KUSLocalization.getSharedInstance().localizedString(mContext,"camera"), "کیمرے");
-        assertEquals(KUSLocalization.getSharedInstance().localizedString(mContext,"gallery"), "نگارخانہ");
+        assertEquals(KUSLocalization.getSharedInstance().localizedString(mContext,"com_kustomer_cancel"), "منسوخ کریں");
+        assertEquals(KUSLocalization.getSharedInstance().localizedString(mContext,"com_kustomer_attachment"), "منسلکہ");
+        assertEquals(KUSLocalization.getSharedInstance().localizedString(mContext,"com_kustomer_just_now"), "ابھی ابھی");
+        assertEquals(KUSLocalization.getSharedInstance().localizedString(mContext,"com_kustomer_camera"), "کیمرے");
+        assertEquals(KUSLocalization.getSharedInstance().localizedString(mContext,"com_kustomer_gallery"), "نگارخانہ");
 
     }
 

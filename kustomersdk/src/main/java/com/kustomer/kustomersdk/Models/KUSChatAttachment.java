@@ -1,7 +1,7 @@
 package com.kustomer.kustomersdk.Models;
 
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
-import com.kustomer.kustomersdk.Utils.JsonHelper;
+import com.kustomer.kustomersdk.Utils.KUSJsonHelper;
 
 import org.json.JSONObject;
 
@@ -22,9 +22,9 @@ public class KUSChatAttachment extends KUSModel {
     public KUSChatAttachment(JSONObject jsonObject) throws KUSInvalidJsonException {
         super(jsonObject);
 
-        name = JsonHelper.stringFromKeyPath(jsonObject,"attributes.name");
-        createdAt = JsonHelper.dateFromKeyPath(jsonObject,"attributes.createdAt");
-        updatedAt = JsonHelper.dateFromKeyPath(jsonObject,"attributes.updatedAt");
+        name = KUSJsonHelper.stringFromKeyPath(jsonObject,"attributes.name");
+        createdAt = KUSJsonHelper.dateFromKeyPath(jsonObject,"attributes.createdAt");
+        updatedAt = KUSJsonHelper.dateFromKeyPath(jsonObject,"attributes.updatedAt");
     }
 
     @Override

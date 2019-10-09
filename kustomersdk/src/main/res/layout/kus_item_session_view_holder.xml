@@ -25,7 +25,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:text="@string/com_kustomer_closed"
-                android:textColor="@color/kusSessionClosedViewTextColor"
+                android:textColor="@color/kusSessionDateColor"
                 android:textSize="12sp" />
         </FrameLayout>
 

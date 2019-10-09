@@ -31,7 +31,7 @@ public class KUSConstants {
         String VOLUME_CONTROL_ENDPOINT = "/c/v1/chat/volume-control/responses";
         String SESSION_LOCK_ENDPOINT = "/c/v1/chat/sessions/%s";
         String CUSTOMER_STATS_ENDPOINT = "/c/v1/chat/customers/stats";
-        String BUSINESS_SCHEDULE_ENDPOINT = "/c/v1/schedules/default?include=holidays";
+        String BUSINESS_SCHEDULE_ENDPOINT_WITH_ID = "/c/v1/schedules/%s?include=holidays";
         String SESSION_QUEUE_ENDPOINT = "/c/v1/chat/sessions/%s/queue";
         String SINGLE_MESSAGE_ENDPOINT = "/c/v1/chat/sessions/%s/messages/%s";
         String SATISFACTION_RESPONSE_ENDPOINT = "/c/v1/chat/sessions/%s/satisfaction";
@@ -58,6 +58,10 @@ public class KUSConstants {
         String SEND_MESSAGE_EVENT = "kustomer.app.chat.message.send";
         String END_SESSION_EVENT = "kustomer.app.chat.session.end";
         String CHAT_ACTIVITY_TYPING_EVENT = "client-kustomer.app.chat.activity.typing";
+        String PRESENCE_MEMBER_ADDED = "pusher:member_added";
+        String PRESENCE_SUBSCRIPTION_SUCCEEDED = "pusher:subscription_succeeded";
+        String PRESENCE_SUBSCRIPTION_ERROR = "pusher:subscription_error";
+        String PRESENCE_MEMBER_REMOVED = "pusher:member_removed";
     }
 
     public interface BundleName {
@@ -66,10 +70,15 @@ public class KUSConstants {
         String NOTIFICATION_ID_BUNDLE_KEY = "Notification_ID";
         String CHAT_SCREEN_MESSAGE = "Chat_screen_message";
         String CHAT_SCREEN_RESTARTED_KEY = "Chat_screen_restarted_bundle";
+        String CHAT_SCREEN_FORM_ID = "Chat_form_id";
     }
 
     public interface ChatSession {
         String TEMP_SESSION_ID = "temp_session_id";
+    }
+
+    public interface ApiStatusCodes{
+        int NOT_FOUND_CODE = 404;
     }
 
 }

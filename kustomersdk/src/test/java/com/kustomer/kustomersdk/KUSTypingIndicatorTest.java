@@ -5,7 +5,7 @@ import android.os.Build;
 import com.kustomer.kustomersdk.Enums.KUSTypingStatus;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
 import com.kustomer.kustomersdk.Models.KUSTypingIndicator;
-import com.kustomer.kustomersdk.Utils.JsonHelper;
+import com.kustomer.kustomersdk.Utils.KUSJsonHelper;
 
 import org.json.JSONObject;
 import org.junit.Assert;
@@ -28,7 +28,7 @@ public class KUSTypingIndicatorTest {
 
         //Constructor should work as expected and all json values are correctly assigned
         //typing status for "typing" is assigned correctly
-        JSONObject data = JsonHelper.jsonObjectFromHashMap(new HashMap<String, Object>() {{
+        JSONObject data = KUSJsonHelper.jsonObjectFromHashMap(new HashMap<String, Object>() {{
             put("id", "temp-id");
             put("userId", "temp-user");
             put("status", "typing");
@@ -44,7 +44,7 @@ public class KUSTypingIndicatorTest {
         }
 
         //typing status for "typing-ended" is assigned correctly
-        data = JsonHelper.jsonObjectFromHashMap(new HashMap<String, Object>() {{
+        data = KUSJsonHelper.jsonObjectFromHashMap(new HashMap<String, Object>() {{
             put("id", "temp-id");
             put("userId", "temp-user");
             put("status", "typing-ended");
@@ -59,7 +59,7 @@ public class KUSTypingIndicatorTest {
         }
 
         //typing status is KUS_TYPING_UNKNOWN when incorrectly value is passed
-        data = JsonHelper.jsonObjectFromHashMap(new HashMap<String, Object>() {{
+        data = KUSJsonHelper.jsonObjectFromHashMap(new HashMap<String, Object>() {{
             put("id", "temp-id");
             put("userId", "temp-user");
             put("status", "unknown-status");
@@ -74,7 +74,7 @@ public class KUSTypingIndicatorTest {
         }
 
         //Throws KUSInvalidJsonException if id is not available
-        data = JsonHelper.jsonObjectFromHashMap(new HashMap<String, Object>() {{
+        data = KUSJsonHelper.jsonObjectFromHashMap(new HashMap<String, Object>() {{
             put("userId", "temp-user");
             put("status", "unknown-status");
         }});
@@ -90,7 +90,7 @@ public class KUSTypingIndicatorTest {
     @Test
     public void testTypingIndicatorStatusSetter() {
         //status setter should work as expected
-        JSONObject data = JsonHelper.jsonObjectFromHashMap(new HashMap<String, Object>() {{
+        JSONObject data = KUSJsonHelper.jsonObjectFromHashMap(new HashMap<String, Object>() {{
             put("id", "temp-id");
             put("userId", "temp-user");
             put("status", "typing");
@@ -112,7 +112,7 @@ public class KUSTypingIndicatorTest {
     @Test
     public void testTypingIndicatorGetters() {
         //Getter should work as expected
-        JSONObject data = JsonHelper.jsonObjectFromHashMap(new HashMap<String, Object>() {{
+        JSONObject data = KUSJsonHelper.jsonObjectFromHashMap(new HashMap<String, Object>() {{
             put("id", "temp-id");
             put("userId", "temp-user");
             put("status", "typing");

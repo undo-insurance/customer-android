@@ -1,5 +1,11 @@
 # Changelog for Kustomer Android SDK
 
+## 0.2.6
+Release Date: 10/09/2019
+* You can now check business hours
+* Wrap chat Greeting text and Waiting text to multiple lines without truncation. 
+* UI fixes
+
 ## 0.2.5
 Release Date: 06/26/2019
 * Optimized & Improved Performance of API calls that fetch Satisfaction Forms data

@@ -91,9 +91,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:singleLine="true"
+                    android:singleLine="false"
                     android:textColor="@color/kusToolbarGreetingColor"
                     android:textSize="11sp"
+                    android:textAlignment="center"
                     tools:ignore="SmallSp" />
 
                 <android.support.v7.widget.AppCompatTextView
@@ -102,9 +103,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:singleLine="true"
+                    android:singleLine="false"
                     android:text="@string/com_kustomer_we_re_here_let_us_know_if_we_can_help"
                     android:textColor="@color/kusToolbarGreetingColor"
+                    android:textAlignment="center"
                     android:textSize="11sp"
                     tools:ignore="SmallSp" />
 

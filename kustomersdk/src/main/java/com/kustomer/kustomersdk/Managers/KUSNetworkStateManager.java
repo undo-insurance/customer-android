@@ -11,14 +11,14 @@ import com.kustomer.kustomersdk.Interfaces.KUSPaginatedDataSourceListener;
 import com.kustomer.kustomersdk.Kustomer;
 import com.kustomer.kustomersdk.Models.KUSChatSession;
 import com.kustomer.kustomersdk.Models.KUSModel;
-import com.kustomer.kustomersdk.Receivers.NetworkStateReceiver;
+import com.kustomer.kustomersdk.Receivers.KUSNetworkStateReceiver;
 
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class KUSNetworkStateManager implements NetworkStateReceiver.NetworkStateReceiverListener,
+public class KUSNetworkStateManager implements KUSNetworkStateReceiver.NetworkStateReceiverListener,
         KUSPaginatedDataSourceListener {
     //region properties
 
@@ -26,7 +26,7 @@ public class KUSNetworkStateManager implements NetworkStateReceiver.NetworkState
     private static KUSNetworkStateManager kusNetworkStateManager;
 
     @NonNull
-    private NetworkStateReceiver networkStateReceiver;
+    private KUSNetworkStateReceiver networkStateReceiver;
     @NonNull
     private ConcurrentHashMap<String, KUSChatSession> previousChatSessions;
 
@@ -35,7 +35,7 @@ public class KUSNetworkStateManager implements NetworkStateReceiver.NetworkState
     //region Lifecycle
 
     private KUSNetworkStateManager() {
-        networkStateReceiver = new NetworkStateReceiver();
+        networkStateReceiver = new KUSNetworkStateReceiver();
         previousChatSessions = new ConcurrentHashMap<>();
         networkStateReceiver.addListener(this);
     }

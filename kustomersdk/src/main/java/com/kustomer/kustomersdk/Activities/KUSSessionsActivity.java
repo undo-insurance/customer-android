@@ -15,8 +15,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.kustomer.kustomersdk.API.KUSUserSession;
-import com.kustomer.kustomersdk.Adapters.SessionListAdapter;
-import com.kustomer.kustomersdk.BaseClasses.BaseActivity;
+import com.kustomer.kustomersdk.Adapters.KUSSessionListAdapter;
+import com.kustomer.kustomersdk.BaseClasses.KUSBaseActivity;
 import com.kustomer.kustomersdk.DataSources.KUSChatSessionsDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSObjectDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSPaginatedDataSource;
@@ -29,13 +29,14 @@ import com.kustomer.kustomersdk.Models.KUSChatSettings;
 import com.kustomer.kustomersdk.R;
 import com.kustomer.kustomersdk.R2;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
+import com.kustomer.kustomersdk.Utils.KUSJsonHelper;
 import com.kustomer.kustomersdk.Views.KUSToolbar;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import butterknife.Optional;
 
-public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDataSourceListener, SessionListAdapter.onItemClickListener, KUSToolbar.OnToolbarItemClickListener, KUSObjectDataSourceListener {
+public class KUSSessionsActivity extends KUSBaseActivity implements KUSPaginatedDataSourceListener, KUSSessionListAdapter.onItemClickListener, KUSToolbar.OnToolbarItemClickListener, KUSObjectDataSourceListener {
 
     //region Properties
     @BindView(R2.id.rvSessions)
@@ -49,7 +50,7 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
     private KUSChatSessionsDataSource chatSessionsDataSource;
 
     private boolean didHandleFirstLoad = false;
-    private SessionListAdapter adapter;
+    private KUSSessionListAdapter adapter;
     private boolean shouldAnimateChatScreen = false;
     //endregion
 
@@ -80,9 +81,10 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
             }
         }
 
-        boolean shouldCreateNewSessionWithMessage = chatSessionsDataSource.getMessageToCreateNewChatSession() != null;
+        userSession.getScheduleDataSource().addListener(this);
+        userSession.getScheduleDataSource().fetch();
 
-        if (chatSessionsDataSource.isFetched() || shouldCreateNewSessionWithMessage) {
+        if (shouldHandleFirstLoad()) {
             handleFirstLoadIfNecessary();
         } else {
             rvSessions.setVisibility(View.INVISIBLE);
@@ -91,6 +93,17 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
         }
 
         showKustomerBrandingFooterIfNeeded();
+
+        //Connecting to Presence channel when Kustomer support chat screen shown for existing user
+        connectToCustomerPresenceChannel();
+    }
+
+    private void connectToCustomerPresenceChannel() {
+        String customerId = chatSessionsDataSource.getCustomerId();
+
+        if(null!=customerId) {
+            userSession.getPushClient().connectToCustomerPresenceChannel(customerId);
+        }
     }
 
     @Override
@@ -109,6 +122,9 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
 
         rvSessions.setAdapter(null);
         userSession.getPushClient().setSupportScreenShown(false);
+
+        //Disconnecting from Presence channel when Kustomer support is exited
+        userSession.getPushClient().disconnectFromCustomerPresenceChannel();
         super.onDestroy();
     }
 
@@ -120,6 +136,15 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
     //endregion
 
     //region Initializer
+
+    private boolean shouldHandleFirstLoad() {
+
+        boolean shouldCreateNewSessionWithMessage = chatSessionsDataSource.getMessageToCreateNewChatSession() != null;
+        boolean scheduleFetched = userSession.getScheduleDataSource().isFetched();
+        boolean chatSessionFetched = chatSessionsDataSource.isFetched();
+
+        return scheduleFetched && (chatSessionFetched || shouldCreateNewSessionWithMessage);
+    }
 
     private void showKustomerBrandingFooterIfNeeded() {
         if (userSession.getChatSettingsDataSource().isFetched()) {
@@ -141,7 +166,7 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
     }
 
     private void setupAdapter() {
-        adapter = new SessionListAdapter(rvSessions, chatSessionsDataSource, userSession, this);
+        adapter = new KUSSessionListAdapter(rvSessions, chatSessionsDataSource, userSession, this);
         rvSessions.setAdapter(adapter);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this,
@@ -189,7 +214,7 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
         if (didHandleFirstLoad || !userSession.getChatSettingsDataSource().isFetched())
             return;
 
-        if(!chatSessionsDataSource.isFetched() &&
+        if (!chatSessionsDataSource.isFetched() &&
                 chatSessionsDataSource.getMessageToCreateNewChatSession() == null)
             return;
 
@@ -201,6 +226,9 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
         if (chatSessionsDataSource.getMessageToCreateNewChatSession() != null) {
             intent.putExtra(KUSConstants.BundleName.CHAT_SCREEN_MESSAGE,
                     chatSessionsDataSource.getMessageToCreateNewChatSession());
+
+            intent.putExtra(KUSConstants.BundleName.CHAT_SCREEN_FORM_ID,
+                    chatSessionsDataSource.getFormIdForConversationalForm());
 
         } else if (chatSessionsDataSource != null &&
                 (chatSessionsDataSource.getSize() == 0 || chatSessionsDataSource.getOpenChatSessionsCount() == 0)) {
@@ -223,6 +251,24 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
                 overridePendingTransition(0, 0);
         }
     }
+
+    private void handleSuccessfulDataLoad() {
+        if (shouldHandleFirstLoad()) {
+            Handler handler = new Handler(Looper.getMainLooper());
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    hideProgressBar();
+                    handleFirstLoadIfNecessary();
+                    rvSessions.setVisibility(View.VISIBLE);
+                    btnNewConversation.setVisibility(View.VISIBLE);
+                }
+
+            };
+            handler.post(runnable);
+        }
+    }
+
     //endregion
 
     //region Listeners
@@ -230,6 +276,7 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
     @OnClick(R2.id.btnRetry)
     void userTappedRetry() {
         chatSessionsDataSource.fetchLatest();
+        userSession.getScheduleDataSource().fetch();
         showProgressBar();
     }
 
@@ -251,17 +298,7 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
 
     @Override
     public void onLoad(KUSPaginatedDataSource dataSource) {
-        Handler handler = new Handler(Looper.getMainLooper());
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                hideProgressBar();
-                handleFirstLoadIfNecessary();
-                rvSessions.setVisibility(View.VISIBLE);
-                btnNewConversation.setVisibility(View.VISIBLE);
-            }
-        };
-        handler.post(runnable);
+        handleSuccessfulDataLoad();
     }
 
     @Override
@@ -317,6 +354,11 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
 
     @Override
     public void objectDataSourceOnLoad(KUSObjectDataSource dataSource) {
+        if (dataSource == userSession.getScheduleDataSource()) {
+            handleSuccessfulDataLoad();
+            return;
+        }
+
         if (dataSource != userSession.getChatSettingsDataSource())
             return;
 
@@ -340,7 +382,27 @@ public class KUSSessionsActivity extends BaseActivity implements KUSPaginatedDat
 
     @Override
     public void objectDataSourceOnError(KUSObjectDataSource dataSource, Error error) {
+        if (dataSource == userSession.getScheduleDataSource()) {
+            int statusCode = KUSJsonHelper.getErrorStatus(error);
 
+            boolean isNotFoundError = statusCode == KUSConstants.ApiStatusCodes.NOT_FOUND_CODE;
+
+            if (isNotFoundError) {
+                handleSuccessfulDataLoad();
+            } else {
+                Handler handler = new Handler(Looper.getMainLooper());
+                Runnable runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        String errorText = getString(R.string.com_kustomer_something_went_wrong_please_try_again);
+                        showErrorWithText(errorText);
+                        rvSessions.setVisibility(View.INVISIBLE);
+                        btnNewConversation.setVisibility(View.INVISIBLE);
+                    }
+                };
+                handler.post(runnable);
+            }
+        }
     }
 
     //endregion

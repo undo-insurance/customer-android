@@ -10,8 +10,8 @@ import com.kustomer.kustomersdk.DataSources.KUSChatSessionsDataSource;
 import com.kustomer.kustomersdk.Models.KUSChatSession;
 import com.kustomer.kustomersdk.R;
 import com.kustomer.kustomersdk.Utils.KUSUtils;
-import com.kustomer.kustomersdk.ViewHolders.DummyViewHolder;
-import com.kustomer.kustomersdk.ViewHolders.SessionViewHolder;
+import com.kustomer.kustomersdk.ViewHolders.KUSDummyViewHolder;
+import com.kustomer.kustomersdk.ViewHolders.KUSSessionViewHolder;
 
 import java.lang.ref.WeakReference;
 
@@ -19,7 +19,7 @@ import java.lang.ref.WeakReference;
  * Created by Junaid on 1/19/2018.
  */
 
-public class SessionListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class KUSSessionListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     //region Properties
     private KUSChatSessionsDataSource mChatSessionsDataSource;
@@ -34,8 +34,8 @@ public class SessionListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     //endregion
 
     //region LifeCycle
-    public SessionListAdapter(RecyclerView recyclerView, KUSChatSessionsDataSource chatSessionsDataSource,
-                              KUSUserSession userSession, onItemClickListener listener) {
+    public KUSSessionListAdapter(RecyclerView recyclerView, KUSChatSessionsDataSource chatSessionsDataSource,
+                                 KUSUserSession userSession, onItemClickListener listener) {
         mChatSessionsDataSource = chatSessionsDataSource;
         mUserSession = userSession;
         mListener = listener;
@@ -46,17 +46,17 @@ public class SessionListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         if (viewType == SESSION_VIEW_TYPE)
-            return new SessionViewHolder(LayoutInflater.from(parent.getContext())
+            return new KUSSessionViewHolder(LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.kus_item_session_view_holder, parent, false));
         else
-            return new DummyViewHolder(LayoutInflater.from(parent.getContext())
+            return new KUSDummyViewHolder(LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.kus_item_session_dummy_view_holder, parent, false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        if (position < mChatSessionsDataSource.getSize() && holder instanceof SessionViewHolder) {
-            ((SessionViewHolder) holder).onBind((KUSChatSession) mChatSessionsDataSource
+        if (position < mChatSessionsDataSource.getSize() && holder instanceof KUSSessionViewHolder) {
+            ((KUSSessionViewHolder) holder).onBind((KUSChatSession) mChatSessionsDataSource
                     .get(position), mUserSession, mListener);
         }
     }
@@ -76,7 +76,7 @@ public class SessionListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         // No need to call onDetach for dummy items
         try {
-            ((SessionViewHolder) holder).onDetached();
+            ((KUSSessionViewHolder) holder).onDetached();
         } catch (Exception ignore) {
         }
     }

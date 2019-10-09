@@ -44,7 +44,7 @@ import com.kustomer.kustomersdk.Models.KUSRetry;
 import com.kustomer.kustomersdk.Models.KUSSessionQueue;
 import com.kustomer.kustomersdk.Models.KUSTypingIndicator;
 import com.kustomer.kustomersdk.R;
-import com.kustomer.kustomersdk.Utils.JsonHelper;
+import com.kustomer.kustomersdk.Utils.KUSJsonHelper;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
 
 import org.json.JSONArray;
@@ -118,6 +118,8 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
     private Timer hideTypingTimer;
     @Nullable
     private KUSTypingIndicator typingIndicator;
+    @Nullable
+    private KUSFormDataSource formDataSource;
     //endregion
 
     //region Initializer
@@ -138,14 +140,20 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
         addListener(this);
     }
 
-    public KUSChatMessagesDataSource(KUSUserSession userSession, boolean startNewConversation) {
+    public KUSChatMessagesDataSource(@NonNull KUSUserSession userSession, @Nullable String formId,
+                                     boolean startNewConversation) {
         this(userSession);
 
         if (startNewConversation) {
             createdLocally = true;
-            userSession.getFormDataSource().addListener(this);
 
-            userSession.getFormDataSource().fetch();
+            if (formId != null)
+                formDataSource = new KUSFormDataSource(userSession, formId);
+            else
+                formDataSource = userSession.getFormDataSource();
+
+            formDataSource.addListener(this);
+            formDataSource.fetch();
         }
     }
 
@@ -157,7 +165,6 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
 
         this.sessionId = sessionId;
     }
-
 
     //endregion
 
@@ -215,7 +222,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
         KUSChatSession session = (KUSChatSession) getUserSession().getChatSessionsDataSource()
                 .findById(getSessionId());
 
-        boolean isSessionLocked =session!=null && session.getLockedAt() != null;
+        boolean isSessionLocked = session != null && session.getLockedAt() != null;
         boolean isSatisfactionResponseFetched = getSatisfactionResponseDataSource().isFetched();
 
         return isSessionLocked && isSatisfactionResponseFetched;
@@ -231,8 +238,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
 
         isProactiveCampaign = !isAnyMessageByCurrentUser();
 
-        KUSChatSettings chatSettings = (KUSChatSettings) getUserSession().getChatSettingsDataSource().getObject();
-        if (chatSettings != null && chatSettings.getActiveFormId() != null && !isActualSession()) {
+        if (!isActualSession() && containsFormId()) {
 
             if (attachments != null && attachments.size() > 0)
                 throw new AssertionError("Should not have been able to send attachments without a sessionId");
@@ -372,7 +378,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
                     onCreateSessionListeners.add(listener);
             } else {
                 if (getUserSession() == null) {
-                    if(listener != null)
+                    if (listener != null)
                         listener.onComplete(false, new Error());
                     return;
                 }
@@ -386,6 +392,12 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
                         ArrayList<onCreateSessionListener> callbacks = new ArrayList<>(onCreateSessionListeners);
                         onCreateSessionListeners = null;
 
+                        if (getUserSession() == null) {
+                            for (onCreateSessionListener listener1 : callbacks)
+                                listener1.onComplete(false, null);
+                            return;
+                        }
+
                         if (error != null || session == null) {
                             KUSLog.KUSLogError(String.format("Error creating session: %s",
                                     error != null ? error.toString() : ""));
@@ -393,6 +405,15 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
                                 listener1.onComplete(false, error);
 
                             return;
+                        }
+
+                        if (!isActualSession() && sessionId != null) {
+                            KUSChatSession tempSession = (KUSChatSession) getUserSession()
+                                    .getChatSessionsDataSource().findById(sessionId);
+
+                            getUserSession().getChatMessagesDataSources().remove(sessionId);
+                            getUserSession().getChatSessionsDataSource()
+                                    .removeAll(Collections.singletonList((KUSModel) tempSession));
                         }
 
                         //Grab the sessionId
@@ -403,7 +424,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
                         sessionQueuePollingManager = new KUSSessionQueuePollingManager(getUserSession(), sessionId);
 
                         //Insert the current messages data source into the userSession's lookup table
-                        if(getUserSession() != null)
+                        if (getUserSession() != null)
                             getUserSession().getChatMessagesDataSources().put(session.getId(),
                                     KUSChatMessagesDataSource.this);
 
@@ -517,7 +538,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
 
     public void endChat(final String reason, final OnEndChatListener onEndChatListener) {
         if (getUserSession() == null) {
-            if(onEndChatListener != null)
+            if (onEndChatListener != null)
                 onEndChatListener.onComplete(false);
             return;
         }
@@ -732,7 +753,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
         }};
 
         getUserSession().getPushClient().sendChatActivityForSessionId(sessionId,
-                JsonHelper.jsonObjectFromHashMap(activityData).toString());
+                KUSJsonHelper.jsonObjectFromHashMap(activityData).toString());
 
         if (typingStatus.equals(KUSTypingStatus.KUS_TYPING)) {
             lastTypingStatusSentAt = currentDate;
@@ -784,7 +805,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
         }
     }
 
-    public boolean isLatestMessageAfterLastSeen(){
+    public boolean isLatestMessageAfterLastSeen() {
         if(getUserSession() == null)
             return false;
 
@@ -841,6 +862,10 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
 
     //region Private Methods
 
+    private boolean containsFormId() {
+        return formDataSource != null && formDataSource.getFormId() != null;
+    }
+
     private boolean shouldAllowResending() {
         if (getUserSession() == null)
             return false;
@@ -875,17 +900,6 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
                 sendTypingStatusToPusher(KUSTypingStatus.KUS_TYPING_ENDED);
             }
         }, KUS_TYPING_ENDED_DELAY);
-    }
-
-    @Nullable
-    private String getCustomerId() {
-        for (int i = 0; i < getSize(); i++) {
-
-            if (get(i).getCustomerId() != null)
-                return get(i).getCustomerId();
-        }
-
-        return null;
     }
 
     private void hideTypingIndicatorAfterDelay() {
@@ -987,8 +1001,7 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
         if (getUserSession() == null)
             return;
 
-        KUSChatSettings chatSettings = (KUSChatSettings) getUserSession().getChatSettingsDataSource().getObject();
-        if (chatSettings != null && chatSettings.getActiveFormId() == null)
+        if (!containsFormId())
             return;
 
         if (getSize() == 0)
@@ -1023,13 +1036,13 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
         final Date createdAt = new Date(lastMessage.getCreatedAt().getTime() + KUS_CHAT_AUTO_REPLY_DELAY);
         final String questionId = String.format("question_%s", formQuestion.getId());
 
-        final JSONObject attributesJson = JsonHelper.jsonObjectFromHashMap(new HashMap<String, Object>() {{
+        final JSONObject attributesJson = KUSJsonHelper.jsonObjectFromHashMap(new HashMap<String, Object>() {{
             put("body", formQuestion.getPrompt());
             put("direction", "out");
             put("createdAt", KUSDate.stringFromDate(createdAt));
         }});
 
-        JSONObject messageJson = JsonHelper.jsonObjectFromHashMap(new HashMap<String, Object>() {{
+        JSONObject messageJson = KUSJsonHelper.jsonObjectFromHashMap(new HashMap<String, Object>() {{
             put("type", "chat_message");
             put("id", questionId);
             put("attributes", attributesJson);
@@ -1303,13 +1316,13 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
                         }
 
                         ArrayList<KUSModel> chatMessages = new ArrayList<>();
-                        JSONArray includedModelsJSON = JsonHelper.arrayFromKeyPath(response, "included");
+                        JSONArray includedModelsJSON = KUSJsonHelper.arrayFromKeyPath(response, "included");
 
                         if (includedModelsJSON != null) {
                             for (int i = 0; i < includedModelsJSON.length(); i++) {
                                 try {
                                     JSONObject includedModelJSON = includedModelsJSON.getJSONObject(i);
-                                    String type = JsonHelper.stringFromKeyPath(includedModelJSON, "type");
+                                    String type = KUSJsonHelper.stringFromKeyPath(includedModelJSON, "type");
 
                                     if (type != null && type.equals(new KUSChatMessage().modelType())) {
                                         KUSChatMessage chatMessage = new KUSChatMessage(includedModelJSON);
@@ -1699,12 +1712,12 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
 
     @Override
     public List<KUSModel> objectsFromJSON(JSONObject jsonObject) {
-        return JsonHelper.kusChatModelsFromJSON(Kustomer.getContext(), jsonObject);
+        return KUSJsonHelper.kusChatModelsFromJSON(Kustomer.getContext(), jsonObject);
     }
 
     private void handleMessageSent(JSONObject response, List<KUSModel> temporaryMessages,
                                    List<Bitmap> attachments, List<String> cachedImageKeys) {
-        List<KUSModel> finalMessages = objectsFromJSON(JsonHelper.jsonObjectFromKeyPath(response, "data"));
+        List<KUSModel> finalMessages = objectsFromJSON(KUSJsonHelper.jsonObjectFromKeyPath(response, "data"));
 
         if (finalMessages == null)
             return;
@@ -1761,6 +1774,21 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
         }
 
         return ids;
+    }
+
+    private void clearFormAndSendMessageIfNecessary() {
+        if (getUserSession() == null)
+            return;
+
+        if (isActualSession())
+            return;
+
+        formDataSource = null;
+        if (getList().size() > 0) {
+            KUSChatMessage message = (KUSChatMessage) getFirst();
+            removeAll(getList());
+            sendMessageWithText(message.getBody(), null);
+        }
     }
     //endregion
 
@@ -1862,16 +1890,26 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
             return;
         }
 
-        if (form == null && dataSource.getClass().equals(KUSFormDataSource.class))
+        if (form == null && dataSource.getClass().equals(KUSFormDataSource.class)) {
             form = (KUSForm) dataSource.getObject();
+            if (form != null && form.getQuestions().size() == 0)
+                clearFormAndSendMessageIfNecessary();
+        }
 
         insertFormMessageIfNecessary();
     }
 
     @Override
     public void objectDataSourceOnError(final KUSObjectDataSource dataSource, Error error) {
-        if(dataSource instanceof KUSSatisfactionResponseDataSource)
+        if (dataSource instanceof KUSSatisfactionResponseDataSource)
             return;
+
+        if (dataSource instanceof KUSFormDataSource) {
+            if (KUSJsonHelper.getErrorStatus(error) == 400) {
+                clearFormAndSendMessageIfNecessary();
+                return;
+            }
+        }
 
         Handler mainHandler = new Handler(Looper.getMainLooper());
         Runnable myRunnable = new Runnable() {

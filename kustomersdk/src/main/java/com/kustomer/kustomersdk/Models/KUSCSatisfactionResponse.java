@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 import com.kustomer.kustomersdk.Enums.KUSCSatisfactionFormResponseStatus;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
 import com.kustomer.kustomersdk.Helpers.KUSLog;
-import com.kustomer.kustomersdk.Utils.JsonHelper;
+import com.kustomer.kustomersdk.Utils.KUSJsonHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -16,7 +16,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 import static com.kustomer.kustomersdk.Enums.KUSCSatisfactionFormResponseStatus.*;
-import static com.kustomer.kustomersdk.Utils.JsonHelper.*;
+import static com.kustomer.kustomersdk.Utils.KUSJsonHelper.*;
 
 public class KUSCSatisfactionResponse extends KUSModel {
 
@@ -62,7 +62,7 @@ public class KUSCSatisfactionResponse extends KUSModel {
     }
 
     private void updateResponseData(JSONObject json) {
-        status = satisfactionResponseStatusFromString(JsonHelper.stringFromKeyPath(json,
+        status = satisfactionResponseStatusFromString(KUSJsonHelper.stringFromKeyPath(json,
                 "attributes.status"));
         lockedAt = dateFromKeyPath(json, "attributes.lockedAt");
         updatedAt = dateFromKeyPath(json, "attributes.updatedAt");
@@ -79,8 +79,8 @@ public class KUSCSatisfactionResponse extends KUSModel {
 
             for (int i = 0; i < array.length(); i++) {
                 try {
-                    answers.put(JsonHelper.stringFromKeyPath(array.getJSONObject(i), "id"),
-                            JsonHelper.stringFromKeyPath(array.getJSONObject(i), "answer"));
+                    answers.put(KUSJsonHelper.stringFromKeyPath(array.getJSONObject(i), "id"),
+                            KUSJsonHelper.stringFromKeyPath(array.getJSONObject(i), "answer"));
                 } catch (JSONException e) {
                     KUSLog.KUSLogError(e.getMessage());
                 }

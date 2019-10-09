@@ -2,6 +2,7 @@ package com.kustomer.kustomersdk.DataSources;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.Nullable;
 import android.support.annotation.NonNull;
 
 import com.kustomer.kustomersdk.API.KUSUserSession;
@@ -22,10 +23,18 @@ import org.json.JSONObject;
 
 public class KUSFormDataSource extends KUSObjectDataSource implements KUSObjectDataSourceListener {
 
+    @Nullable
+    private String formId;
+
     //region LifeCycle
     public KUSFormDataSource(KUSUserSession userSession) {
         super(userSession);
         userSession.getChatSettingsDataSource().addListener(this);
+    }
+
+    KUSFormDataSource(@NonNull KUSUserSession userSession, @Nullable String formId) {
+        super(userSession);
+        this.formId = formId;
     }
 
     KUSModel objectFromJson(JSONObject jsonObject) throws KUSInvalidJsonException {
@@ -35,17 +44,16 @@ public class KUSFormDataSource extends KUSObjectDataSource implements KUSObjectD
 
     //region Subclass Methods
     public void performRequest(@NonNull KUSRequestCompletionListener listener) {
-        if(getUserSession() == null) {
+        if (getUserSession() == null) {
             listener.onCompletion(new Error(), null);
             return;
         }
 
-        KUSChatSettings chatSettings = (KUSChatSettings) getUserSession().getChatSettingsDataSource().getObject();
+        String formId = getFormId();
 
-        String formId = getUserSession().getSharedPreferences().getFormId();
         if (formId == null)
-            formId = chatSettings.getActiveFormId();
-        
+            return;
+
         getUserSession().getRequestManager().getEndpoint(
                 String.format(KUSConstants.URL.FORMS_ENDPOINT, formId),
                 true,
@@ -53,17 +61,20 @@ public class KUSFormDataSource extends KUSObjectDataSource implements KUSObjectD
     }
 
     public void fetch() {
-        if(getUserSession() == null)
+        if (getUserSession() == null)
             return;
 
-        if (!getUserSession().getChatSettingsDataSource().isFetched()) {
+        String formId = getFormId();
+
+        if (formId == null && !getUserSession().getChatSettingsDataSource().isFetched()) {
             getUserSession().getChatSettingsDataSource().fetch();
             return;
         }
 
-        KUSChatSettings chatSettings = (KUSChatSettings) getUserSession().getChatSettingsDataSource().getObject();
-        if (chatSettings != null && chatSettings.getActiveFormId() != null)
-            super.fetch();
+        if (formId == null)
+            return;
+
+        super.fetch();
     }
 
     public boolean isFetching() {
@@ -77,10 +88,10 @@ public class KUSFormDataSource extends KUSObjectDataSource implements KUSObjectD
     public boolean isFetched() {
         KUSChatSettings chatSettings = null;
 
-        if(getUserSession() != null)
+        if (getUserSession() != null)
             chatSettings = (KUSChatSettings) getUserSession().getChatSettingsDataSource().getObject();
 
-        if (chatSettings != null && chatSettings.getActiveFormId() == null)
+        if (chatSettings != null && getFormId() == null)
             return true;
 
         return super.isFetched();
@@ -89,6 +100,27 @@ public class KUSFormDataSource extends KUSObjectDataSource implements KUSObjectD
     public Error getError() {
         Error error = getUserSession().getChatSettingsDataSource().getError();
         return error != null ? error : super.getError();
+    }
+
+    @Nullable
+    String getFormId() {
+        if (getUserSession() == null)
+            return null;
+
+        KUSChatSettings chatSettings = (KUSChatSettings) getUserSession().getChatSettingsDataSource().getObject();
+
+        String formId = null;
+
+        if (this.formId != null)
+            formId = this.formId;
+
+        else if (getUserSession().getSharedPreferences().getFormId() != null)
+            formId = getUserSession().getSharedPreferences().getFormId();
+
+        else if (chatSettings != null && chatSettings.getActiveFormId() != null)
+            formId = chatSettings.getActiveFormId();
+
+        return formId;
     }
     //endregion
 

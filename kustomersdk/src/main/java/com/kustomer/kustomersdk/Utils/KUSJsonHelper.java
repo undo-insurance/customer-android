@@ -2,6 +2,7 @@ package com.kustomer.kustomersdk.Utils;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
@@ -33,7 +34,18 @@ import java.util.regex.Pattern;
  * Created by Junaid on 1/23/2018.
  */
 
-public class JsonHelper {
+public class KUSJsonHelper {
+
+    public static int getErrorStatus(@Nullable Error error) {
+        if (error == null)
+            return 0;
+        try {
+            return new JSONObject(error.getMessage()).getJSONArray("errors")
+                    .getJSONObject(0).getInt("status");
+        } catch (Exception e) {
+            return 0;
+        }
+    }
 
     @NonNull
     public static JSONObject jsonObjectFromHashMap(@NonNull HashMap<String, Object> dataMap) {

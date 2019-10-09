@@ -26,7 +26,7 @@ The Kustomer Android SDK requires a valid API Key with role `org.tracking`. See 
 Include the library in your `app.gradle`:
 
 ```gradle
-implementation 'com.kustomer.kustomersdk:kustomersdk:0.2.5'
+implementation 'com.kustomer.kustomersdk:kustomersdk:0.2.6'
 ```
 
 #### Or through Maven
@@ -35,7 +35,7 @@ implementation 'com.kustomer.kustomersdk:kustomersdk:0.2.5'
 <dependency>
   <groupId>com.kustomer.kustomersdk</groupId>
   <artifactId>kustomersdk</artifactId>
-  <version>0.2.5</version>
+  <version>0.2.6</version>
   <type>pom</type>
 </dependency>
 ```
@@ -104,8 +104,35 @@ Kustomer.init(this, "API_KEY");
 ```
 
 ```java
-// Convenience method that will present the chat interface.
+// Convenience methods that will present the chat interface.
+
+// Present new or recent chat conversation if there is any.
 Kustomer.showSupport(ACTIVITY);
+
+
+// Present new chat conversation with chatAttributes a.k.a Key-Pair values.
+
+KUSChatAttributes chatAttributes = new KUSChatAttributes();
+
+    // Initial message to start a new conversation
+    // if not specified then it will show either the most recent session or new window to start a new conversation
+    chatAttributes.put(Kustomer.KUS_MESSAGE,"MESSAGE");
+
+    // Custom schedule id, if not specified then SDK will use the schedule id specified on the admin panel
+    // This can be access by an admin panel via Administration > Business Schedules
+    chatAttributes.put(Kustomer.KUS_SCHEDULE_ID,"SCHEDULE_ID");
+
+    // Custom form id, if not specified then SDK will use the conversational assistant form specified on the admin panel
+    // This can be access be an admin panel via Channels > Chat > Conversational Assistant
+    chatAttributes.put(Kustomer.KUS_FORM_ID,"FORM_ID");
+
+    // Attach custom attributes to the user's next new conversation
+    // These key-value pairs must be enabled on the Conversation Klass via the admin portal.
+    // This can be done by an admin via Settings > Platform Settings > Klasses > Conversation
+    JSONObject customObject = new JSONObject();
+    customObject.put("customAttributeStr", "value");
+
+    chatAttributes.put(Kustomer.KUS_CUSTOM_ATTRIBUTES, customObject);
 
 // Convenience methods that will present a browser interface pointing to your KnowledgeBase.
 Kustomer.presentKnowledgeBase(ACTIVITY);
@@ -211,7 +238,7 @@ Kustomer.describeNextConversation(conversationObject);
 
 
  <receiver
-     android:name="com.kustomer.kustomersdk.Receivers.NotificationDismissReceiver"
+     android:name="com.kustomer.kustomersdk.Receivers.KUSNotificationDismissReceiver"
      android:enabled="true"
      android:exported="true"/>
 

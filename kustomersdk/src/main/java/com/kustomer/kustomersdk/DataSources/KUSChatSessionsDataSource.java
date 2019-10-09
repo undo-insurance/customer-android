@@ -20,7 +20,7 @@ import com.kustomer.kustomersdk.Models.KUSChatMessage;
 import com.kustomer.kustomersdk.Models.KUSChatSession;
 import com.kustomer.kustomersdk.Models.KUSModel;
 import com.kustomer.kustomersdk.Models.KUSTypingIndicator;
-import com.kustomer.kustomersdk.Utils.JsonHelper;
+import com.kustomer.kustomersdk.Utils.KUSJsonHelper;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
 
 import org.json.JSONArray;
@@ -49,6 +49,8 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource
     private JSONObject pendingCustomChatSessionAttributesForNextConversation;
     private HashMap<String, Date> localLastSeenAtBySessionId;
     private String messageToCreateNewChatSession;
+    @Nullable
+    private String formIdForConversationalForm;
     //endregion
 
     //region Initializer
@@ -105,6 +107,11 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource
     public String getMessageToCreateNewChatSession() {
         return messageToCreateNewChatSession;
     }
+
+    @Nullable
+    public String getFormIdForConversationalForm(){
+        return formIdForConversationalForm;
+    }
     //endregion
 
     //region Public Methods
@@ -140,7 +147,7 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource
 
                         KUSChatSession session = null;
                         try {
-                            session = new KUSChatSession(JsonHelper.jsonObjectFromKeyPath(response, "data"));
+                            session = new KUSChatSession(KUSJsonHelper.jsonObjectFromKeyPath(response, "data"));
                         } catch (KUSInvalidJsonException e) {
                             e.printStackTrace();
                         }
@@ -219,7 +226,7 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource
 
                         KUSChatSession session = null;
                         try {
-                            session = new KUSChatSession(JsonHelper.jsonObjectFromKeyPath(response, "data"));
+                            session = new KUSChatSession(KUSJsonHelper.jsonObjectFromKeyPath(response, "data"));
                         } catch (KUSInvalidJsonException e) {
                             e.printStackTrace();
                         }
@@ -273,13 +280,13 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource
 
                         KUSChatSession chatSession = null;
                         ArrayList<KUSModel> chatMessages = new ArrayList<>();
-                        JSONArray includedModelsJSON = JsonHelper.arrayFromKeyPath(response, "included");
+                        JSONArray includedModelsJSON = KUSJsonHelper.arrayFromKeyPath(response, "included");
 
                         if (includedModelsJSON != null) {
                             for (int i = 0; i < includedModelsJSON.length(); i++) {
                                 try {
                                     JSONObject includedModelJSON = includedModelsJSON.getJSONObject(i);
-                                    String type = JsonHelper.stringFromKeyPath(includedModelJSON, "type");
+                                    String type = KUSJsonHelper.stringFromKeyPath(includedModelJSON, "type");
 
                                     if (type != null && type.equals(new KUSChatSession().modelType())) {
                                         chatSession = new KUSChatSession(includedModelJSON);
@@ -396,6 +403,10 @@ public class KUSChatSessionsDataSource extends KUSPaginatedDataSource
 
     public void setMessageToCreateNewChatSession(String messageToCreateNewChatSession) {
         this.messageToCreateNewChatSession = messageToCreateNewChatSession;
+    }
+
+    public void setFormIdForConversationalForm(@Nullable String formId){
+        formIdForConversationalForm =formId;
     }
 
     public int getOpenProactiveCampaignsCount() {

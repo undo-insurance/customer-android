@@ -78,7 +78,6 @@ public class KUSUserSession implements Serializable, KUSPaginatedDataSourceListe
         }
 
         getChatSettingsDataSource().fetch();
-        getScheduleDataSource().fetch();
         getPushClient();
 
         chatSessionsDataSource.addListener(this);

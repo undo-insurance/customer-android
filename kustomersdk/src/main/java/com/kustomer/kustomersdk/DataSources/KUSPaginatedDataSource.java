@@ -431,4 +431,14 @@ public class KUSPaginatedDataSource {
     }
     //endregion
 
+    @Nullable
+    public String getCustomerId() {
+        for (int i = 0; i < getSize(); i++) {
+
+            if (get(i).getCustomerId() != null)
+                return get(i).getCustomerId();
+        }
+
+        return null;
+    }
 }

@@ -31,8 +31,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.kustomer.kustomersdk.API.KUSUserSession;
-import com.kustomer.kustomersdk.Adapters.MessageListAdapter;
-import com.kustomer.kustomersdk.BaseClasses.BaseActivity;
+import com.kustomer.kustomersdk.Adapters.KUSMessageListAdapter;
+import com.kustomer.kustomersdk.BaseClasses.KUSBaseActivity;
 import com.kustomer.kustomersdk.DataSources.KUSChatMessagesDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSObjectDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSPaginatedDataSource;
@@ -88,12 +88,12 @@ import static com.kustomer.kustomersdk.Enums.KUSFormQuestionProperty.*;
 import static com.kustomer.kustomersdk.Models.KUSFormQuestion.KUSFormQuestionRequiresResponse;
 import static com.kustomer.kustomersdk.Utils.KUSConstants.BundleName.CHAT_SCREEN_RESTARTED_KEY;
 
-public class KUSChatActivity extends BaseActivity implements KUSChatMessagesDataSourceListener,
+public class KUSChatActivity extends KUSBaseActivity implements KUSChatMessagesDataSourceListener,
         KUSToolbar.OnToolbarItemClickListener,
         KUSEmailInputViewListener,
         KUSInputBarViewListener,
         KUSOptionPickerViewListener,
-        MessageListAdapter.ChatMessageItemListener,
+        KUSMessageListAdapter.ChatMessageItemListener,
         KUSMLFormValuesPickerViewListener,
         KUSObjectDataSourceListener,
         KUSInputBarTextChangeListener {
@@ -132,7 +132,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
     KUSChatMessagesDataSource chatMessagesDataSource;
     KUSTeamsDataSource teamOptionsDatasource;
     String chatSessionId;
-    MessageListAdapter adapter;
+    KUSMessageListAdapter adapter;
     KUSToolbar kusToolbar;
     boolean shouldShowBackButton = true;
     boolean backPressed = false;
@@ -140,6 +140,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
     boolean shouldShowNonBusinessHoursImage = false;
 
     String message;
+    String formId;
 
     String mCurrentPhotoPath;
     //endregion
@@ -169,8 +170,10 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
     protected void onStart() {
         super.onStart();
 
-        if (chatMessagesDataSource != null)
+        if (chatMessagesDataSource != null) {
             chatMessagesDataSource.startListeningForTypingUpdate();
+        }
+
     }
 
     @Override
@@ -307,6 +310,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         kusChatSession = (KUSChatSession) getIntent().getSerializableExtra(KUSConstants.BundleName.CHAT_SESSION_BUNDLE_KEY);
         shouldShowBackButton = getIntent().getBooleanExtra(KUSConstants.BundleName.CHAT_SCREEN_BACK_BUTTON_KEY, true);
         message = getIntent().getStringExtra(KUSConstants.BundleName.CHAT_SCREEN_MESSAGE);
+        formId = getIntent().getStringExtra(KUSConstants.BundleName.CHAT_SCREEN_FORM_ID);
 
         shouldShowNonBusinessHoursImage = !userSession.getScheduleDataSource().isActiveBusinessHours();
 
@@ -314,11 +318,15 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
         if (settings != null && settings.getNoHistory())
             shouldShowBackButton = false;
 
-        if (kusChatSession != null) {
+        if (formId != null) {
+            chatMessagesDataSource = new KUSChatMessagesDataSource(userSession, formId, true);
+            userSession.getChatSessionsDataSource().setFormIdForConversationalForm(null);
+
+        }else if (kusChatSession != null) {
             chatSessionId = kusChatSession.getId();
             chatMessagesDataSource = userSession.chatMessageDataSourceForSessionId(chatSessionId);
         } else {
-            chatMessagesDataSource = new KUSChatMessagesDataSource(userSession, true);
+            chatMessagesDataSource = new KUSChatMessagesDataSource(userSession, null, true);
         }
 
         if (message != null) {
@@ -566,9 +574,9 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
             boolean teamOptionsDidFail = false;
 
             if (isConversationTeamQuestion) {
-                teamOptionsDidFail = teamOptionsDatasource == null
-                        || teamOptionsDatasource.getError() != null
-                        || (teamOptionsDatasource.isFetched() && teamOptionsDatasource.getSize() == 0);
+                teamOptionsDidFail = (teamOptionsDatasource != null && teamOptionsDatasource.getError() != null)
+                        || (teamOptionsDatasource != null && teamOptionsDatasource.isFetched()
+                        && teamOptionsDatasource.getSize() == 0);
 
                 if (!teamOptionsDidFail) {
                     List<String> teamIds = currentQuestion.getValues();
@@ -645,7 +653,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
     }
 
     private void setupAdapter() {
-        adapter = new MessageListAdapter(chatMessagesDataSource, userSession, chatMessagesDataSource, this);
+        adapter = new KUSMessageListAdapter(chatMessagesDataSource, userSession, chatMessagesDataSource, this);
         rvMessages.setAdapter(adapter);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true);
@@ -831,7 +839,7 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
             chatMessagesDataSource = userSession.chatMessageDataSourceForSessionId(chatSessionId);
 
         } else {
-            chatMessagesDataSource = new KUSChatMessagesDataSource(userSession, true);
+            chatMessagesDataSource = new KUSChatMessagesDataSource(userSession, null,true);
             chatSessionId = null;
             kusInputBarView.setAllowsAttachment(false);
 
@@ -962,9 +970,20 @@ public class KUSChatActivity extends BaseActivity implements KUSChatMessagesData
                 setupToolbar();
                 checkShouldShowEmailInput();
                 chatMessagesDataSource.startListeningForTypingUpdate();
+
+                //Connecting to Presence channel after Customer Id is created for new user
+                connectToCustomerPresenceChannel();
             }
         };
         handler.post(runnable);
+    }
+
+    private void connectToCustomerPresenceChannel() {
+        String customerId = userSession.getChatSessionsDataSource().getCustomerId();
+
+        if(null!=customerId) {
+            userSession.getPushClient().connectToCustomerPresenceChannel(customerId);
+        }
     }
 
     @Override

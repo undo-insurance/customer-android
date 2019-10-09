@@ -902,17 +902,6 @@ public class KUSChatMessagesDataSource extends KUSPaginatedDataSource
         }, KUS_TYPING_ENDED_DELAY);
     }
 
-    @Nullable
-    private String getCustomerId() {
-        for (int i = 0; i < getSize(); i++) {
-
-            if (get(i).getCustomerId() != null)
-                return get(i).getCustomerId();
-        }
-
-        return null;
-    }
-
     private void hideTypingIndicatorAfterDelay() {
         if (hideTypingTimer != null) {
             hideTypingTimer.cancel();

@@ -11,8 +11,8 @@ import com.kustomer.kustomersdk.DataSources.KUSPaginatedDataSource;
 import com.kustomer.kustomersdk.Enums.KUSRequestType;
 import com.kustomer.kustomersdk.Helpers.KUSAudio;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
-import com.kustomer.kustomersdk.Interfaces.KUSCustomerStatsListener;
 import com.kustomer.kustomersdk.Helpers.KUSLog;
+import com.kustomer.kustomersdk.Interfaces.KUSCustomerStatsListener;
 import com.kustomer.kustomersdk.Interfaces.KUSObjectDataSourceListener;
 import com.kustomer.kustomersdk.Interfaces.KUSPaginatedDataSourceListener;
 import com.kustomer.kustomersdk.Interfaces.KUSRequestCompletionListener;
@@ -24,8 +24,8 @@ import com.kustomer.kustomersdk.Models.KUSChatSettings;
 import com.kustomer.kustomersdk.Models.KUSModel;
 import com.kustomer.kustomersdk.Models.KUSTrackingToken;
 import com.kustomer.kustomersdk.Models.KUSTypingIndicator;
-import com.kustomer.kustomersdk.Utils.KUSJsonHelper;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
+import com.kustomer.kustomersdk.Utils.KUSJsonHelper;
 import com.kustomer.kustomersdk.Views.KUSNotificationWindow;
 import com.pusher.client.Pusher;
 import com.pusher.client.PusherOptions;
@@ -69,6 +69,7 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
     private Pusher pusherClient;
     private PresenceChannel pusherChannel;
     private PrivateChannel chatActivityChannel;
+    private PresenceChannel customerPresenceChannel;
     private ConcurrentHashMap<String, KUSChatSession> previousChatSessions;
 
     private WeakReference<KUSUserSession> userSession;
@@ -172,6 +173,32 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
         }
     }
 
+    public void connectToCustomerPresenceChannel(@NonNull String customerId) {
+
+        if(null == customerPresenceChannel) {
+
+            try {
+                String presenceChannelName = getPresenceChannelNameForCustomerId(customerId);
+
+                KUSLog.KUSLogPusher("Connecting to presence channel : "+presenceChannelName);
+                if (presenceChannelName != null) {
+                    customerPresenceChannel = pusherClient.subscribePresence(presenceChannelName);
+                }
+            } catch (IllegalArgumentException e) {
+                KUSLog.KUSLogError(e.getMessage());
+            }
+        }
+
+    }
+
+    public void disconnectFromCustomerPresenceChannel() {
+        if (null != customerPresenceChannel) {
+            KUSLog.KUSLogPusher("Disconnecting from presence channel");
+            pusherClient.unsubscribe(customerPresenceChannel.getName());
+            customerPresenceChannel = null;
+        }
+    }
+
     //endregion
 
     //region Private Methods
@@ -200,6 +227,15 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
 
         return String.format("private-external-%s-chat-activity-%s", userSession.get().getOrgId(),
                 activeSessionId);
+    }
+
+    @Nullable
+    private String getPresenceChannelNameForCustomerId(@NonNull String customerId) {
+        if (userSession.get() == null)
+            return null;
+
+        return String.format("presence-external-%s-customer-activity-%s", userSession.get().getOrgId(),
+                customerId);
     }
 
     private void connectToChannelsIfNecessary() {
@@ -729,24 +765,29 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
 
         @Override
         public void userSubscribed(String channelName, User user) {
+            KUSLog.KUSLogPusher("User Added "+channelName);
         }
 
         @Override
         public void userUnsubscribed(String channelName, User user) {
+            KUSLog.KUSLogPusher("User Removed "+channelName);
         }
 
         @Override
         public void onAuthenticationFailure(String message, Exception e) {
+            KUSLog.KUSLogPusher("User Failure "+message);
             updatePollingTimer();
         }
 
         @Override
         public void onSubscriptionSucceeded(String channelName) {
+            KUSLog.KUSLogPusher("User subscribed "+channelName);
             updatePollingTimer();
         }
 
         @Override
         public void onEvent(String channelName, String eventName, String data) {
+            KUSLog.KUSLogPusher("onEvent "+eventName);
             if (userSession.get() == null || eventName == null)
                 return;
 

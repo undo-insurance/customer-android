@@ -170,8 +170,10 @@ public class KUSChatActivity extends KUSBaseActivity implements KUSChatMessagesD
     protected void onStart() {
         super.onStart();
 
-        if (chatMessagesDataSource != null)
+        if (chatMessagesDataSource != null) {
             chatMessagesDataSource.startListeningForTypingUpdate();
+        }
+
     }
 
     @Override
@@ -968,9 +970,20 @@ public class KUSChatActivity extends KUSBaseActivity implements KUSChatMessagesD
                 setupToolbar();
                 checkShouldShowEmailInput();
                 chatMessagesDataSource.startListeningForTypingUpdate();
+
+                //Connecting to Presence channel after Customer Id is created for new user
+                connectToCustomerPresenceChannel();
             }
         };
         handler.post(runnable);
+    }
+
+    private void connectToCustomerPresenceChannel() {
+        String customerId = userSession.getChatSessionsDataSource().getCustomerId();
+
+        if(null!=customerId) {
+            userSession.getPushClient().connectToCustomerPresenceChannel(customerId);
+        }
     }
 
     @Override

@@ -58,6 +58,10 @@ public class KUSConstants {
         String SEND_MESSAGE_EVENT = "kustomer.app.chat.message.send";
         String END_SESSION_EVENT = "kustomer.app.chat.session.end";
         String CHAT_ACTIVITY_TYPING_EVENT = "client-kustomer.app.chat.activity.typing";
+        String PRESENCE_MEMBER_ADDED = "pusher:member_added";
+        String PRESENCE_SUBSCRIPTION_SUCCEEDED = "pusher:subscription_succeeded";
+        String PRESENCE_SUBSCRIPTION_ERROR = "pusher:subscription_error";
+        String PRESENCE_MEMBER_REMOVED = "pusher:member_removed";
     }
 
     public interface BundleName {

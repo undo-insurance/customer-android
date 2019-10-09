@@ -9,7 +9,7 @@ android {
         minSdkVersion 17
         targetSdkVersion 28
         versionCode 1
-        versionName "0.2.5"
+        versionName "0.2.6"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -59,10 +59,10 @@ ext {
     libraryDescription = 'A set of methods used to manipulate time object'
     siteUrl = 'https://github.com/kustomer/customer-android'
     gitUrl = 'https://github.com/kustomer/customer-android.git'
-    libraryVersion = '0.2.5'
-    developerId = 'junaid'
-    developerName = 'Junaid'
-    developerEmail = 'junaid.ahmed@brainxtech.com'
+    libraryVersion = '0.2.6'
+    developerId = 'kustomer'
+    developerName = 'Kustomer'
+    developerEmail = 'developers@kustomer.com'
     licenseName = 'The Apache Software License, Version 2.0'
     licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
     allLicenses = ["Apache-2.0"]

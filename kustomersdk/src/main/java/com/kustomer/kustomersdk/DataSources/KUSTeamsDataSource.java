@@ -7,6 +7,7 @@ import com.kustomer.kustomersdk.Models.KUSTeam;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
 import com.kustomer.kustomersdk.Utils.KUSUtils;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URL;
@@ -53,8 +54,13 @@ public class KUSTeamsDataSource extends KUSPaginatedDataSource {
 
         KUSModel model = null;
         try {
+            if(jsonObject.has("data")) {
+                jsonObject = jsonObject.getJSONObject("data");
+            }
             model = new KUSTeam(jsonObject);
         } catch (KUSInvalidJsonException e) {
+            e.printStackTrace();
+        }catch (JSONException e) {
             e.printStackTrace();
         }
 

@@ -28,8 +28,8 @@ import com.kustomer.kustomersdk.Models.KUSChatSession;
 import com.kustomer.kustomersdk.Models.KUSChatSettings;
 import com.kustomer.kustomersdk.R;
 import com.kustomer.kustomersdk.R2;
-import com.kustomer.kustomersdk.Utils.KUSJsonHelper;
 import com.kustomer.kustomersdk.Utils.KUSConstants;
+import com.kustomer.kustomersdk.Utils.KUSJsonHelper;
 import com.kustomer.kustomersdk.Views.KUSToolbar;
 
 import butterknife.BindView;
@@ -93,6 +93,17 @@ public class KUSSessionsActivity extends KUSBaseActivity implements KUSPaginated
         }
 
         showKustomerBrandingFooterIfNeeded();
+
+        //Connecting to Presence channel when Kustomer support chat screen shown for existing user
+        connectToCustomerPresenceChannel();
+    }
+
+    private void connectToCustomerPresenceChannel() {
+        String customerId = chatSessionsDataSource.getCustomerId();
+
+        if(null!=customerId) {
+            userSession.getPushClient().connectToCustomerPresenceChannel(customerId);
+        }
     }
 
     @Override
@@ -111,6 +122,9 @@ public class KUSSessionsActivity extends KUSBaseActivity implements KUSPaginated
 
         rvSessions.setAdapter(null);
         userSession.getPushClient().setSupportScreenShown(false);
+
+        //Disconnecting from Presence channel when Kustomer support is exited
+        userSession.getPushClient().disconnectFromCustomerPresenceChannel();
         super.onDestroy();
     }
 

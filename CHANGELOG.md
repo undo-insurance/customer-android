@@ -2,8 +2,7 @@
 
 ## 0.2.6
 Release Date: 10/09/2019
-
-* Business schedule feature
+* You can now check business hours
 * Wrap chat Greeting text and Waiting text to multiple lines without truncation. 
 * UI fixes
 

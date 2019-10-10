@@ -1,5 +1,9 @@
 # Changelog for Kustomer Android SDK
 
+## 0.2.7
+Release Date: 10/09/2019
+* Fixing Memory Leak
+
 ## 0.2.6
 Release Date: 10/09/2019
 * You can now check business hours

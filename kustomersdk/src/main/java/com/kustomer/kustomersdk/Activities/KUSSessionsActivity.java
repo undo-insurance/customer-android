@@ -117,8 +117,11 @@ public class KUSSessionsActivity extends KUSBaseActivity implements KUSPaginated
 
     @Override
     protected void onDestroy() {
-        if (chatSessionsDataSource != null)
+        if (null != chatSessionsDataSource)
             chatSessionsDataSource.removeListener(this);
+
+        if (null != userSession)
+            userSession.getScheduleDataSource().removeListener(this);
 
         rvSessions.setAdapter(null);
         userSession.getPushClient().setSupportScreenShown(false);

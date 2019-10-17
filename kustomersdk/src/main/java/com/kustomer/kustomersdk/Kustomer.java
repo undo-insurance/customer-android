@@ -59,6 +59,7 @@ public class Kustomer {
     public static String KUS_FORM_ID = "KUFormIdAttributeKey";
     public static String KUS_SCHEDULE_ID = "KUSScheduleIdAttributeKey";
     public static String KUS_CUSTOM_ATTRIBUTES = "KUSCustomAttributesKey";
+    public static String KUS_EMOJI_COMPACT_SUPPORTED = "KUSEmojiCompactSupported";
 
     private static Context mContext;
     private static Kustomer sharedInstance = null;
@@ -70,6 +71,7 @@ public class Kustomer {
     private String orgName;
 
     private static String hostDomainOverride = null;
+    private static Boolean emojiCompactSupported = true; // By default Emoji Compact Support Library is enabled
     private static int logOptions = KUSLogOptions.KUSLogOptionInfo | KUSLogOptions.KUSLogOptionErrors;
     KUSKustomerListener mListener;
     //endregion
@@ -92,8 +94,6 @@ public class Kustomer {
     public static void init(Context context, String apiKey,@NonNull Boolean emojiCompactSupported) throws AssertionError {
         mContext = context.getApplicationContext();
 
-        intializeEmojiCompact(emojiCompactSupported);
-
         KUSLocalization.getSharedInstance().updateKustomerLocaleWithFallback(mContext);
         KUSNetworkStateManager.getSharedInstance().startObservingNetworkState();
         getSharedInstance().setApiKey(apiKey);
@@ -108,32 +108,6 @@ public class Kustomer {
             Fresco.initialize(context, config);
         } catch (Exception ignore) {
         }
-    }
-
-    private static void intializeEmojiCompact(@NonNull Boolean emojiCompactSupported) {
-
-        String emojiQuery = emojiCompactSupported ? KUSConstants.GoogleFonts.EMOJI_FONT_NAME : "";
-
-        FontRequest fontRequest = new FontRequest(
-                KUSConstants.GoogleFonts.FONT_PROVIDER_AUTHORITY_NAME,
-                KUSConstants.GoogleFonts.FONT_PROVIDER_PACKAGE_NAME,
-                emojiQuery
-                ,R.array.com_google_android_gms_fonts_certs);
-
-        EmojiCompat.Config emojiConfig = new FontRequestEmojiCompatConfig(mContext,fontRequest)
-                .registerInitCallback(new EmojiCompat.InitCallback() {
-                    @Override
-                    public void onInitialized() {
-                        super.onInitialized();
-                        KUSLog.KUSLogInfo("EmojiCompat Initialized");
-                    }
-                    @Override
-                    public void onFailed(@Nullable Throwable throwable) {
-                        KUSLog.KUSLogInfo("EmojiCompat initialization failed : "+throwable.getMessage());
-                    }
-                })
-                ;
-        EmojiCompat.init(emojiConfig);
     }
 
     public static void setListener(KUSKustomerListener listener) {
@@ -452,6 +426,11 @@ public class Kustomer {
         if (customAttributes instanceof JSONObject)
             mDescribeNextConversation((JSONObject) customAttributes);
 
+        Object isEmojiCompactSupported = attributes.get(KUS_EMOJI_COMPACT_SUPPORTED);
+        if(isEmojiCompactSupported instanceof Boolean) {
+             emojiCompactSupported = (Boolean) isEmojiCompactSupported;
+        }
+
         showSupport(activity);
     }
     //endregion
@@ -486,6 +465,10 @@ public class Kustomer {
             throw new AssertionError("Kustomer needs to be initialized before use");
 
         return userSession;
+    }
+
+    public Boolean getEmojiCompactSupported() {
+        return emojiCompactSupported;
     }
 
     //endregion

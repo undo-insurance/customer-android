@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Enums.KUSRequestType;
 import com.kustomer.kustomersdk.Helpers.KUSInvalidJsonException;
+import com.kustomer.kustomersdk.Helpers.KUSLog;
 import com.kustomer.kustomersdk.Interfaces.KUSPaginatedDataSourceListener;
 import com.kustomer.kustomersdk.Interfaces.KUSRequestCompletionListener;
 import com.kustomer.kustomersdk.Models.KUSModel;
@@ -149,6 +150,8 @@ public class KUSPaginatedDataSource {
         final WeakReference<KUSPaginatedDataSource> weakInstance = new WeakReference<>(this);
 
         final KUSPaginatedDataSource dataSource = this;
+
+        KUSLog.KUSLogInfo("Fetching API Url "+url);
 
         userSession.get().getRequestManager().performRequestType(
                 KUSRequestType.KUS_REQUEST_TYPE_GET,

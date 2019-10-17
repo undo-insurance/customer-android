@@ -14,12 +14,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.LazyHeaders;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.bxlargeimageviewer.BxImageViewer;
+import com.kustomer.kustomersdk.Helpers.GlideApp;
 import com.kustomer.kustomersdk.Helpers.KUSLog;
 import com.kustomer.kustomersdk.Helpers.KUSPermission;
 import com.kustomer.kustomersdk.Kustomer;
@@ -110,7 +110,7 @@ public class KUSLargeImageViewer implements View.OnClickListener {
                     .addHeader(KUSConstants.Keys.K_KUSTOMER_TRACKING_TOKEN_HEADER_KEY, Kustomer.getSharedInstance().getUserSession().getTrackingTokenDataSource().getCurrentTrackingToken())
                     .build());
 
-            Glide.with(mContext)
+            GlideApp.with(mContext)
                     .asBitmap()
                     .load(glideUrl)
                     .into(new SimpleTarget<Bitmap>() {

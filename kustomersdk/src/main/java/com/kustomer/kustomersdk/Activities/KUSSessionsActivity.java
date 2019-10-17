@@ -7,6 +7,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.text.emoji.EmojiCompat;
+import android.support.text.emoji.FontRequestEmojiCompatConfig;
+import android.support.v4.provider.FontRequest;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,6 +26,7 @@ import com.kustomer.kustomersdk.DataSources.KUSChatSessionsDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSObjectDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSPaginatedDataSource;
 import com.kustomer.kustomersdk.Helpers.KUSLocalization;
+import com.kustomer.kustomersdk.Helpers.KUSLog;
 import com.kustomer.kustomersdk.Interfaces.KUSObjectDataSourceListener;
 import com.kustomer.kustomersdk.Interfaces.KUSPaginatedDataSourceListener;
 import com.kustomer.kustomersdk.Kustomer;
@@ -96,6 +102,9 @@ public class KUSSessionsActivity extends KUSBaseActivity implements KUSPaginated
 
         //Connecting to Presence channel when Kustomer support chat screen shown for existing user
         connectToCustomerPresenceChannel();
+
+        //Initialize Emoji Compact Support Library
+        initializeEmojiCompact(Kustomer.getSharedInstance().getEmojiCompactSupported());
     }
 
     private void connectToCustomerPresenceChannel() {
@@ -270,6 +279,32 @@ public class KUSSessionsActivity extends KUSBaseActivity implements KUSPaginated
             };
             handler.post(runnable);
         }
+    }
+
+    private void initializeEmojiCompact(@NonNull Boolean emojiCompactSupported) {
+
+        String emojiQuery = emojiCompactSupported ? KUSConstants.GoogleFonts.EMOJI_FONT_NAME : "";
+
+        FontRequest fontRequest = new FontRequest(
+                KUSConstants.GoogleFonts.FONT_PROVIDER_AUTHORITY_NAME,
+                KUSConstants.GoogleFonts.FONT_PROVIDER_PACKAGE_NAME,
+                emojiQuery
+                ,R.array.com_google_android_gms_fonts_certs);
+
+        EmojiCompat.Config emojiConfig = new FontRequestEmojiCompatConfig(this,fontRequest)
+                .registerInitCallback(new EmojiCompat.InitCallback() {
+                    @Override
+                    public void onInitialized() {
+                        super.onInitialized();
+                        KUSLog.KUSLogInfo("EmojiCompat Initialized");
+                    }
+                    @Override
+                    public void onFailed(@Nullable Throwable throwable) {
+                        KUSLog.KUSLogInfo("EmojiCompat initialization failed : "+throwable.getMessage());
+                    }
+                })
+                ;
+        EmojiCompat.init(emojiConfig);
     }
 
     //endregion

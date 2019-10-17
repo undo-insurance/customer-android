@@ -6,7 +6,8 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.text.emoji.EmojiCompat;
-import android.support.text.emoji.bundled.BundledEmojiCompatConfig;
+import android.support.text.emoji.FontRequestEmojiCompatConfig;
+import android.support.v4.provider.FontRequest;
 import android.text.TextUtils;
 import android.util.Base64;
 
@@ -19,6 +20,7 @@ import com.kustomer.kustomersdk.Activities.KUSKnowledgeBaseActivity;
 import com.kustomer.kustomersdk.Activities.KUSSessionsActivity;
 import com.kustomer.kustomersdk.Enums.KUSRequestType;
 import com.kustomer.kustomersdk.Helpers.KUSLocalization;
+import com.kustomer.kustomersdk.Helpers.KUSLog;
 import com.kustomer.kustomersdk.Interfaces.KUSChatAvailableListener;
 import com.kustomer.kustomersdk.Interfaces.KUSIdentifyListener;
 import com.kustomer.kustomersdk.Interfaces.KUSKustomerListener;
@@ -84,10 +86,13 @@ public class Kustomer {
     //region Class Methods
 
     public static void init(Context context, String apiKey) throws AssertionError {
+        init(context,apiKey,true);
+    }
+
+    public static void init(Context context, String apiKey,@NonNull Boolean emojiCompactSupported) throws AssertionError {
         mContext = context.getApplicationContext();
 
-        EmojiCompat.Config emojiConfig = new BundledEmojiCompatConfig(mContext);
-        EmojiCompat.init(emojiConfig);
+        intializeEmojiCompact(emojiCompactSupported);
 
         KUSLocalization.getSharedInstance().updateKustomerLocaleWithFallback(mContext);
         KUSNetworkStateManager.getSharedInstance().startObservingNetworkState();
@@ -103,6 +108,32 @@ public class Kustomer {
             Fresco.initialize(context, config);
         } catch (Exception ignore) {
         }
+    }
+
+    private static void intializeEmojiCompact(@NonNull Boolean emojiCompactSupported) {
+
+        String emojiQuery = emojiCompactSupported ? KUSConstants.GoogleFonts.EMOJI_FONT_NAME : "";
+
+        FontRequest fontRequest = new FontRequest(
+                KUSConstants.GoogleFonts.FONT_PROVIDER_AUTHORITY_NAME,
+                KUSConstants.GoogleFonts.FONT_PROVIDER_PACKAGE_NAME,
+                emojiQuery
+                ,R.array.com_google_android_gms_fonts_certs);
+
+        EmojiCompat.Config emojiConfig = new FontRequestEmojiCompatConfig(mContext,fontRequest)
+                .registerInitCallback(new EmojiCompat.InitCallback() {
+                    @Override
+                    public void onInitialized() {
+                        super.onInitialized();
+                        KUSLog.KUSLogInfo("EmojiCompat Initialized");
+                    }
+                    @Override
+                    public void onFailed(@Nullable Throwable throwable) {
+                        KUSLog.KUSLogInfo("EmojiCompat initialization failed : "+throwable.getMessage());
+                    }
+                })
+                ;
+        EmojiCompat.init(emojiConfig);
     }
 
     public static void setListener(KUSKustomerListener listener) {

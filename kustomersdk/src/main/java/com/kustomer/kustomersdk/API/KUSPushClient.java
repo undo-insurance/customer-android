@@ -275,19 +275,33 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
                         return;
 
                     isPusherTrackingStarted = false;
-                    userSession.get().getStatsManager().updateStats(new KUSCustomerStatsListener() {
-                        @Override
-                        public void onCompletion(boolean sessionUpdated) {
-                            if (userSession.get() == null)
-                                return;
 
-                            if (sessionUpdated) {
-                                didPusherLostPackets = true;
-                                userSession.get().getChatSessionsDataSource().fetchLatest();
+                    //Check if pusher is already connected
+
+                    boolean isPusherConnected = pusherClient != null &&
+                            pusherClient.getConnection().getState() == ConnectionState.CONNECTED;
+
+                    if(!isPusherConnected) {
+
+                        KUSLog.KUSLogPusher("Pusher not connected");
+
+                        userSession.get().getStatsManager().updateStats(new KUSCustomerStatsListener() {
+                            @Override
+                            public void onCompletion(boolean sessionUpdated) {
+                                if (userSession.get() == null)
+                                    return;
+
+                                if (sessionUpdated) {
+                                    didPusherLostPackets = true;
+                                    userSession.get().getChatSessionsDataSource().fetchLatest();
+                                }
+                                connectToChannelsIfNecessary();
                             }
-                            connectToChannelsIfNecessary();
-                        }
-                    });
+                        });
+                    }else {
+                        KUSLog.KUSLogPusher("Pusher is connected");
+                    }
+
                 }
             };
             handler.postDelayed(runnable, KUS_SHOULD_CONNECT_TO_PUSHER_RECENCY_THRESHOLD);
@@ -316,6 +330,7 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
             if (pollingTimer != null) {
                 pollingTimer.cancel();
                 pollingTimer = null;
+                KUSLog.KUSLogPusher("Polling stopped");
             }
         } else {
             if (isSupportScreenShown()) {
@@ -326,6 +341,7 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
                         pollingTimer.cancel();
 
                     startTimer(ACTIVE_POLLING_TIMER_INTERVAL);
+                    KUSLog.KUSLogPusher("Active Polling started with Time - "+ACTIVE_POLLING_TIMER_INTERVAL);
                 }
             } else {
                 // Make sure we're polling lazily
@@ -334,6 +350,7 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
                         pollingTimer.cancel();
 
                     startTimer(LAZY_POLLING_TIMER_INTERVAL);
+                    KUSLog.KUSLogPusher("Lazy Polling started with Time - "+LAZY_POLLING_TIMER_INTERVAL);
                 }
             }
         }
@@ -805,12 +822,12 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
 
         @Override
         public void onAuthenticationFailure(String message, Exception e) {
-
+            KUSLog.KUSLogPusher("User Authentication Failure "+message);
         }
 
         @Override
         public void onSubscriptionSucceeded(String channelName) {
-
+            KUSLog.KUSLogPusher("User Subscription Succeeded "+channelName);
         }
 
         @Override
@@ -831,11 +848,13 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
     private ConnectionEventListener pusherConnectionListener = new ConnectionEventListener() {
         @Override
         public void onConnectionStateChange(ConnectionStateChange change) {
+            KUSLog.KUSLogPusher("User onConnectionStateChange "+change.getCurrentState().name());
             updatePollingTimer();
         }
 
         @Override
         public void onError(String message, String code, Exception e) {
+            KUSLog.KUSLogPusher("User ConnectionEvent Error "+message);
             updatePollingTimer();
         }
     };

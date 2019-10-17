@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.kustomer.kustomersdk.API.KUSUserSession;
+import com.kustomer.kustomersdk.Helpers.KUSLog;
 import com.kustomer.kustomersdk.Interfaces.KUSCustomerStatsListener;
 import com.kustomer.kustomersdk.Interfaces.KUSRequestCompletionListener;
 import com.kustomer.kustomersdk.Utils.KUSJsonHelper;
@@ -42,6 +43,8 @@ public class KUSStatsManager {
             return;
 
         // Fetch last activity time of the client
+
+        KUSLog.KUSLogInfo("Calling Stats API");
         userSession.get().getRequestManager().getEndpoint(KUSConstants.URL.CUSTOMER_STATS_ENDPOINT,
                 true,
                 new KUSRequestCompletionListener() {

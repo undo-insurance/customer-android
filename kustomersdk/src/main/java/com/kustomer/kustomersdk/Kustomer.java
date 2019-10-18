@@ -88,10 +88,6 @@ public class Kustomer {
     //region Class Methods
 
     public static void init(Context context, String apiKey) throws AssertionError {
-        init(context,apiKey,true);
-    }
-
-    public static void init(Context context, String apiKey,@NonNull Boolean emojiCompactSupported) throws AssertionError {
         mContext = context.getApplicationContext();
 
         KUSLocalization.getSharedInstance().updateKustomerLocaleWithFallback(mContext);

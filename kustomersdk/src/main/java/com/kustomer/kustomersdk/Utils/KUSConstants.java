@@ -81,4 +81,10 @@ public class KUSConstants {
         int NOT_FOUND_CODE = 404;
     }
 
+    public interface GoogleFonts {
+        String FONT_PROVIDER_AUTHORITY_NAME = "com.google.android.gms.fonts";
+        String FONT_PROVIDER_PACKAGE_NAME = "com.google.android.gms";
+        String EMOJI_FONT_NAME = "Noto Color Emoji Compat";
+    }
+
 }

@@ -6,7 +6,8 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.text.emoji.EmojiCompat;
-import android.support.text.emoji.bundled.BundledEmojiCompatConfig;
+import android.support.text.emoji.FontRequestEmojiCompatConfig;
+import android.support.v4.provider.FontRequest;
 import android.text.TextUtils;
 import android.util.Base64;
 
@@ -19,6 +20,7 @@ import com.kustomer.kustomersdk.Activities.KUSKnowledgeBaseActivity;
 import com.kustomer.kustomersdk.Activities.KUSSessionsActivity;
 import com.kustomer.kustomersdk.Enums.KUSRequestType;
 import com.kustomer.kustomersdk.Helpers.KUSLocalization;
+import com.kustomer.kustomersdk.Helpers.KUSLog;
 import com.kustomer.kustomersdk.Interfaces.KUSChatAvailableListener;
 import com.kustomer.kustomersdk.Interfaces.KUSIdentifyListener;
 import com.kustomer.kustomersdk.Interfaces.KUSKustomerListener;
@@ -57,6 +59,7 @@ public class Kustomer {
     public static String KUS_FORM_ID = "KUFormIdAttributeKey";
     public static String KUS_SCHEDULE_ID = "KUSScheduleIdAttributeKey";
     public static String KUS_CUSTOM_ATTRIBUTES = "KUSCustomAttributesKey";
+    public static String KUS_EMOJI_COMPACT_SUPPORTED = "KUSEmojiCompactSupported";
 
     private static Context mContext;
     private static Kustomer sharedInstance = null;
@@ -68,6 +71,7 @@ public class Kustomer {
     private String orgName;
 
     private static String hostDomainOverride = null;
+    private static Boolean emojiCompactSupported = true; // By default Emoji Compact Support Library is enabled
     private static int logOptions = KUSLogOptions.KUSLogOptionInfo | KUSLogOptions.KUSLogOptionErrors;
     KUSKustomerListener mListener;
     //endregion
@@ -84,10 +88,11 @@ public class Kustomer {
     //region Class Methods
 
     public static void init(Context context, String apiKey) throws AssertionError {
-        mContext = context.getApplicationContext();
+        init(context,apiKey,true);
+    }
 
-        EmojiCompat.Config emojiConfig = new BundledEmojiCompatConfig(mContext);
-        EmojiCompat.init(emojiConfig);
+    public static void init(Context context, String apiKey,@NonNull Boolean emojiCompactSupported) throws AssertionError {
+        mContext = context.getApplicationContext();
 
         KUSLocalization.getSharedInstance().updateKustomerLocaleWithFallback(mContext);
         KUSNetworkStateManager.getSharedInstance().startObservingNetworkState();
@@ -421,6 +426,11 @@ public class Kustomer {
         if (customAttributes instanceof JSONObject)
             mDescribeNextConversation((JSONObject) customAttributes);
 
+        Object isEmojiCompactSupported = attributes.get(KUS_EMOJI_COMPACT_SUPPORTED);
+        if(isEmojiCompactSupported instanceof Boolean) {
+             emojiCompactSupported = (Boolean) isEmojiCompactSupported;
+        }
+
         showSupport(activity);
     }
     //endregion
@@ -455,6 +465,10 @@ public class Kustomer {
             throw new AssertionError("Kustomer needs to be initialized before use");
 
         return userSession;
+    }
+
+    public Boolean getEmojiCompactSupported() {
+        return emojiCompactSupported;
     }
 
     //endregion

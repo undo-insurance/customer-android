@@ -26,7 +26,7 @@ The Kustomer Android SDK requires a valid API Key with role `org.tracking`. See 
 Include the library in your `app.gradle`:
 
 ```gradle
-implementation 'com.kustomer.kustomersdk:kustomersdk:0.2.7'
+implementation 'com.kustomer.kustomersdk:kustomersdk:0.2.8'
 ```
 
 #### Or through Maven
@@ -35,7 +35,7 @@ implementation 'com.kustomer.kustomersdk:kustomersdk:0.2.7'
 <dependency>
   <groupId>com.kustomer.kustomersdk</groupId>
   <artifactId>kustomersdk</artifactId>
-  <version>0.2.7</version>
+  <version>0.2.8</version>
   <type>pom</type>
 </dependency>
 ```
@@ -110,7 +110,8 @@ Kustomer.init(this, "API_KEY");
 Kustomer.showSupport(ACTIVITY);
 
 
-// Present new chat conversation with chatAttributes a.k.a Key-Pair values.
+// Present new chat conversation with chatAttributes a.k.a Key-Pair value options -
+Kustomer.showSupport(ACTIVITY,chatAttributes);
 
 KUSChatAttributes chatAttributes = new KUSChatAttributes();
 
@@ -133,6 +134,13 @@ KUSChatAttributes chatAttributes = new KUSChatAttributes();
     customObject.put("customAttributeStr", "value");
 
     chatAttributes.put(Kustomer.KUS_CUSTOM_ATTRIBUTES, customObject);
+
+    // Option to provide latest emoji support to older devices
+    // if not specified then SDK will provide support by default.
+    // You can choose to disable it by providing false as the value
+    chatAttributes.put(Kustomer.KUS_EMOJI_COMPACT_SUPPORTED,true|false);
+
+
 
 // Convenience methods that will present a browser interface pointing to your KnowledgeBase.
 Kustomer.presentKnowledgeBase(ACTIVITY);

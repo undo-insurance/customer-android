@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.model.GlideUrl;
@@ -20,6 +19,7 @@ import com.bumptech.glide.request.target.Target;
 import com.kustomer.kustomersdk.Adapters.KUSMessageListAdapter;
 import com.kustomer.kustomersdk.Enums.KUSChatMessageState;
 import com.kustomer.kustomersdk.Enums.KUSChatMessageType;
+import com.kustomer.kustomersdk.Helpers.GlideApp;
 import com.kustomer.kustomersdk.Helpers.KUSCache;
 import com.kustomer.kustomersdk.Helpers.KUSDate;
 import com.kustomer.kustomersdk.Helpers.KUSText;
@@ -126,7 +126,7 @@ public class KUSUserMessageViewHolder extends RecyclerView.ViewHolder {
                     .addHeader(KUSConstants.Keys.K_KUSTOMER_TRACKING_TOKEN_HEADER_KEY, Kustomer.getSharedInstance().getUserSession().getTrackingTokenDataSource().getCurrentTrackingToken())
                     .build());
 
-            Glide.with(itemView)
+            GlideApp.with(itemView)
                     .load(glideUrl)
                     .error(R.drawable.kus_ic_error_outline_red_33dp)
                     .listener(new RequestListener<Drawable>() {

@@ -16,7 +16,6 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 import android.widget.RemoteViews;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
@@ -27,6 +26,7 @@ import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.DataSources.KUSChatMessagesDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSUserDataSource;
 import com.kustomer.kustomersdk.Enums.KUSChatMessageType;
+import com.kustomer.kustomersdk.Helpers.GlideApp;
 import com.kustomer.kustomersdk.Helpers.KSize;
 import com.kustomer.kustomersdk.Helpers.KUSDate;
 import com.kustomer.kustomersdk.Helpers.KUSImage;
@@ -130,7 +130,7 @@ public class KUSNotificationWindow {
 
             if (iconURL != null) {
                 try {
-                    Glide.with(mContext)
+                    GlideApp.with(mContext)
                             .asBitmap()
                             .load(iconURL.toString())
                             .circleCrop()

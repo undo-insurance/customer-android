@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
@@ -25,6 +24,7 @@ import com.bumptech.glide.request.transition.Transition;
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.DataSources.KUSObjectDataSource;
 import com.kustomer.kustomersdk.DataSources.KUSUserDataSource;
+import com.kustomer.kustomersdk.Helpers.GlideApp;
 import com.kustomer.kustomersdk.Helpers.KSize;
 import com.kustomer.kustomersdk.Helpers.KUSImage;
 import com.kustomer.kustomersdk.Interfaces.KUSObjectDataSourceListener;
@@ -197,7 +197,7 @@ public class KUSAvatarImageView extends FrameLayout implements KUSObjectDataSour
 
             if(iconURL != null) {
                 try {
-                    Glide.with(getContext())
+                    GlideApp.with(getContext())
                             .load(iconURL.toString())
                             .circleCrop()
                             .dontAnimate()

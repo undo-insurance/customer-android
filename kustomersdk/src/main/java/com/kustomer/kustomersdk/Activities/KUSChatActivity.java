@@ -29,7 +29,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Adapters.KUSMessageListAdapter;
 import com.kustomer.kustomersdk.BaseClasses.KUSBaseActivity;
@@ -40,6 +39,7 @@ import com.kustomer.kustomersdk.DataSources.KUSTeamsDataSource;
 import com.kustomer.kustomersdk.Enums.KUSChatMessageType;
 import com.kustomer.kustomersdk.Enums.KUSFormQuestionProperty;
 import com.kustomer.kustomersdk.Enums.KUSTypingStatus;
+import com.kustomer.kustomersdk.Helpers.GlideApp;
 import com.kustomer.kustomersdk.Helpers.KUSLocalization;
 import com.kustomer.kustomersdk.Helpers.KUSLog;
 import com.kustomer.kustomersdk.Helpers.KUSPermission;
@@ -84,7 +84,10 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-import static com.kustomer.kustomersdk.Enums.KUSFormQuestionProperty.*;
+import static com.kustomer.kustomersdk.Enums.KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_CONVERSATION_TEAM;
+import static com.kustomer.kustomersdk.Enums.KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_CUSTOMER_FOLLOW_UP_CHANNEL;
+import static com.kustomer.kustomersdk.Enums.KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_MLV;
+import static com.kustomer.kustomersdk.Enums.KUSFormQuestionProperty.KUS_FORM_QUESTION_PROPERTY_VALUES;
 import static com.kustomer.kustomersdk.Models.KUSFormQuestion.KUSFormQuestionRequiresResponse;
 import static com.kustomer.kustomersdk.Utils.KUSConstants.BundleName.CHAT_SCREEN_RESTARTED_KEY;
 
@@ -393,7 +396,7 @@ public class KUSChatActivity extends KUSBaseActivity implements KUSChatMessagesD
         KUSChatSettings chatSettings = (KUSChatSettings) userSession.getChatSettingsDataSource().getObject();
         if (chatSettings != null && chatSettings.getOffHoursImageUrl() != null
                 && !chatSettings.getOffHoursImageUrl().isEmpty()) {
-            Glide.with(this)
+            GlideApp.with(this)
                     .load(chatSettings.getOffHoursImageUrl())
                     .dontAnimate()
                     .into(ivNonBusinessHours);

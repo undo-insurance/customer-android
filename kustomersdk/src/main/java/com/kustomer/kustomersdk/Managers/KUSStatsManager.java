@@ -44,7 +44,7 @@ public class KUSStatsManager {
 
         // Fetch last activity time of the client
 
-        KUSLog.KUSLogInfo("Calling Stats API");
+        KUSLog.KUSLogDebug("Calling Stats API");
         userSession.get().getRequestManager().getEndpoint(KUSConstants.URL.CUSTOMER_STATS_ENDPOINT,
                 true,
                 new KUSRequestCompletionListener() {

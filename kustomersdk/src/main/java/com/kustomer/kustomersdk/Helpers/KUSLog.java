@@ -36,8 +36,8 @@ public class KUSLog {
         KUSLogMessage(KUSLogOptions.KUSLogOptionPusher,info);
     }
 
-    public static void KUSLogPusherError(String info){
-        KUSLogMessage(KUSLogOptions.KUSLogOptionPusher | KUSLogOptions.KUSLogOptionErrors,info);
+    public static void KUSLogDebug(String info){
+        KUSLogMessage(KUSLogOptions.KUSLogOptionDebug,info);
     }
     //endregion
 

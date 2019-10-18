@@ -296,11 +296,11 @@ public class KUSSessionsActivity extends KUSBaseActivity implements KUSPaginated
                     @Override
                     public void onInitialized() {
                         super.onInitialized();
-                        KUSLog.KUSLogInfo("EmojiCompat Initialized");
+                        KUSLog.KUSLogDebug("EmojiCompat Initialized");
                     }
                     @Override
                     public void onFailed(@Nullable Throwable throwable) {
-                        KUSLog.KUSLogInfo("EmojiCompat initialization failed : "+throwable.getMessage());
+                        KUSLog.KUSLogDebug("EmojiCompat initialization failed : "+throwable.getMessage());
                     }
                 })
                 ;

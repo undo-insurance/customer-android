@@ -1,7 +1,7 @@
 # Changelog for Kustomer Android SDK
 
 ## 0.2.8
-Release Date: 10/09/2019
+Release Date: 10/18/2019
 * Decreased SDK size, by downloading NotoColorEmojiCompat.ttf from the EmojiCompat support library at runtime. Clients can now choose to disable support for latest emojis on older devices
 * Removed Stats call
 

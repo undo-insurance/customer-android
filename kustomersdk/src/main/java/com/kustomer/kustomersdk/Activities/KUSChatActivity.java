@@ -29,6 +29,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.kustomer.kustomersdk.API.KUSUserSession;
 import com.kustomer.kustomersdk.Adapters.KUSMessageListAdapter;
 import com.kustomer.kustomersdk.BaseClasses.KUSBaseActivity;
@@ -39,7 +40,6 @@ import com.kustomer.kustomersdk.DataSources.KUSTeamsDataSource;
 import com.kustomer.kustomersdk.Enums.KUSChatMessageType;
 import com.kustomer.kustomersdk.Enums.KUSFormQuestionProperty;
 import com.kustomer.kustomersdk.Enums.KUSTypingStatus;
-import com.kustomer.kustomersdk.Helpers.GlideApp;
 import com.kustomer.kustomersdk.Helpers.KUSLocalization;
 import com.kustomer.kustomersdk.Helpers.KUSLog;
 import com.kustomer.kustomersdk.Helpers.KUSPermission;
@@ -396,7 +396,7 @@ public class KUSChatActivity extends KUSBaseActivity implements KUSChatMessagesD
         KUSChatSettings chatSettings = (KUSChatSettings) userSession.getChatSettingsDataSource().getObject();
         if (chatSettings != null && chatSettings.getOffHoursImageUrl() != null
                 && !chatSettings.getOffHoursImageUrl().isEmpty()) {
-            GlideApp.with(this)
+            Glide.with(this)
                     .load(chatSettings.getOffHoursImageUrl())
                     .dontAnimate()
                     .into(ivNonBusinessHours);

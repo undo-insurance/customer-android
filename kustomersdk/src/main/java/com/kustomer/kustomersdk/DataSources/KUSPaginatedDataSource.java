@@ -151,8 +151,6 @@ public class KUSPaginatedDataSource {
 
         final KUSPaginatedDataSource dataSource = this;
 
-        KUSLog.KUSLogRequest("Fetching API Url "+url);
-
         userSession.get().getRequestManager().performRequestType(
                 KUSRequestType.KUS_REQUEST_TYPE_GET,
                 url,

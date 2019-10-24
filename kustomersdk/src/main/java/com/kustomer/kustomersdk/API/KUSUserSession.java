@@ -75,6 +75,7 @@ public class KUSUserSession implements Serializable, KUSPaginatedDataSourceListe
         if(reset){
             getTrackingTokenDataSource().reset();
             getSharedPreferences().reset();
+            pushClient = null;
         }
 
         getChatSettingsDataSource().fetch();

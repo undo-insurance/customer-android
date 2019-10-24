@@ -8,6 +8,7 @@ import android.support.v4.os.LocaleListCompat;
 import com.kustomer.kustomersdk.BuildConfig;
 import com.kustomer.kustomersdk.DataSources.KUSObjectDataSource;
 import com.kustomer.kustomersdk.Enums.KUSRequestType;
+import com.kustomer.kustomersdk.Helpers.KUSLog;
 import com.kustomer.kustomersdk.Interfaces.KUSObjectDataSourceListener;
 import com.kustomer.kustomersdk.Interfaces.KUSRequestCompletionListener;
 import com.kustomer.kustomersdk.Kustomer;
@@ -151,6 +152,7 @@ public class KUSRequestManager implements Serializable, KUSObjectDataSourceListe
                                    final HashMap additionalHeaders,
                                    final KUSRequestCompletionListener completionListener) {
 
+        KUSLog.KUSLogDebug("Performing Request: "+type.name()+" "+url.getPath()+" "+url.getQuery());
         if (authenticated) {
             dispenseTrackingToken(new KUSTrackingTokenListener() {
                 @Override

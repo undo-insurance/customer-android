@@ -393,6 +393,9 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
 
     private void notifyForUpdatedChatSession(String sessionId) {
 
+        if (userSession.get() == null)
+            return;
+
         if (isSupportScreenShown()) {
             KUSAudio.playMessageReceivedSound();
         } else {
@@ -485,6 +488,9 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
                 new KUSRequestCompletionListener() {
                     @Override
                     public void onCompletion(final Error error, final JSONObject response) {
+
+                        if (userSession.get() == null)
+                            return;
 
                         if (error != null) {
                             handler = new Handler();
@@ -615,6 +621,8 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
             fetchEndedSessionForId(sessionId);
 
         } else {
+            if (userSession.get() == null)
+                return;
             List<KUSModel> chatSessions = userSession.get().getChatSessionsDataSource()
                     .objectsFromJSON(KUSJsonHelper.jsonObjectFromKeyPath(jsonObject, "data"));
 
@@ -639,6 +647,8 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
     //region Callbacks
     @Override
     public void objectDataSourceOnLoad(KUSObjectDataSource dataSource) {
+        if (userSession.get() == null)
+            return;
         if (!userSession.get().getChatSessionsDataSource().isFetched())
             userSession.get().getChatSessionsDataSource().fetchLatest();
 
@@ -707,6 +717,8 @@ public class KUSPushClient implements Serializable, KUSObjectDataSourceListener,
             new Timer().schedule(new TimerTask() {
                 @Override
                 public void run() {
+                    if (userSession.get() == null)
+                        return;
                     userSession.get().getChatSessionsDataSource().fetchLatest();
                 }
             }, KUS_RETRY_DELAY);
